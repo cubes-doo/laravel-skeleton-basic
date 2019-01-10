@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 
-class ResponseMacroServiceProvider extends ServiceProvider
+class SystemMessagesServiceProvider extends ServiceProvider
 {
     /**
      * Register the application's response macros.
