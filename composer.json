@@ -1,6 +1,16 @@
 {
     "name": "cubes-doo/laravel-skeleton-basic",
     "description": "Cubes Laravel project skeleton-basic",
+    "authors": [
+        {
+            "name": "Aleksandar Dimic",
+            "email": "aleksandar.dimic@cubes.rs"
+        },
+        {
+            "name": "Aleksa Cvijic",
+            "email": "aleksa.cvijic@cubes.rs"
+        }
+    ],
     "keywords": ["framework", "laravel", "cubes-doo"],
     "license": "MIT",
     "type": "project",
