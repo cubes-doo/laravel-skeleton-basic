@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "cubes-doo/laravel-skeleton-basic",
+    "description": "Cubes Laravel project skeleton-basic",
+    "keywords": ["framework", "laravel", "cubes-doo"],
     "license": "MIT",
     "type": "project",
     "require": {
