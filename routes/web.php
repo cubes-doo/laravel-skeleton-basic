@@ -1,43 +1,46 @@
 <?php
 
+/**
+ * URLs - always kebab-cased ( http://wiki.c2.com/?KebabCase ), always begining with a '/' 
+ *      - order of words in a route goes as follows: 
+ *          #1 name of entity in plural (ex. "entities")
+ *          #2 (optional) {entity} (if action is related to one entity) this parameter is the primary key of entity model
+ *          #3 action name
+ * 
+ *      - entity's ID is always represented as {entity}, because of policies applied in controller
+ * Names - underscore case, always
+ * 
+ * Grouping - by controller - minimum. In each group, a url prefix & name prefix 
+ * are a must, the namspace prefix is optional if the controller is in a 
+ * sub-folder.
+ * 
+ * example:
+ */
+Route::name('entities.')->prefix('/entites')->group(function() {
+    Route::get('/', 'EntitesController@all')->name('list');
+    Route::get('/create', 'EntitesController@create')->name('create');
+    Route::post('/create', 'EntitesController@store');
+    Route::get('/{entity}/edit', 'EntitesController@edit')->name('edit');
+    Route::post('/{entity}/edit', 'EntitesController@update');
+    Route::post('/{entity}/change-status', 'EntitesController@changeStatus')->name('change_status');
+    Route::post('/{entity}/delete-photo', 'EntitesController@deletePhoto')->name('delete_photo');
+    Route::get('/{entity}/entity-action', 'EntitiesController@entityAction')->name('entityAction');
+});
+
+/**
+ * If a controller is in a sub-folder (ex. app/http/Controllers/Admin):
+ * 
+ * example:
+ */
+Route::name('section.')->prefix('/section')->namespace('Section')->group(function() {
+    require __DIR__ . '/web/section.php';
+});
+
 /*
-|--------------------------------------------------------------------------
-| Web Routes - Standard
-|--------------------------------------------------------------------------
-|
-| * URLs - always kebab-cased ( http://wiki.c2.com/?KebabCase ), always begining with a '/' 
-| (ex. '/users', '/users/get/{id}', '/users/add-image')
-| * Names - underscore case, always
-| 
-| * Grouping - by controller - minimum. In each group, a url prefix & name prefix 
-| are a must, the namspace prefix is optional if the controller is in a 
-| sub-folder.
-| examples: 
-| 
-| Route::name('backend_users.')->prefix('/backend-users')->group(function() {
-|     Route::get('/list-users', 'BackendUsersController@listUsers')->name('list_users'); 
-| });
-| 
-| if controller is in a sub-folder (ex. app/http/Controllers/Admin):
-| Route::name('admin.')->prefix('/admin')->namespace('Admin')->group(function() {
-|     require __DIR__ . '/web/admin.php';
-| });
 |
 | Route::match(...) & Route::any(...) are discouraged, because they map more 
 | than one HTTP method to one Controller method, and this would break the single 
 | responsibility principle.
 | @link https://www.sitepoint.com/the-single-responsibility-principle/
 | @link https://blog.codinghorror.com/curlys-law-do-one-thing/
-|
 */
-
-Route::get('/', function () {
-    return redirect('/aaa')->withSystemMessage('aaa');
-});
-Route::get('/aaa', function () {
-    dump(session('system-message'));
-    return '<a href="/back">back</a>';
-});
-Route::get('/back', function () {
-    return back()->withSystemWarning('warning');
-});

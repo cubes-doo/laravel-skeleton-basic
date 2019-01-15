@@ -21,7 +21,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  * Policies are generally written for each Model separately, but if this is 
  * not necessary an abstraction could be made that would cover multiple Models. 
  * A fact that you need to hear right away: a Policy can be assigned to multiple 
- * Models in the AuthServiceProvider, but a Model cannot use more than one Policy.
+ * Models in the AuthServiceProvider, but a Model cannot use more than one Policy; 
+ * The last assignment of a Policy to a Model will override all previous ones.
  * 
  * All public methods in a Policy must return a boolean value.
  * 

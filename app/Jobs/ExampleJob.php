@@ -26,7 +26,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
  * 
  *  - __construct(): 
  *  - handle(): 
- *  - handle(): 
  *  - protected methods: 
  *  - properties: 
  * 
