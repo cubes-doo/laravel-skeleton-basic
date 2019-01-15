@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  */
 use App\Models\Example as Entity;
 use App\Http\Resources\Entity as EntityResource;
+use App\Http\Resources\Json as JsonResource;
 
 /**
  * Example Controller for describing standards
@@ -61,12 +62,32 @@ class EntitesController extends Controller
     {
         $this->request = $request;
         
+		/* The "can" (policy) middlewares */
+		
 		$this->middleware('can:view,' . Entity::class);
         
 		$this
             ->middleware('can:edit,entity') // 'entity' = route variable name 
             ->only(['info', 'activate', 'lock', 'unlock', 'setPin', 'getPin']) // names of methods in this Controller
         ;
+		
+		/* 
+		 * Middlewares for global scopes on models
+		 * Each Model should have separate middleware!!!
+	     */
+		
+		$this->middleware(function ($request, $next) {
+			//Model 1
+			
+			\App\Models\Example::addGlobalScope(function ($query) {
+				
+				//limit field on logged in user id for example
+				$query->where('user_id', auth()->user()->id);
+			});
+			
+			return $next($request);
+			
+		})->only('postAction');
 	}
 
     /**
@@ -75,12 +96,25 @@ class EntitesController extends Controller
      * route parameters.
      *          
      * Any other public method would repeat most of the steps, if needed, of 
-     * course, but would do its own thing on steps #5 & #6. Be it Job queuing, 
+     * course, but would do its own thing like Job queuing, 
      * Event dispatching, or any other business logic.
-     * If needed, steps #5 & #6 could be replaced with a service call, that 
-     * would deal with saving data, API calls and any other mumbo-jumbo.
      */
-    public function postAction(Entity $entity)
+	
+	/**
+	 * This is just an example of service injection
+	 * @param \Illuminate\Contracts\Mail\Mailer $mail
+	 */
+	public function all(\Illuminate\Contracts\Mail\Mailer $mail)
+	{
+		//initiate entity query
+		$query = Entity::query();
+		
+		$query->join();
+		//!!! OBLIGATORY IF JOIN IS USED!!!
+		$query->select('entities.*');
+	}
+	
+    public function update(Entity $entity)
     {
         $request = $this->request;
         
@@ -141,17 +175,26 @@ class EntitesController extends Controller
             $entity->storeFile($imageFile, 'image');
         }
         
+		#6 Return propper response
+		
+		// if ajax call is in place return JsonResource with message
         if($request->wantsJson()) {
-            return new EntityResource(Entity::find(1));
-            //return EntityResource::collection(Entity::all());
+            return JsonResource::make()->withSuccess(__('Entity has been saved!'));
         }
         
-        #6 redirection with a message or json response if "wants json" (i.e. ajax call)
+        //redirection with a message or json response if "wants json" (i.e. ajax call)
         return redirect()->route('entities.list')->withSystemSuccess(__('Entity has been saved!'));
     }
     
-    public function getAction(Request $request, Entity $entity)
+	/**
+	 * 
+	 * @param Entity $entity
+	 * @return type
+	 */
+    public function edit(Entity $entity)
     {
+		$request = $this->request;
+		
         // Primary goal: page rendering or retuning JSON
         #1 fetching needed data
         
@@ -160,7 +203,13 @@ class EntitesController extends Controller
         #3 business logic
         
         #4 retuning response
+		
+		return view('entities.edit', [
+			'entity' => $entity
+		]);
     }
+	
+	
     
     /**
      * Protected/Private methods: used to uphold the single responsibility 
