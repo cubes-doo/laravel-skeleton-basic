@@ -25,6 +25,23 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Example extends Model 
 {
+    use Utils\StoreFilesModel, Utils\ActiveInactiveModel;
+    
+    /**
+     * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
+     */
+    const STATUSES = [
+        'status1',
+        'status2',
+        'status3',
+        'status4'
+    ];
+    
+    const STATUS_1 = 'status1';
+    const STATUS_2 = 'status2';
+    const STATUS_3 = 'status3';
+    const STATUS_4 = 'status4';
+    
     /**
      * specifying table names is recommended
      */
@@ -33,7 +50,7 @@ class Example extends Model
     /**
      * used to check which columns may be updated using mass-assignment
      */
-    protected $fillable = ['id', 'title', 'description'];
+    protected $fillable = ['id', 'title', 'description', 'active', 'status'];
     
     /**
      * used to check which attributes shouldn't be available in a JSON response
@@ -55,25 +72,6 @@ class Example extends Model
      */
     protected $touches = ['exampleParent'];
     
-    /**
-     * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
-     */
-    const STATUSES = [
-        'status1',
-        'status2',
-        'status3',
-        'status4'
-    ];
-    
-    /**
-     *  Global Scopes: must be declared if throughout the whole application there is a scope that is always applied
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope(new NotDeletedScope());
-    }
     
     /**
      * Relationships: must be declared for all related models, even if they will never be used
@@ -81,7 +79,21 @@ class Example extends Model
     public function exampleParent() 
     {
         return $this->belongsTo('App\Models\ExampleParent');
-        //return $this->belongsToMany('App\Models\ExampleParent');
+    }
+    
+    public function tags()
+    {
+        return $this->hasMany('App\Models\Tag');
+    }
+    
+    public function exampleChild() 
+    {
+        return $this->hasOne('App\Models\ExampleChild');
+    }
+    
+    public function exampleChildren() 
+    {
+        return $this->hasMany('App\Models\ExampleChild');
     }
     
     /**
@@ -90,5 +102,24 @@ class Example extends Model
     public function scopeMy($query)
     {
         return $query->where('created_by', auth()->user()->id);
+    }
+    
+    /**
+     * Overriding delete method if delete logic is complicated & is a HARD delete.
+     * 
+     * DO NOT DO THIS IF SOFT DELETE!!!
+     */
+    public function delete() 
+    {
+        // deleting many-to-many relationships
+        $this->tags()->sync([]);
+        // delete children if needed
+        //$this->exampleChildren()->delete();
+        // delete all related files by columns
+        $this->deleteFile('photo');
+        $this->deleteFile('cv');
+        $this->deleteFile('profile');
+        // delete this instance
+        return parent::delete();
     }
 }

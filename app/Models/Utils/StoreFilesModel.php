@@ -81,4 +81,16 @@ trait StoreFilesModel
     {
         
     }
+    
+    public function deleteFile($column)
+    {
+        $columnFilePath = $this->columnFilePath($column);
+        
+        if(is_file($columnFilePath)) {
+            unlink($columnFilePath);
+            return $columnFilePath;
+        }
+        
+        return false;
+    }
 }

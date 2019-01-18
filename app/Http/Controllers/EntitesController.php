@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
 /**
  * - Model <use> statements: 
  *      When you have a Controller tailored towards a certain Model entity, 
- *      this Model should be <use>-ed as "Entity". Fore example, 
+ *      this Model should be <use>-ed as "Entity". For example, 
  *      in a BuildingsController class, the Building Model should be included 
  *      like so: 
  *      <code>
@@ -31,6 +31,9 @@ use Illuminate\Support\Carbon;
  *      the instance should be named $entity.
  *      This should be AVOIDED on Controllers that are NOT tailored to a 
  *      Model CRUD.
+ * 
+ * Method order should stay the same as in routes.
+ * 
  */
 use App\Models\Example as Entity;
 use App\Http\Resources\Entity as EntityResource;
@@ -41,8 +44,7 @@ use App\Http\Resources\Json as JsonResource;
  * 
  * @category   Class
  * @package    Cubes
- * @copyright  2015-2018 Cubes d.o.o.
- * @version    GIT: 1.0.0
+ * @copyright  Cubes d.o.o.
  */
 class EntitesController extends Controller 
 {
@@ -73,7 +75,7 @@ class EntitesController extends Controller
 		
 		/* 
 		 * Middlewares for global scopes on models
-		 * Each Model should have separate middleware!!!
+		 * Each Model should have its own separate middleware!!!
 	     */
 		
 		$this->middleware(function ($request, $next) {
@@ -113,13 +115,35 @@ class EntitesController extends Controller
 		//!!! OBLIGATORY IF JOIN IS USED!!!
 		$query->select('entities.*');
 	}
-	
-    public function update(Entity $entity)
+    
+    public function create()
+    {
+        $request = $this->request;
+		
+        // Primary goal: page rendering or retuning JSON
+        #1 fetching needed data
+        
+        #2 normalization
+        
+        #3 business logic
+        
+        #4 retuning response
+		
+		return view('entities.create', [
+            'entity' => new Entity() // passed to avoid existence check on view script
+        ]);
+    }
+    
+    public function store()
     {
         $request = $this->request;
         
         #1 validation
         $data = $request->validate([
+            // validation rules:
+            // 1. required or nullable
+            // 2. modifier (string or int or date or numeric or file etc)
+            // 3. validation rules specific to modifier
             'title'        => 'required|string|max:255|min:2',
             'category_id'  => 'required|int|exists:categories,id',
             'phone_number' => [
@@ -132,47 +156,42 @@ class EntitesController extends Controller
             ],
             'due_date'     => 'required|date',
             'status'       => 'required|in:' . implode(',', Entity::STATUSES),
-            'image'        => 'nullable|file|mimes:jpg,png,gif',
-            // validation rules:
-            // 1. required or nullable
-            // 2. modifier (string or int or date or numeric or file etc)
-            // 3. validation rules specific to modifier
+            'photo'        => 'nullable|file|mimes:jpg,png,gif',
+            'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
         
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
-        unset($data['image']);
+        unset($data['photo']);
         // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
         $data['due_date'] = Carbon::parse($data['due_date']);
         // always bcrypt passwords
         $data['password'] = bcrypt($data['password']);
         
         #3 business logic check and throw ValidationException
-        if ($entity->cards_count > 3) {
+        if (auth()->user()->role != 'janitor') {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'cards' => 'You exceed max card count'
-            ]);
-        }
-        
-        if($entity->status > $data['status']) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'status' => 'You can\'t return to previous status'
+                'cards' => 'Your role can\'t create this entity for some reason or another'
             ]);
         }
         
         #4 model population
+        $entity = new Entity();
         $entity->fill($data);
         
         #5 saving data
         $entity->save();
         
-        // if there is a file being uploaded (ex. image)
-        if($request->hasFile('image') && $request->file('image')->isValid()) {
-            $imageFile = $request->file('image');
+        // sync many to many relationships
+        $entity->tags()->sync($data['tag_ids']);
+        
+        // if there is a file being uploaded (ex. photo)
+        if($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $photoFile = $request->file('photo');
             
             // entites should use the App\Models\Utils\StoreFilesModel trait
-            $entity->storeFile($imageFile, 'image');
+            $entity->storeFile($photoFile, 'photo');
         }
         
 		#6 Return propper response
@@ -182,7 +201,7 @@ class EntitesController extends Controller
             return JsonResource::make()->withSuccess(__('Entity has been saved!'));
         }
         
-        //redirection with a message or json response if "wants json" (i.e. ajax call)
+        //redirection with a message
         return redirect()->route('entities.list')->withSystemSuccess(__('Entity has been saved!'));
     }
     
@@ -209,7 +228,142 @@ class EntitesController extends Controller
 		]);
     }
 	
-	
+    public function update(Entity $entity)
+    {
+        $request = $this->request;
+        
+        #1 validation
+        $data = $request->validate([
+            // validation rules:
+            // 1. required or nullable
+            // 2. modifier (string or int or date or numeric or file etc)
+            // 3. validation rules specific to modifier
+            'title'        => 'required|string|max:255|min:2',
+            'category_id'  => 'required|int|exists:categories,id',
+            'phone_number' => [
+                'required', 'string', 
+                function ($attribute, $value, $fail) {
+                    if ($value === 'foo') {
+                        $fail($attribute.' is invalid.');
+                    }
+                }
+            ],
+            'due_date'     => 'required|date',
+            'status'       => 'required|in:' . implode(',', Entity::STATUSES),
+            'photo'        => 'nullable|file|mimes:jpg,png,gif',
+            'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
+        ]);
+        
+        
+        #2 normalization = remove keys from $data that are files, and filter/normalize some values
+        // always unset file keys, it will be processed on request object directly
+        unset($data['photo']);
+        // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
+        $data['due_date'] = Carbon::parse($data['due_date']);
+        // always bcrypt passwords
+        $data['password'] = bcrypt($data['password']);
+        
+        #3 business logic check and throw ValidationException
+        if ($entity->cards_count > 3) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'cards' => 'You exceed max card count'
+            ]);
+        }
+        
+        if($entity->status > $data['status']) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'status' => 'You can\'t return to previous status'
+            ]);
+        }
+        
+        #4 model population
+        $entity->fill($data);
+        
+        #5 saving data
+        $entity->save();
+        
+        // sync many to many relationships
+        $entity->tags()->sync($data['tag_ids']);
+        
+        // if there is a file being uploaded (ex. photo)
+        if($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $photoFile = $request->file('photo');
+            
+            // entites should use the App\Models\Utils\StoreFilesModel trait
+            $entity->storeFile($photoFile, 'photo');
+        }
+        
+		#6 Return propper response
+		
+		// if ajax call is in place return JsonResource with message
+        if($request->wantsJson()) {
+            return JsonResource::make()->withSuccess(__('Entity has been saved!'));
+        }
+        
+        //redirection with a message
+        return redirect()->route('entities.list')->withSystemSuccess(__('Entity has been saved!'));
+    }
+    
+    /**
+     * Handles deletion of the Entity around which this controller revolves.
+     * Important issues:
+     *      #1 only expose this method via routes with the POST or DELETE method
+     *      #2 $entity->delete(); is the only appropriate way to delete a model; 
+     *          Whether its soft- or hard- delete, should be defined 
+     *          in the model itself
+     */
+    public function delete(Entity $entity)
+    {
+        $entity->delete();
+        
+        // if ajax call is in place return JsonResource with message
+        if($this->request->wantsJson()) {
+            return JsonResource::make()->withSuccess(__('Entity has been saved!'));
+        }
+        //redirection with a message
+        return redirect()->route('entities.list')->withSystemSuccess(__('Entity has been deleted!'));
+    }
+    
+    /**
+     * Handles change in any one column. In this case it is a column that 
+     * denotes status, and will be appropriately called 'status'.
+     * Important rules:
+     *      #1 only expose this method via routes with the POST or PATCH method
+     *      #2 this method only changes the specified column and returns 
+     *          an appropriate response
+     *      #3 other business logic associated with this change must be 
+     *          delegated to Event Listeners and/or Jobs
+     */
+    public function changeStatus(Entity $entity)
+    {
+        $data = $this->request->validate([
+            'status' => 'required|in:' . implode(',', Entity::STATUSES)
+        ]);
+        
+        $entity->update($data);
+        
+        // if ajax call is in place return JsonResource with message
+        if($this->request->wantsJson()) {
+            return JsonResource::make()->withSuccess(__('Entity status has been changed!'));
+        }
+        //redirection with a message
+        return redirect()->route('entities.list')->withSystemSuccess(__('Entity status has been changed!'));
+    }
+    
+    /**
+     * Also abides by the rules used for the delete() method
+     */
+    public function deletePhoto(Entity $entity)
+    {
+        $entity->deleteFile('photo');
+        
+        // if ajax call is in place return JsonResource with message
+        if($this->request->wantsJson()) {
+            return JsonResource::make()->withSuccess(__('Entity photo deleted!'));
+        }
+        //redirection with a message
+        return redirect()->route('entities.list')->withSystemSuccess(__('Entity photo deleted!'));
+    }
     
     /**
      * Protected/Private methods: used to uphold the single responsibility 
