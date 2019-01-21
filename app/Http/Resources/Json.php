@@ -102,6 +102,22 @@ class Json extends BaseResource
 	}
 	
 	/**
+	 * @return bool
+	 */
+	public function isStatusOk()
+	{
+		return self::STATUS_OK == $this->getStatus();
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function isStatusError()
+	{
+		return self::STATUS_ERROR == $this->getStatus();
+	}
+	
+	/**
 	 * @param string $status
 	 * @return Json
 	 */
@@ -175,5 +191,20 @@ class Json extends BaseResource
             'message' => $this->getMessage(),
 			'status'  => $this->getStatus(),
         ];
+    }
+	
+    /**
+     * Customize the response for a request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\JsonResponse  $response
+     * @return void
+     */
+    public function withResponse(\Illuminate\Http\Request $request, \Illuminate\Http\JsonResponse $response)
+    {
+		if (!$this->isStatusOk()) {
+			//Set status code to 400 if error is occured
+			$response->setStatusCode(400);
+		}
     }
 }
