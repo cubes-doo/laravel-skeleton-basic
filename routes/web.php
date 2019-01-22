@@ -16,6 +16,8 @@
  * 
  * example:
  */
+Auth::routes();
+
 Route::name('entities.')->prefix('/entites')->group(function() {
     Route::get('/', 'EntitesController@all')->name('list');
     Route::get('/create', 'EntitesController@create')->name('create');
