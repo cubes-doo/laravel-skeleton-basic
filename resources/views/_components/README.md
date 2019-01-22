@@ -1,6 +1,7 @@
 ## Project wide components
 
 In this folder are stored templates that are used all over the project. 
+
 **Component** (_noun_): 
 > a constituent part, i.e. ingredient.
 
