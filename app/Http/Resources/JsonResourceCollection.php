@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Resources;
-
 /**
  * Class
  *
@@ -10,60 +8,25 @@ namespace App\Http\Resources;
  * @category   class
  * @copyright  2015-2018 Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version    GIT: 1.0.0
  */
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\Resource as BaseResource;
+namespace App\Http\Resources;
 
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
- * Description of JsonResource
- * 
  * @category   Class
  * @package    Cubes
  * @copyright  2015-2018 Cubes d.o.o.
- * @version    GIT: 1.0.0
  */
-class Json extends BaseResource 
+class JsonResourceCollection extends AnonymousResourceCollection
 {
-	const STATUS_OK = 'ok';
+    const STATUS_OK = 'ok';
 	const STATUS_ERROR = 'error';
 	
 	protected $locale;
 	protected $status = 'ok';
 	protected $message = '';
-	
-	
-    /**
-     * Create a new resource instance.
-     *
-     * @param  mixed  $resource
-     * @return void
-     */
-    public function __construct($resource = null)
-    {
-		if ($resource === null) {
-			$resource = [];
-		}
-        
-        if(!is_object($resource) || !method_exists($resource, 'toArray')) {
-            $resource = collect($resource);
-        }
-		
-		return parent::__construct($resource);
-    }
-    
-    /**
-     * Create new anonymous resource collection.
-     *
-     * @param  mixed  $resource
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public static function collection($resource)
-    {
-        return new JsonResourceCollection($resource, get_called_class());
-    }
 	
 	/**
 	 * @return string The locale or app locale if not set
