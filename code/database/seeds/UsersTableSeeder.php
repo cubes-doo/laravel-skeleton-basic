@@ -1,11 +1,38 @@
 <?php
 
+/**
+ * Class
+ *
+ * PHP version 7.2
+ *
+ * @category   class
+ * @copyright  Cubes d.o.o.
+ * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
 use Illuminate\Database\Seeder;
 
+/**
+ * Seeder for Users model
+ * 
+ * @category   Class
+ * @package    Cubes
+ * @copyright  Cubes d.o.o.
+ */
 class UsersTableSeeder extends Seeder
 {
+    /**
+     * Name of the table being seeded
+     * 
+     * @var string
+     */
     protected $table = 'users';
 
+    /**
+     * Users to be seeded by default
+     * 
+     * @var array
+     */
     protected $defaultUsers = [
         [
             'first_name' => 'Name',
@@ -14,7 +41,7 @@ class UsersTableSeeder extends Seeder
     ];
     
     /**
-     * Run the database seeds.
+     * Runs the DB seed
      *
      * @return void
      */
@@ -38,6 +65,7 @@ class UsersTableSeeder extends Seeder
             ]);
         }
 
+        // optionally for testing...
         // $count = (int) $this->command->ask('How many additional users do you need?', 0);
         
         // $this->command->info("Creating {$count} more users.");

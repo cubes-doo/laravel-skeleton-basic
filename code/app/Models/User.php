@@ -1,16 +1,33 @@
 <?php
 
+/**
+ * Class
+ *
+ * PHP version 7.2
+ *
+ * @category   class
+ * @copyright  Cubes d.o.o.
+ * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ */
+
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * Model for the appplication user
+ * 
+ * @category   Class
+ * @package    Cubes
+ * @copyright  Cubes d.o.o.
+ */
 class User extends Authenticatable
 {
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Mass assignable attributes
      *
      * @var array
      */
@@ -19,7 +36,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * Attributes that should be hidden for arrays
      *
      * @var array
      */
