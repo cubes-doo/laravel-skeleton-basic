@@ -18,6 +18,10 @@
  */
 Auth::routes();
 
+Route::get('/', function() {
+    return redirect()->route('login');
+});
+
 Route::name('entities.')->prefix('/entites')->group(function() {
     Route::get('/', 'EntitesController@all')->name('list');
     Route::get('/create', 'EntitesController@create')->name('create');
