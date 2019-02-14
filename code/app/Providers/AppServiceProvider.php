@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
                 )
             ;
             
-            return '<?= $errors->has("' . $pattern . '") ? ' . $class . ' : ""; ?>';
+            return '<?= $errors->has("' . $pattern . '") ? \'' . $class . '\' : ""; ?>';
         }); 
         
         Blade::directive('route', function ($expression) {
