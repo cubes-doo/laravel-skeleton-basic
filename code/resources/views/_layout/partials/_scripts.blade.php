@@ -2,6 +2,7 @@
 <script src="/theme/assets/js/core/jquery.min.js" type="text/javascript"></script>
 <script src="/theme/assets/js/core/popper.min.js" type="text/javascript"></script>
 <script src="/theme/assets/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+<script src="/theme/assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
 <!-- Plugin for the Perfect Scrollbar -->
 <script src="/theme/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
 <!-- Plugin for the momentJs  -->
