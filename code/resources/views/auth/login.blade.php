@@ -22,25 +22,31 @@
             </div>
             <div class="card-body ">
                 <p class="card-description text-center">@lang('Or Be Classical')</p>
-                <span class="bmd-form-group">
+                <span class="bmd-form-group @errors('email', 'has-danger')">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="material-icons">email</i>
                             </span>
                         </div>
-                        <input type="email" class="form-control" placeholder="@lang('Email...')">
+                        <input type="email" name="email" class="form-control" placeholder="@lang('Email...')">
                     </div>
+                    @component('_layout.partials.form.error', ['field' => 'email'])
+                            
+                    @endcomponent
                 </span>
-                <span class="bmd-form-group">
+                <span class="bmd-form-group @errors('password', 'has-danger')">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <i class="material-icons">lock_outline</i>
                             </span>
                         </div>
-                        <input type="password" class="form-control" placeholder="@lang('Password...')">
+                        <input type="password" name="password" class="form-control" placeholder="@lang('Password...')">
                     </div>
+                    @component('_layout.partials.form.error', ['field' => 'password'])
+                            
+                    @endcomponent
                 </span>
             </div>
             <div class="card-footer justify-content-center">
