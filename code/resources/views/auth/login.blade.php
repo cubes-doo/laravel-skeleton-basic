@@ -1,6 +1,6 @@
 @extends('auth._layout.layout')
 
-@section('title', __('Login'))
+@section('title', __('Login Page'))
 
 @section('content')
     <form class="form" method="POST" action="{{ route('login') }}">

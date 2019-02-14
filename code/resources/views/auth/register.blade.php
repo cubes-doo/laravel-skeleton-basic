@@ -1,6 +1,6 @@
 @extends('auth._layout.layout')
 
-@section('title', __('Register'))
+@section('title', __('Register Page'))
 
 @section('content')
     <div class="card card-signup">
