@@ -18,7 +18,7 @@
 
         $.notify({
             icon: icon[type],
-            message: "{!!{{$message['text']}}!!}"
+            message: "{!!$message['text']!!}"
         }, {
             type: color[type],
             timer: 3000,
