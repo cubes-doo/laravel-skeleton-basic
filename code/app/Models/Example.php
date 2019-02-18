@@ -6,26 +6,30 @@
  * PHP version 7.2
  *
  * @category   class
- * @copyright  2015-2018 Cubes d.o.o.
+ * @copyright  Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version    GIT: 1.0.0
  */
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\{Model, SoftDeletes};
+
+use App\Models\Utils\{
+    ActiveInactive, 
+    ActiveInactiveModel,
+    StoreFilesModel
+};
 
 /**
  * Example Model for describing standards
  * 
  * @category   Class
  * @package    Cubes
- * @copyright  2015-2018 Cubes d.o.o.
- * @version    GIT: 1.0.0
+ * @copyright  Cubes d.o.o.
  */
-class Example extends Model 
+class Example extends Model implements ActiveInactive 
 {
-    use Utils\StoreFilesModel, Utils\ActiveInactiveModel;
+    use ActiveInactiveModel, StoreFilesModel, SoftDeletes;
     
     /**
      * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
@@ -53,11 +57,6 @@ class Example extends Model
     protected $fillable = ['id', 'title', 'description', 'active', 'status'];
     
     /**
-     * used to check which attributes shouldn't be available in a JSON response
-     */
-    protected $hidden = ['password'];
-    
-    /**
      * used to fetch certain attributes as Date objects
      */
     protected $dates = ['created_at', 'updated_at'];
@@ -65,12 +64,12 @@ class Example extends Model
     /**
      * https://laravel.com/docs/5.5/eloquent-mutators#attribute-casting
      */
-    protected $casts = ['data' => 'array'];
+    // protected $casts = ['data' => 'array'];
     
     /**
      * https://laravel.com/docs/5.5/eloquent-relationships#touching-parent-timestamps
      */
-    protected $touches = ['exampleParent'];
+    // protected $touches = ['exampleParent'];
     
     
     /**
@@ -117,8 +116,6 @@ class Example extends Model
         //$this->exampleChildren()->delete();
         // delete all related files by columns
         $this->deleteFile('photo');
-        $this->deleteFile('cv');
-        $this->deleteFile('profile');
         // delete this instance
         return parent::delete();
     }
