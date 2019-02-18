@@ -25,60 +25,62 @@ Route::get('/', function() {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function() {
         return view('dashboard');
-    });
-});
+    })->name('dashboard');
 
-Route::name('entities.')->prefix('/entites')->group(function() {
-    Route::get('/', 'EntitesController@all')->name('list');
-    Route::get('/create', 'EntitesController@create')->name('create');
-    Route::post('/create', 'EntitesController@store');
-    Route::get('/{entity}/edit', 'EntitesController@edit')->name('edit');
-    Route::post('/{entity}/edit', 'EntitesController@update');
-    Route::post('/{entity}/delete', 'EntitesController@delete')->name('delete');
-    Route::post('/{entity}/change-status', 'EntitesController@changeStatus')->name('change_status');
-    Route::post('/{entity}/delete-photo', 'EntitesController@deletePhoto')->name('delete_photo');
+    Route::name('entities.')->prefix('/entities/')->group(function() {
+        Route::get('', 'EntitesController@all')->name('list');
+        Route::get('create', 'EntitesController@create')->name('create');
+        Route::post('create', 'EntitesController@store');
+        Route::get('{entity}/edit', 'EntitesController@edit')->name('edit');
+        Route::post('{entity}/edit', 'EntitesController@update');
+        Route::post('{entity}/delete', 'EntitesController@delete')->name('delete');
+        Route::post('{entity}/change-status', 'EntitesController@changeStatus')->name('change_status');
+        Route::post('{entity}/delete-photo', 'EntitesController@deletePhoto')->name('delete_photo');
     
-    Route::get('/{entity}/child-entities/create', 'ChildEntitesController@create')->name('child_entities.create');
-    Route::post('/{entity}/child-entities/create', 'ChildEntitesController@store');
-    Route::get('/{entity}/child-entities/{child}/edit', 'ChildEntitesController@edit')->name('child_entities.edit');
-    Route::post('/{entity}/child-entities/{child}/edit', 'ChildEntitesController@update');
-    Route::post('/{entity}/child-entities/{child}/delete', 'ChildEntitesController@delete')->name('child_entities.delete');
-    Route::post('/{entity}/child-entities/{child}/change-status', 'ChildEntitesController@changeStatus')->name('child_entities.change_status');
-    Route::post('/{entity}/child-entities/{child}/delete-photo', 'ChildEntitesController@deletePhoto')->name('child_entities.delete_photo');
-});
+        Route::name('child_entities.')->prefix('{entity}/child-entities/')->group(function() {
+            Route::get('create', 'ChildEntitesController@create')->name('create');
+            Route::post('create', 'ChildEntitesController@store');
+            Route::get('{child}/edit', 'ChildEntitesController@edit')->name('edit');
+            Route::post('{child}/edit', 'ChildEntitesController@update');
+            Route::post('{child}/delete', 'ChildEntitesController@delete')->name('delete');
+            Route::post('{child}/change-status', 'ChildEntitesController@changeStatus')->name('change_status');
+            Route::post('{child}/delete-photo', 'ChildEntitesController@deletePhoto')->name('delete_photo');
+        });
+    });
 
-/**
- * If a controller is in a sub-folder (ex. app/http/Controllers/Admin):
- * 
- * When would you use this?
- * Usually for entities that have a lot of child entities, 
- * and all of their "children" come with their own convoluted business logic.
- * In that case, since we want to emphasize their connection and the fact 
- * that they represent a portion all on their own, 
- * we would have a structure similar to this one:
- * 
- * App
- *      Models
- *              Section
- *                      Section.php
- *                      SubSection.php
- *                      SubSubSection.php
- *              SomeEntity.php
- *              SomeOtherEntity.php
- *              ...
- *      Http
- *              Controllers
- *                      Section
- *                          SectionsController.php
- *                          SubSectionsController.php // if needed
- *                          SubSubSectionsController.php // if needed
- *                      SomeEntitiesController.php
- *                      SomeOtherEntitiesController.php
- * 
- * example:
- */
-Route::name('section.')->prefix('/section')->namespace('Section')->group(function() {
-    require __DIR__ . '/web/section.php';
+    /**
+     * If a controller is in a sub-folder (ex. app/http/Controllers/Admin):
+     * 
+     * When would you use this?
+     * Usually for entities that have a lot of child entities, 
+     * and all of their "children" come with their own convoluted business logic.
+     * In that case, since we want to emphasize their connection and the fact 
+     * that they represent a portion all on their own, 
+     * we would have a structure similar to this one:
+     * 
+     * App
+     *      Models
+     *              Section
+     *                      Section.php
+     *                      SubSection.php
+     *                      SubSubSection.php
+     *              SomeEntity.php
+     *              SomeOtherEntity.php
+     *              ...
+     *      Http
+     *              Controllers
+     *                      Section
+     *                          SectionsController.php
+     *                          SubSectionsController.php // if needed
+     *                          SubSubSectionsController.php // if needed
+     *                      SomeEntitiesController.php
+     *                      SomeOtherEntitiesController.php
+     * 
+     * example:
+     */
+    Route::name('section.')->prefix('/section')->namespace('Section')->group(function() {
+        require __DIR__ . '/web/section.php';
+    });
 });
 
 /*

@@ -6,9 +6,8 @@
  * PHP version 7.2
  *
  * @category   class
- * @copyright  2015-2018 Cubes d.o.o.
+ * @copyright  Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- * @version    GIT: 1.0.0
  */
 
 namespace App\Http\Controllers;
@@ -66,35 +65,35 @@ class EntitesController extends Controller
         
 		/* The "can" (policy) middlewares */
 		
-		$this->middleware('can:view,' . Entity::class);
+		// $this->middleware('can:view,' . Entity::class);
         
-		$this
-            ->middleware('can:edit,entity') // 'entity' = route variable name 
-            ->only(['info', 'activate', 'lock', 'unlock', 'setPin', 'getPin']) // names of methods in this Controller
-        ;
+		// $this
+        //     ->middleware('can:edit,entity') // 'entity' = route variable name 
+        //     ->only(['info', 'activate', 'lock', 'unlock', 'setPin', 'getPin']) // names of methods in this Controller
+        // ;
 		
 		/* 
 		 * Middlewares for global scopes on models
 		 * Each Model should have its own separate middleware!!!
 	     */
 		
-		$this->middleware(function ($request, $next) {
-			//Model 1
+		// $this->middleware(function ($request, $next) {
+		// 	//Model 1
 			
-			\App\Models\Example::addGlobalScope(function ($query) {
+		// 	\App\Models\Example::addGlobalScope(function ($query) {
 				
-				//limit field on logged in user id for example
-				$query->where('user_id', auth()->user()->id);
-			});
+		// 		//limit field on logged in user id for example
+		// 		$query->where('user_id', auth()->user()->id);
+		// 	});
 			
-			return $next($request);
+		// 	return $next($request);
 			
-		})->only('postAction');
+		// })->only('postAction');
 	}
 
     /**
      * Public methods: always exposed via routes. The first arguments MUST be 
-     * services resolved by dependency injection, than any entities passed via 
+     * services resolved by dependency injection, then any entities passed via 
      * route parameters.
      *          
      * Any other public method would repeat most of the steps, if needed, of 
@@ -106,14 +105,16 @@ class EntitesController extends Controller
 	 * This is just an example of service injection
 	 * @param \Illuminate\Contracts\Mail\Mailer $mail
 	 */
-	public function all(\Illuminate\Contracts\Mail\Mailer $mail)
+	public function all()
 	{
 		//initiate entity query
-		$query = Entity::query();
+		// $query = Entity::query();
 		
-		$query->join();
+		// $query->join();
 		//!!! OBLIGATORY IF JOIN IS USED!!!
-		$query->select('entities.*');
+        // $query->select('entities.*');
+        
+        return view('entities.list');
 	}
     
     public function create()
@@ -142,7 +143,7 @@ class EntitesController extends Controller
         $data = $request->validate([
             // validation rules:
             // 1. required or nullable
-            // 2. modifier (string or int or date or numeric or file etc)
+            // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
             'title'        => 'required|string|max:255|min:2',
             'category_id'  => 'required|int|exists:categories,id',
