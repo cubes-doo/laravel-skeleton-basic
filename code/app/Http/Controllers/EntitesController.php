@@ -77,18 +77,18 @@ class EntitesController extends Controller
 		 * Each Model should have its own separate middleware!!!
 	     */
 		
-		// $this->middleware(function ($request, $next) {
-		// 	//Model 1
+		$this->middleware(function ($request, $next) {
+			//Model 1
 			
-		// 	\App\Models\Example::addGlobalScope(function ($query) {
+			Entity::addGlobalScope(function ($query) {
 				
-		// 		//limit field on logged in user id for example
-		// 		$query->where('user_id', auth()->user()->id);
-		// 	});
+				//limit field on logged in user id for example
+				$query->my();
+			});
 			
-		// 	return $next($request);
+			return $next($request);
 			
-		// })->only('postAction');
+		});
 	}
 
     /**
@@ -101,10 +101,7 @@ class EntitesController extends Controller
      * Event dispatching, or any other business logic.
      */
 	
-	/**
-	 * This is just an example of service injection
-	 * @param \Illuminate\Contracts\Mail\Mailer $mail
-	 */
+	
 	public function all()
 	{
 		//initiate entity query
@@ -115,7 +112,32 @@ class EntitesController extends Controller
         // $query->select('entities.*');
         
         return view('entities.list');
-	}
+    }
+    
+    public function datatable()
+    {
+        return 
+            datatables(Entity::query())
+                ->filter(function ($query) {
+                    if (request()->has('search')) {
+                        $query->where('title', 'like', "%" . request()['search']['value'] . "%");
+                    }
+                })
+                ->editColumn('active', function ($example) {
+                    return view('entities.partials.table.active', compact('example'));
+                })
+                ->editColumn('title', '{{str_cut($title, 20)}}')
+                ->editColumn('description', '{{str_cut($description, 30)}}')
+                ->editColumn('photo', function ($example) {
+                    return view('entities.partials.table.photo', compact('example'));
+                })
+                ->addColumn('actions', function ($example) {
+                    return view('entities.partials.table.actions', compact('example'));
+                })
+                ->rawColumns(['active', 'photo', 'actions'])
+                ->make(true)
+        ;
+    }
     
     public function create()
     {

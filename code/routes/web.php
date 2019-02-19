@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('entities.')->prefix('/entities/')->group(function() {
         Route::get('', 'EntitesController@all')->name('list');
+        Route::post('datatable', 'EntitesController@datatable')->name('datatable');
         Route::get('create', 'EntitesController@create')->name('create');
         Route::post('create', 'EntitesController@store');
         Route::get('{entity}/edit', 'EntitesController@edit')->name('edit');

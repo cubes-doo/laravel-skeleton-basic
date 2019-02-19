@@ -55,6 +55,13 @@ class Example extends Model implements ActiveInactive
      * used to check which columns may be updated using mass-assignment
      */
     protected $fillable = ['id', 'title', 'description', 'active', 'status'];
+
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array
+     */
+    protected $visible = ['active', 'status', 'title', 'description', 'photo'];
     
     /**
      * used to fetch certain attributes as Date objects
