@@ -15,6 +15,9 @@ namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+use App\Models\Example as Entity;
+use App\Models\User;
+
 /**
  * Example Policy for describing standards
  * 
@@ -41,6 +44,23 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ExamplePolicy 
 {
     use HandlesAuthorization;
+
+    public function before(User $user, $ability)
+    {
+        // Common check for all policy actions
+        // executed BEFORE any other action
+        // ideally to enable super users
+
+        return true;//remove this after copy!!!
+    }
     
-    
+    public function access(User $user)
+    {
+        // Access policy only checks if user has right to do anything with the Entity
+    }
+
+    public function change(User $user, Entity $entity)
+    {
+        // Change policy checks if user has right to change the Entity
+    }
 }

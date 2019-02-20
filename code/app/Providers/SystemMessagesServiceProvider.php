@@ -50,6 +50,12 @@ class SystemMessagesServiceProvider extends ServiceProvider
         Request::macro('getSystemMessage', function() use($key) {
             return session()->get($key);
         });
+        Request::macro('getSystemMessageText', function() use($key) {
+            $systemMessage = session()->get($key);
+            if (is_array($systemMessage) && isset($systemMessage['text'])) {
+                return $systemMessage['text'];
+            }
+        });
         Request::macro('getSystemMessageKey', function() use($key) {
             return $key;
         });

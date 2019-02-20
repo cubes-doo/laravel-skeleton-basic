@@ -12,3 +12,6 @@
 /code/yarn-error.log
 /code/.env
 /code/nbproject/private/
+/nbproject/private/
+/.vscode
+/docker/.env

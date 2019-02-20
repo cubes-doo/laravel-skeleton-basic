@@ -65,10 +65,10 @@ class EntitesController extends Controller
         
 		/* The "can" (policy) middlewares */
 		
-		// $this->middleware('can:view,' . Entity::class);
+		// $this->middleware('can:access,' . Entity::class);
         
 		// $this
-        //     ->middleware('can:edit,entity') // 'entity' = route variable name 
+        //     ->middleware('can:change,entity') // 'entity' = route variable name 
         //     ->only(['info', 'activate', 'lock', 'unlock', 'setPin', 'getPin']) // names of methods in this Controller
         // ;
 		
@@ -111,7 +111,7 @@ class EntitesController extends Controller
 		//!!! OBLIGATORY IF JOIN IS USED!!!
         // $query->select('entities.*');
         
-        return view('entities.list');
+        return view('entities.all');
     }
     
     public function datatable()

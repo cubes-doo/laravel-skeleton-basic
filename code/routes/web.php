@@ -38,14 +38,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('{entity}/change-status', 'EntitesController@changeStatus')->name('change_status');
         Route::post('{entity}/delete-photo', 'EntitesController@deletePhoto')->name('delete_photo');
     
-        Route::name('child_entities.')->prefix('{entity}/child-entities/')->group(function() {
+        Route::name('child_entities.')->prefix('{masterEntity}/child-entities/')->group(function() {
             Route::get('create', 'ChildEntitesController@create')->name('create');
             Route::post('create', 'ChildEntitesController@store');
-            Route::get('{child}/edit', 'ChildEntitesController@edit')->name('edit');
-            Route::post('{child}/edit', 'ChildEntitesController@update');
-            Route::post('{child}/delete', 'ChildEntitesController@delete')->name('delete');
-            Route::post('{child}/change-status', 'ChildEntitesController@changeStatus')->name('change_status');
-            Route::post('{child}/delete-photo', 'ChildEntitesController@deletePhoto')->name('delete_photo');
+            Route::get('{entity}/edit', 'ChildEntitesController@edit')->name('edit');
+            Route::post('{entity}/edit', 'ChildEntitesController@update');
+            Route::post('{entity}/delete', 'ChildEntitesController@delete')->name('delete');
+            Route::post('{entity}/change-status', 'ChildEntitesController@changeStatus')->name('change_status');
+            Route::post('{entity}/delete-photo', 'ChildEntitesController@deletePhoto')->name('delete_photo');
         });
     });
 
