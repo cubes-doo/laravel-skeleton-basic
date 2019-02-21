@@ -4,6 +4,6 @@
     </div>
 @else
     <span>
-        N/A
+        @lang('N/A')
     </span>
 @endunless

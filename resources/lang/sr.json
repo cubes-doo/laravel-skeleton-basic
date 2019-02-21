@@ -1,8 +1,12 @@
 {
+  "Actions": "Akcije",
+  "Active": "Aktivan",
+  "All": "Svi",
   "Back": "Nazad",
   "Confirm Password": "Potvrdite lozinku",
   "Create": "Kreiraj",
   "Dashboard": "Komandna tabla",
+  "Description": "Opis",
   "E-Mail": "E-mail",
   "Email...": "Email",
   "Entities": "Entiteti",
@@ -15,12 +19,17 @@
   "Lets Go": "Idemo",
   "Login": "Login",
   "Login Page": "Login Stranica",
+  "N/A": "- nedostupno -",
   "Name": "Ime",
   "Or Be Classical": "Ili na običan način",
   "Password": "Lozinka",
   "Password...": "Lozinka...",
+  "Photo": "Fotografija",
   "Register Page": "Registraciona stranica",
   "Reset Password": "Reset lozinke",
   "Reset Password Page": "Stranica za promenu šifre",
-  "Send Password Reset Link": "Pošalji link za reset lozinke"
+  "Search records": "Pretraži",
+  "Send Password Reset Link": "Pošalji link za reset lozinke",
+  "Status": "Status",
+  "Title": "Naslov"
 }

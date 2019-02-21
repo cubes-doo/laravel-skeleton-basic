@@ -27,22 +27,22 @@
                     <table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Active</th>
-                            <th>Status</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Photo</th>
-                            <th class="disabled-sorting text-right">Actions</th>
+                            <th>@lang('Active')</th>
+                            <th>@lang('Status')</th>
+                            <th>@lang('Title')</th>
+                            <th>@lang('Description')</th>
+                            <th>@lang('Photo')</th>
+                            <th class="disabled-sorting text-right">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Active</th>
-                            <th>Status</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Photo</th>
-                            <th class="text-right">Actions</th>
+                            <th>@lang('Active')</th>
+                            <th>@lang('Status')</th>
+                            <th>@lang('Title')</th>
+                            <th>@lang('Description')</th>
+                            <th>@lang('Photo')</th>
+                            <th class="text-right">@lang('Actions')</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -85,12 +85,12 @@
                 "pagingType": "full_numbers",
                 "lengthMenu": [
                     [10, 25, 50, -1],
-                    [10, 25, 50, "All"]
+                    [10, 25, 50, "@lang('All')"]
                 ],
                 responsive: true,
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Search records",
+                    searchPlaceholder: "@lang('Search records')",
                 }
             });
     
