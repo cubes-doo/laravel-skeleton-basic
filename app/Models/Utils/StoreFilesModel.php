@@ -17,7 +17,7 @@ trait StoreFilesModel
         return str_slug((new static())->getTable());
     }
     
-    public function columnFileName($column)
+    public function fileName($column)
     {
         if ($this->$column) {
             return $this[$this->primaryKey] . '_' . $column . '_' . $this->$column;
@@ -26,31 +26,49 @@ trait StoreFilesModel
         return null;
     }
     
-	public function columnFileUrl($column)
+	public function fileUrl($column)
     {
         
-        $columnFileName = $this->columnFileName($column);
+        $fileName = $this->fileName($column);
         
-        if ($columnFileName) {
-            return url('/storage/' . static::storageDir() . '/' . $columnFileName);
+        if ($fileName) {
+            return url('/storage/' . static::storageDir() . '/' . $fileName);
         }
         
         return null;
 	}
     
-    public function columnFilePath($column)
+    public function filePath($column)
     {
-        $columnFileName = $this->columnFileName($column);
+        $fileName = $this->fileName($column);
         
-        if ($columnFileName) {
-            return public_path('/storage/' . static::storageDir() . '/' . $columnFileName);
+        if ($fileName) {
+            return public_path('/storage/' . static::storageDir() . '/' . $fileName);
         }
         
         return null; 
     }
     
-    public function storeFile(\Illuminate\Http\UploadedFile $file, $column)
+    /**
+     * @param string $column
+     * @param string|\Illuminate\Http\UploadedFile $file
+     * @return mixed $this fluent interface
+     */
+    public function storeFile($column, $file = null)
     {
+        if (is_string($file) && !empty($file)) {
+
+            $file = request()->file($file);
+
+        } else if ($file === null) {
+
+            $file = request()->file($column);
+        }
+
+        if (!($file instanceof \Illuminate\Http\UploadedFile)) {
+            throw new \InvalidArgumentException('Unable to resolve file from request');
+        }
+
         $oldColumnFilePath = $this->columnFilePath($column);
         if ($oldColumnFilePath && is_file($oldColumnFilePath)) {
             //remove old file
@@ -70,7 +88,7 @@ trait StoreFilesModel
         
         $this->processFileBeforeStore($file, $column);
         
-        $file->storeAs(self::storageDir(), $this->columnFileName($column));
+        $file->storeAs(self::storageDir(), $this->fileName($column));
         
         $this->save();
         
@@ -84,7 +102,7 @@ trait StoreFilesModel
     
     public function deleteFile($column)
     {
-        $columnFilePath = $this->columnFilePath($column);
+        $columnFilePath = $this->filePath($column);
         
         if(is_file($columnFilePath)) {
             unlink($columnFilePath);

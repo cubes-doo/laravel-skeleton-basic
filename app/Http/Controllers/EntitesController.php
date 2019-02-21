@@ -211,10 +211,8 @@ class EntitesController extends Controller
         
         // if there is a file being uploaded (ex. photo)
         if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $photoFile = $request->file('photo');
-            
             // entites should use the App\Models\Utils\StoreFilesModel trait
-            $entity->storeFile($photoFile, 'photo');
+            $entity->storeFile('photo');
         }
         
 		#6 Return propper response
@@ -310,10 +308,8 @@ class EntitesController extends Controller
         
         // if there is a file being uploaded (ex. photo)
         if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $photoFile = $request->file('photo');
-            
             // entites should use the App\Models\Utils\StoreFilesModel trait
-            $entity->storeFile($photoFile, 'photo');
+            $entity->storeFile('photo');
         }
         
 		#6 Return propper response
