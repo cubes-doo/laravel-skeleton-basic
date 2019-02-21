@@ -1,3 +1,26 @@
 {
-    "Entity has been saved!": "Entitet je snimljen!"
+  "Back": "Nazad",
+  "Confirm Password": "Potvrdite lozinku",
+  "Create": "Kreiraj",
+  "Dashboard": "Komandna tabla",
+  "E-Mail": "E-mail",
+  "Email...": "Email",
+  "Entities": "Entiteti",
+  "Entities: Create": "Kreiraj: Entitet",
+  "Entity has been deleted!": "Entitet je uspešno obrisan",
+  "Entity has been saved!": "Entitet je snimljen!",
+  "Entity photo deleted!": "Fotografija Entiteta obrisana!",
+  "Entity status has been changed!": "Promenjen status entiteta!",
+  "Forgot Password?": "Zaboravili ste lozinku?",
+  "Lets Go": "Idemo",
+  "Login": "Login",
+  "Login Page": "Login Stranica",
+  "Name": "Ime",
+  "Or Be Classical": "Ili na običan način",
+  "Password": "Lozinka",
+  "Password...": "Lozinka...",
+  "Register Page": "Registraciona stranica",
+  "Reset Password": "Reset lozinke",
+  "Reset Password Page": "Stranica za promenu šifre",
+  "Send Password Reset Link": "Pošalji link za reset lozinke"
 }
