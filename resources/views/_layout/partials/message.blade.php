@@ -1,7 +1,7 @@
 <!-- begin:system-message rendering script-->
 <script type="text/javascript">
-    @unless(empty($message = request()->getSystemMessage()))
-        let type = '{{$message['type']}}';
+    function showSystemMessage(text, type) {
+        type = type ? type : 'success';
         let color = {
             'info': 'info', 
             'error': 'danger', 
@@ -18,7 +18,7 @@
 
         $.notify({
             icon: icon[type],
-            message: "{!!$message['text']!!}"
+            message: text
         }, {
             type: color[type],
             timer: 3000,
@@ -27,6 +27,10 @@
                 align: 'right'
             }
         });
+    }
+
+    @unless(empty($message = request()->getSystemMessage()))
+        showSystemMessage("{!!$message['text']!!}", "{{$message['type']}}");
     @endunless
 </script>
 <!-- end:system-message rendering script-->
