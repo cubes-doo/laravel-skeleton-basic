@@ -178,7 +178,7 @@ class EntitesController extends Controller
                 }
             ],
             'due_date'     => 'required|date',
-            'status'       => 'required|in:' . implode(',', Entity::STATUSES),
+            'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             'photo'        => 'nullable|file|mimes:jpg,png,gif',
             'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
