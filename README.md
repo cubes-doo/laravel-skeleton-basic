@@ -50,7 +50,7 @@ Since there could be some discrepancies between UID's on different machines, let
 cd docker ; ./docker-usermod.sh ; cd ../
 ```
 
-just in case. The short explanation for this is: using this command we are ensuring that you have the same privileges as a user in the docker shell, as you would on your own machine.
+just in case. The short explanation for this is: using this command ensures that you have the same privileges as a user in the docker shell, as you would on your own machine.
 
 Now we can run:
 
@@ -95,7 +95,7 @@ sudo docker/docker-php-cs-fix.sh
 
 ### Automating code checks
 
-To automate code checking, you could register git hooks that will run one of the commands mentioned above. We prefer the `commit` hook, but you could pick one that best suits you  :simple_smile:
+To automate code checking, you could register git hooks that will run one of the commands mentioned above. We prefer the `commit` hook, but you could pick one that best suits you  :smile:
 
 ```
 Give an example
