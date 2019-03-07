@@ -29,13 +29,13 @@ A step by step series of examples that tell you how to get a development env run
 Firstly, we need to pull a project instance from packagist
 
 ```
-composer create-project cubes-doo/laravel-skeleton-basic
+composer create-project cubes-doo/laravel-skeleton-basic newProjectName
 ```
 
-Next, lets copy the `.env.example` to a new `.env` file
+Next, lets copy the `docker/.env.example` to a new `docker/.env` file
 
 ```
-cp ./.env.example ./.env
+cp docker/.env.example docker/.env
 ```
 
 Now, something more exciting :grin:, lets start our docker container!
@@ -62,12 +62,6 @@ to enter the docker container's shell, and then inside it run:
 
 ```
 composer install
-```
-
-After this, run:
-
-```
-php artisan key:generate
 ```
 
 and you are good to go!
