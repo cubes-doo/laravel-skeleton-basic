@@ -1,49 +1,150 @@
-
 <form method="POST" class="form-horizontal">
   <div class="row">
-    <label class="col-sm-2 col-form-label">With help</label>
-    <div class="col-sm-10">
+    <label class="col-sm-2 col-form-label">Basic Input</label>
+    <div class="col-sm-8">
       <div class="form-group">
-        <input type="text" class="form-control">
-        <span class="bmd-help">A block of help text that breaks onto a new line.</span>
+        <input name="basic_input" type="text" class="form-control">
       </div>
     </div>
   </div>
   <div class="row">
-    <label class="col-sm-2 col-form-label">Password</label>
-    <div class="col-sm-10">
+    @include('entities.partials.form.clipboard')    
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Touchspin</label>
+    <div class="col-sm-8">
       <div class="form-group">
-        <input type="password" class="form-control">
+        <input name="touchspin" type="text" class="form-control">
       </div>
     </div>
   </div>
   <div class="row">
-    <label class="col-sm-2 col-form-label">Placeholder</label>
-    <div class="col-sm-10">
+    <label class="col-sm-2 col-form-label">Typeahead</label>
+    <div class="col-sm-8">
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="placeholder">
+        <input name="typeahead" type="text" class="form-control">
       </div>
     </div>
   </div>
   <div class="row">
-    <label class="col-sm-2 col-form-label">Disabled</label>
-    <div class="col-sm-10">
+    <label class="col-sm-2 col-form-label">Date picker</label>
+    <div class="col-sm-8">
       <div class="form-group">
-        <input type="text" class="form-control" value="Disabled input here.." disabled>
+        <input name="date_picker" type="text" class="form-control">
       </div>
     </div>
   </div>
   <div class="row">
-    <label class="col-sm-2 col-form-label">Static control</label>
-    <div class="col-sm-10">
+    <label class="col-sm-2 col-form-label">Date-time Picker</label>
+    <div class="col-sm-8">
       <div class="form-group">
-        <p class="form-control-static">hello@creative-tim.com</p>
+        <input name="date_time_picker" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Time Picker</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <input name="time_picker" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Date Range Picker</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <input name="date_range_picker" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Colour Picker</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <input name="colour_picker" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Map Select</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <input name="map_select" type="text" class="form-control">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Text Area</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <textarea name="text_area" class="form-control"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Ckeditor</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <textarea name="ckeditor" class="form-control"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Select</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <select name="select" class="form-control">
+          <option value="">-- Select One --</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Tags</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <select name="select" class="form-control">
+          <option value="">-- Select Some --</option>
+          <option value="1">Tag 1</option>
+          <option value="2">Tag 2</option>
+          <option value="3">Tag 3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Select2 - One</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <select name="select" class="form-control">
+          <option value="">-- Select One --</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-sm-2 col-form-label">Select2 - Multiple</label>
+    <div class="col-sm-8">
+      <div class="form-group">
+        <select name="select" class="form-control">
+          <option value="">-- Select Multiple --</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
       </div>
     </div>
   </div>
   <div class="row">
     <label class="col-sm-2 col-form-label label-checkbox">Checkboxes and radios</label>
-    <div class="col-sm-10 checkbox-radios">
+    <div class="col-sm-8 checkbox-radios">
       <div class="form-check">
         <label class="form-check-label">
           <input class="form-check-input" type="checkbox" value=""> First Checkbox
@@ -79,32 +180,42 @@
     </div>
   </div>
   <div class="row">
-    <label class="col-sm-2 col-form-label label-checkbox">Inline checkboxes</label>
-    <div class="col-sm-10 checkbox-radios">
-      <div class="form-check form-check-inline">
-        <label class="form-check-label">
-          <input class="form-check-input" type="checkbox" value=""> a
-          <span class="form-check-sign">
-            <span class="check"></span>
+    <div class="col-sm-2">
+    </div>
+    <div class="col-sm-4 col">
+      <h4 class="title">Regular Image</h4>
+      <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+        <div class="fileinput-new thumbnail">
+          <img src="/theme/assets/img/image_placeholder.jpg" alt="...">
+        </div>
+        <div class="fileinput-preview fileinput-exists thumbnail"></div>
+        <div>
+          <span class="btn btn-rose btn-round btn-file">
+            <span class="fileinput-new">Select image</span>
+            <span class="fileinput-exists">Change</span>
+            <input type="file" name="..." />
           </span>
-        </label>
-      </div>
-      <div class="form-check form-check-inline">
-        <label class="form-check-label">
-          <input class="form-check-input" type="checkbox" value=""> b
-          <span class="form-check-sign">
-            <span class="check"></span>
-          </span>
-        </label>
-      </div>
-      <div class="form-check form-check-inline">
-        <label class="form-check-label">
-          <input class="form-check-input" type="checkbox" value=""> c
-          <span class="form-check-sign">
-            <span class="check"></span>
-          </span>
-        </label>
+          <a href="javascript:;" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+        </div>
       </div>
     </div>
   </div>
+  <div class="row">
+      <label class="col-sm-2 col-form-label">Dropzone</label>
+      <div class="col-sm-8">
+        <div class="form-group">
+          <input name="dropzone" type="text" class="form-control">
+        </div>
+      </div>
+    </div>
 </form>
+
+@push('js')
+  <!-- script for .fileinput -->
+  <script src="/theme/assets/js/plugins/jasny-bootstrap.min.js" type="text/javascript"></script>
+@endpush
+
+@push('js')
+  <script type="text/javascript">
+  </script>
+@endpush
