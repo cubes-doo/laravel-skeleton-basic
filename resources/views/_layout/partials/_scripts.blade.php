@@ -13,5 +13,6 @@
 <script src="/theme/assets/js/plugins/bootstrap-notify.js"></script>
 <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
 <script src="/theme/assets/js/plugins/bootstrap-selectpicker.js" ></script>
+@include('_layout.partials.ajax')
 @stack('js')
 
