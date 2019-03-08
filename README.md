@@ -97,23 +97,13 @@ Give an example
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+We created a script, that runs tests inside the Docker container:
 
 ```
-Give an example
+sudo docker/docker-unit-test-run.sh
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+This script will run all exposed tests in the `tests/` folder.
 
 ## Deployment
 
