@@ -15,7 +15,7 @@ A Laravel starter project, for defining standards & kickoff speed :rocket:
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project and help you get it up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -24,7 +24,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+A step by step series of examples that will tell you how to get a development env running.
 
 Firstly, we need to pull a project instance from packagist
 
@@ -58,7 +58,7 @@ Now we can run:
 sudo docker/docker-console.sh
 ```
 
-to enter the docker container's shell, and then inside it run:
+to enter the docker container's shell, and then inside it, run:
 
 ```
 composer install
@@ -66,7 +66,7 @@ composer install
 
 and you are good to go!
 
-The [theme](https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html) used on this project, developed by [Creative Tim](https://www.creative-tim.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way the theme should be placed in the `public/theme/` folder.
+The [theme](https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html) used on this project, developed by [Creative Tim](https://www.creative-tim.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way, the theme should be placed in the `public/theme/` folder.
 
 Go ahead, log in and explore! By default, the project is exposed to http://localhost:7737. If this is no good for you, please refer to `docker/.env` & `.env` files to change it.
 
@@ -85,7 +85,7 @@ and
 ```
 sudo docker/docker-php-cs-fix.sh
 ```
-> actually fixes code using php-cs-fixer
+> actually fixes the code using php-cs-fixer
 
 ### Automating code checks
 
