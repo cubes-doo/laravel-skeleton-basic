@@ -15,7 +15,7 @@ A Laravel starter project, for defining standards & kickoff speed :rocket:
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project and help you get it up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -24,7 +24,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+A step by step series of examples that will tell you how to get a development env running.
 
 Firstly, we need to pull a project instance from packagist
 
@@ -58,7 +58,7 @@ Now we can run:
 sudo docker/docker-console.sh
 ```
 
-to enter the docker container's shell, and then inside it run:
+to enter the docker container's shell, and then inside it, run:
 
 ```
 composer install
@@ -66,7 +66,7 @@ composer install
 
 and you are good to go!
 
-The [theme](https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html) used on this project, developed by [Creative Tim](https://www.creative-tim.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way the theme should be placed in the `public/theme/` folder.
+The [theme](https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html) used on this project, developed by [Creative Tim](https://www.creative-tim.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way, the theme should be placed in the `public/theme/` folder.
 
 Go ahead, log in and explore! By default, the project is exposed to http://localhost:7737. If this is no good for you, please refer to `docker/.env` & `.env` files to change it.
 
@@ -85,7 +85,7 @@ and
 ```
 sudo docker/docker-php-cs-fix.sh
 ```
-> actually fixes code using php-cs-fixer
+> actually fixes the code using php-cs-fixer
 
 ### Automating code checks
 
@@ -97,23 +97,13 @@ Give an example
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+We created a script, that runs tests inside the Docker container:
 
 ```
-Give an example
+sudo docker/docker-unit-test-run.sh
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+This script will run all exposed tests in the `tests/` folder.
 
 ## Deployment
 
@@ -122,11 +112,13 @@ Add additional notes about how to deploy this on a live system
 ## Reading Material
 
  - basics
-    - test
-    - test
+    - [Laravel](https://laravel.com/docs/5.7)
+    - [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+    - [Docker](https://docs.docker.com/get-started/)
  - for those in the know
-    - test
-    - test
+    - [Simple Laravel TDD](https://medium.com/@jsdecena/simple-tdd-in-laravel-with-11-steps-c475f8b1b214)
+    - [Easy to use app for .json based translations in Laravel](https://github.com/christofferok/langly)
+    - [jQuery DataTables API for Laravel 4|5](https://github.com/yajra/laravel-datatables)
  - for the brave
     - test
     - test
