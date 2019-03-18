@@ -126,7 +126,7 @@ Add additional notes about how to deploy this on a live system
 ## Built With
 
 * [Composer](https://getcomposer.org/) - PHP package management system
-* [Laravel 5.7](https://laravel.com/docs/5.7/) - The web framework used
+* [Laravel 5.8](https://laravel.com/docs/5.8/) - The web framework used
 * [Docker](https://docs.docker.com/) - Containerization platform
 
 ## Contributing
