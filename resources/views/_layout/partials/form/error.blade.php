@@ -1,5 +1,5 @@
 @if($errors->has($field))
-    <label class="error" for="{{$field}}">
-        {{ $errors->first($field) }}
-    </label>
+<div class="invalid-feedback">
+    <strong>{{ $errors->first($field) }}</strong>
+</div>
 @endif

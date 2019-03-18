@@ -25,10 +25,10 @@ class ViewServiceProvider extends ServiceProvider
         \View::share('loggedInUser', auth()->user());
 
         // add some more composers if needed
-        \View::composer('*', function(\Illuminate\View\View $view) {});
+        //\View::composer('*', function(\Illuminate\View\View $view) {});
 
         // add custom blade directives
-        \Blade::directive('active', function ($expression) {
+        \Blade::directive('activeClass', function ($expression) {
             list($pattern, $class) = 
                 explode(
                     ',', 
@@ -38,7 +38,7 @@ class ViewServiceProvider extends ServiceProvider
             return "<?= request()->is('$pattern') ? '$class' : ''; ?>";
         }); 
         
-        \Blade::directive('errors', function ($expression) {
+        \Blade::directive('errorClass', function ($expression) {
             list($pattern, $class) = 
                 explode(
                     ',', 

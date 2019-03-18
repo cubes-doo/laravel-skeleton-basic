@@ -2,14 +2,12 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
+        <meta charset="utf-8" />
         <title>
-            @if(\View::hasSection('head_title'))
-            @yield('head_title')
+            403
             -
-            @endif
             {{config('app.name')}}
         </title>
-        <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <meta name="description" content="{{config('app.description')}}" />
@@ -42,26 +40,16 @@
         <section>
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 text-center">
 
                         <div class="wrapper-page">
-
-                            <div class="m-t-40 account-pages">
-                                <div class="text-center account-logo-box">
-                                    <h2 class="text-uppercase">
-                                        <a href="{{url('/')}}" class="text-success">
-                                            <span><img src="{{asset('/theme/assets/images/logo_dark.png')}}" alt="" height="30"></span>
-                                        </a>
-                                    </h2>
-                                    <!--<h4 class="text-uppercase font-bold m-b-0">Sign In</h4>-->
-                                </div>
-                                <div class="account-content">
-                                        @yield('content')
-                                </div>
-                            </div>
-                            <!-- end card-box-->
+                            <img src="{{asset('/theme/assets/images/logo_dark.png')}}" alt="" height="30">
+                            <br/>
+                            <img src="{{asset('/theme/assets/images/icons/high_priority.svg')}}" alt="high_priority.svg" height="60" class="m-t-50">
+                            <h2 class="text-uppercase text-primary m-t-50">@lang('You are not authorized for this page')</h2>
+                            <br>
+                            <a class="btn btn-info waves-effect waves-light m-t-20" href="{{url('/')}}"> Return Home</a>
                         </div>
-                        <!-- end wrapper -->
 
                     </div>
                 </div>
@@ -69,14 +57,12 @@
           </section>
           <!-- END HOME -->
 
-
-
         <script>
             var resizefunc = [];
         </script>
 
-        <!-- jQuery  -->
-        <script src="{{asset('/theme/assets/js/jquery.min.js')}}"></script>
+       <!-- jQuery  -->
+       <script src="{{asset('/theme/assets/js/jquery.min.js')}}"></script>
         <script src="{{asset('/theme/assets/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{asset('/theme/assets/js/metisMenu.min.js')}}"></script>
         <script src="{{asset('/theme/assets/js/waves.js')}}"></script>
@@ -86,7 +72,6 @@
         <!-- App js -->
         <script src="{{asset('/theme/assets/js/jquery.core.js')}}"></script>
         <script src="{{asset('/theme/assets/js/jquery.app.js')}}"></script>
-
-        @stack('footer_scripts')
+        
     </body>
 </html>

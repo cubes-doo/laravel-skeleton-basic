@@ -1,7 +1,12 @@
 @extends('_layout.layout')
 
-@section('title', __("Dashboard"))
+@section('head_title', __("Dashboard"))
 
 @section('content')
-    To be defined!
+@include('_layout.partials.breadcrumbs', [
+    'pageTitle' => __("Dashboard"),
+    'breadcrumbs' => [
+        url('/') => __("Home"),
+    ]
+])
 @endsection

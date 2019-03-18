@@ -1,33 +1,45 @@
-<div class="sidebar" data-color="purple" data-background-color="black">
-    <!--
-    Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left side-menu">
+        <div class="slimscroll-menu" id="remove-scroll">
 
-    Tip 2: you can also add an image using data-image tag
-    -->
-    <div class="logo">
-        <a href="/" class="simple-text logo-mini">
-            CT
-        </a>
-        <a href="/" class="simple-text logo-normal">
-            Cubes
-        </a>
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                    <li class="menu-title">Navigation</li>
+                    <li>
+                        <a href="{{url('/')}}">
+                            <i class="fi-air-play"></i>
+                            <span class="badge badge-pill badge-success float-right">1</span> 
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-title">More</li>
+
+                    <li>
+                        <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
+                        <ul class="nav-second-level nav" aria-expanded="true">
+                            <li><a href="javascript: void(0);">Level 1.1</a></li>
+                            <li><a href="javascript: void(0);" aria-expanded="true">Level 1.2 <span class="menu-arrow"></span></a>
+                                <ul class="nav-third-level nav" aria-expanded="true">
+                                    <li><a href="javascript: void(0);">Level 2.1</a></li>
+                                    <li><a href="javascript: void(0);">Level 2.2</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                </ul>
+
+            </div>
+            <!-- Sidebar -->
+            <div class="clearfix"></div>
+
+        </div>
+        <!-- Sidebar -left -->
+
     </div>
-    <div class="sidebar-wrapper">
-        <ul class="nav">
-            <li class="nav-item @active('dashboard', 'active')">
-                <a class="nav-link" href="@route('dashboard')">
-                    <i class="material-icons">dashboard</i>
-                    <p>Dashboard</p>
-                </a>
-            </li>
-            <li class="nav-item @active('entities', 'active') @active('entities/*', 'active')">
-                <a class="nav-link" href="@route('entities.list')">
-                    <i class="material-icons">waves</i>
-                    <p>Entities</p>
-                </a>
-            </li>
-            <!-- your sidebar here -->
-        </ul>
-    </div>
-</div>
+    <!-- Left Sidebar End -->
 
