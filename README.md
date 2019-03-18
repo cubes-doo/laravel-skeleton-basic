@@ -112,11 +112,13 @@ Add additional notes about how to deploy this on a live system
 ## Reading Material
 
  - basics
-    - test
-    - test
+    - [Laravel](https://laravel.com/docs/5.7)
+    - [PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+    - [Docker](https://docs.docker.com/get-started/)
  - for those in the know
-    - test
-    - test
+    - [Simple Laravel TDD](https://medium.com/@jsdecena/simple-tdd-in-laravel-with-11-steps-c475f8b1b214)
+    - [Easy to use app for .json based translations in Laravel](https://github.com/christofferok/langly)
+    - [jQuery DataTables API for Laravel 4|5](https://github.com/yajra/laravel-datatables)
  - for the brave
     - test
     - test
