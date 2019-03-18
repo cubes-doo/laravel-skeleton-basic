@@ -1,18 +1,23 @@
-<!--   Core JS Files   -->
-<script src="/theme/assets/js/core/jquery.min.js" type="text/javascript"></script>
-<script src="/theme/assets/js/core/popper.min.js" type="text/javascript"></script>
-<script src="/theme/assets/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
-<script src="/theme/assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
-<!-- Plugin for the Perfect Scrollbar -->
-<script src="/theme/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-<!-- Plugin for the momentJs  -->
-<script src="/theme/assets/js/plugins/moment.min.js"></script>
-<!--  Plugin for Sweet Alert -->
-<script src="/theme/assets/js/plugins/sweetalert2.js"></script>
-<!--  Notifications Plugin    -->
-<script src="/theme/assets/js/plugins/bootstrap-notify.js"></script>
-<!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-<script src="/theme/assets/js/plugins/bootstrap-selectpicker.js" ></script>
+<script>
+    var resizefunc = [];
+</script>
+
+<!-- jQuery  -->
+<script src="{{asset('/theme/assets/js/jquery.min.js')}}"></script>
+<script src="{{asset('/theme/assets/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('/theme/assets/js/metisMenu.min.js')}}"></script>
+<script src="{{asset('/theme/assets/js/waves.js')}}"></script>
+<script src="{{asset('/theme/assets/js/jquery.slimscroll.js')}}"></script>
+<script src="{{asset('/theme/plugins/bootstrap-select/js/bootstrap-select.min.js')}}"></script>
+<script src="{{asset('/theme/plugins/sweet-alert2/sweetalert2.min.js')}}"></script>
+        
+
+<!-- App js -->
+<script src="{{asset('/theme/assets/js/jquery.core.js')}}"></script>
+<script src="{{asset('/theme/assets/js/jquery.app.js')}}"></script>
+
 @include('_layout.partials.ajax')
-@stack('js')
+@include('_layout.partials.system_messages')
+
+@stack('footer_scripts')
 
