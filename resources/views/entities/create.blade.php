@@ -27,7 +27,24 @@
                 </div>
             </div>
             <div class="card-body">
-                @include('entities.partials.form')
+                <div class="tabs-vertical-env tabs-vertical-env-right">
+                    <div class="tab-content">
+                        <div class="tab-pane show active" id="simple-form" role="tabpanel" aria-labelledby="simple-form-tab">
+                            @include('entities.partials.form')
+                        </div>
+                        <div class="tab-pane" id="extended-form" role="tabpanel" aria-labelledby="extended-form-tab">
+                            @include('entities.partials.form_extended')
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs flex-column tabs-vertical" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="simple-form-tab" data-toggle="tab" href="#simple-form" role="tab" aria-controls="simple-form" aria-selected="true">Simple Form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="extended-form-tab" data-toggle="tab" href="#extended-form" role="tab" aria-controls="extended-form" aria-selected="false">Extended Form</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <!-- end content-->
         </div>
