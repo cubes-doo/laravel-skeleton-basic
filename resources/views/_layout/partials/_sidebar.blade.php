@@ -6,16 +6,23 @@
             <div id="sidebar-menu">
                 <!-- Left Menu Start -->
                 <ul class="metismenu list-unstyled" id="side-menu">
-                    <li class="menu-title">Navigation</li>
+                    <li class="menu-title">@lang('Navigation')</li>
                     <li>
-                        <a href="{{url('/')}}">
+                        <a class="@activeClass('dashboard', 'active')" href="{{route('dashboard')}}">
                             <i class="fi-air-play"></i>
                             <span class="badge badge-pill badge-success float-right">1</span> 
-                            <span>Dashboard</span>
+                            <span>@lang('Dashboard')</span>
                         </a>
                     </li>
 
-                    <li class="menu-title">More</li>
+                    <li class="menu-title">@lang('More')</li>
+
+                    <li>
+                        <a class="@activeClass('entities', 'active') @activeClass('entities/*', 'active')" href="{{route('entities.list')}}">
+                            <i class="fi-layers"></i>
+                            <span>@lang('Entities')</span>
+                        </a>
+                    </li>
 
                     <li>
                         <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
