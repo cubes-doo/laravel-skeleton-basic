@@ -21,10 +21,7 @@ class CreateExamplesTable extends Migration
             $table->increments('id');
             $table->softDeletes();
             $table->integer('created_by');
-            $table->enum('active', [
-                Example::ACTIVE, 
-                Example::INACTIVE
-            ])->default(Example::ACTIVE);
+            $table->boolean('active')->default(Example::ACTIVE);
             $table->enum('status', Example::STATUSES)->default(Example::STATUS_1);
             $table->string('title', 100);
             $table->longText('description');

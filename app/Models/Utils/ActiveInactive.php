@@ -14,8 +14,8 @@ namespace App\Models\Utils;
  */
 interface ActiveInactive
 {
-    const ACTIVE   = 1;
-    const INACTIVE = 0;
+    const ACTIVE   = true;
+    const INACTIVE = false;
     
     public function isActive(): bool;
     public function isInactive(): bool;
