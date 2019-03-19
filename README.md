@@ -66,7 +66,7 @@ composer install
 
 and you are good to go!
 
-The [theme](https://demos.creative-tim.com/material-dashboard-pro/examples/dashboard.html) used on this project, developed by [Creative Tim](https://www.creative-tim.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way, the theme should be placed in the `public/theme/` folder.
+The [theme](https://coderthemes.com/codefox/menu-dark/index.html) used on this project, developed by [Coderthemes](https://coderthemes.com/), isn't free. So, at least visually, this project won't be useful to you without a paid licence. If you are one of our colleagues here at [Cubes](https://cubes.rs/), please contact one of your supperiors for a copy of the theme. Either way, the theme should be placed in the `public/theme/` folder.
 
 Go ahead, log in and explore! By default, the project is exposed to http://localhost:7737. If this is no good for you, please refer to `docker/.env` & `.env` files to change it.
 
