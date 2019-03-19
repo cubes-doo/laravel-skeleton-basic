@@ -1,9 +1,9 @@
 @if ($example->isActive())
-    <button class="btn btn-link btn-success btn-just-icon">
-        <i class="material-icons">check</i>
+    <button class="btn btn-icon waves-effect btn-success">
+        <i class="mdi mdi-check"></i>
     </button>
 @else
-    <button class="btn btn-link btn-danger btn-just-icon">
-        <i class="material-icons">close</i>
+    <button class="btn btn-icon waves-effect btn-danger">
+        <i class="mdi mdi-close"></i>
     </button>
 @endif

@@ -1,21 +1,29 @@
 @extends('_layout.layout')
 
-@section('title', __("Entities"))
+@section('head_title', __("Entities"))
+
+@push('head_links')
+    <link href="{{asset('/theme/plugins/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css"/>    
+    <link href="../plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+@endpush
 
 @section('content')
+    @include('_layout.partials.breadcrumbs', [
+        'pageTitle' => __("Entities"),
+        'breadcrumbs' => [
+            url('/') => __('Home')
+        ]
+    ])
     <div class="row">
         <div class="col-md-12">
         <div class="card">
             <div class="card-header card-header-primary card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons">waves</i>
-                </div>
                 <div class="d-flex justify-content-between">
-                    <h4 class="card-title">@lang('Entities')</h4>
+                    <h4 class="card-title"></h4>
                     <!-- begin:title-toolbar -->
                     <a href="@route('entities.create')" class="btn btn-primary btn-round">
                         <span class="btn-label">
-                            <i class="material-icons">add</i>
+                            <i class="mdi mdi-plus-circle-outline"></i>
                         </span>
                         @lang('Create')
                     </a>
@@ -58,9 +66,13 @@
     </div>
 @endsection
 
-@push('js')
+@push('footer_scripts')
     <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-    <script src="/theme/assets/js/plugins/jquery.dataTables.min.js"></script>
+    <script src="{{asset('/theme/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('/theme/plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
+
+    <script src="{{asset('/theme/plugins/datatables/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('/theme/plugins/datatables/buttons.bootstrap4.min.js')}}"></script>
     <!-- begin:page script -->
     <script type="text/javascript">
         $(document).ready(function() {
