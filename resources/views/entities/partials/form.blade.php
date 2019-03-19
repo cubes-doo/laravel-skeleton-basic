@@ -210,12 +210,7 @@
     </div>
 </form>
 
-@push('js')
-  <!-- script for .fileinput -->
-  <script src="/theme/assets/js/plugins/jasny-bootstrap.min.js" type="text/javascript"></script>
-@endpush
-
-@push('js')
+@push('footer_scripts')
   <script type="text/javascript">
   </script>
 @endpush

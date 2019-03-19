@@ -1,6 +1,6 @@
 @extends('_layout.layout')
 
-@section('title', __("Entities: Create"))
+@section('head_title', __("Entities: Create"))
 
 @section('content')
     @include('_layout.partials.breadcrumbs', [
