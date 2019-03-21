@@ -1,11 +1,12 @@
 #!/bin/bash
 
 
-# =================================================================================
-# 				docker-usermod.sh
-#
-# Set docker container user id and user primary group id to match those of the host
-# =================================================================================
+# ============================================================================ #
+# 				            docker-usermod.sh                                  #
+# ============================================================================ #
+#           Set docker container user id and user primary group id             #
+#                      to match those of the host                              #
+# ---------------------------------------------------------------------------- #
 
 
 SCRIPT_NAME=docker-usermod
@@ -64,7 +65,7 @@ set +e;
 
 DOCKERUSER=localuser
 DOCKERGROUP=localgroup
-DOCKERCONTAINER=${COMPOSE_PROJECT_NAME}_phpfpm
+DOCKERCONTAINER=${COMPOSE_PROJECT_NAME}_${COMPOSE_PHP_MODULE}
 
 
 # parse command line arguments if existant
@@ -105,13 +106,6 @@ if [ "$EUID" -eq 0 ]; then
 	USER_ID="$SUDO_UID"
 	PRIM_GROUP_ID="$SUDO_GID"
 else
-	#if [ ! -r /etc/passwd ]; then
-	#	echo "$SCRIPT_NAME: Invalid permissions. Cannot read /etc/passwd.";
-	#	exit 1;
-	#fi
-	#USER=`cat /etc/passwd | grep ^$(whoami):`
-	#USER_ID=`echo $USER | cut -f3 -d:`
-	#PRIM_GROUP_ID=`echo $USER | cut -f4 -d:`
 	USER=`id -un`
 	USER_ID=`id -u`
 	PRIM_GROUP_ID=`id -g`
@@ -198,3 +192,14 @@ exit $SCIRPT_STAT;
 #do
 #	echo "$f1 $f3 $f4"
 #done </etc/passwd
+
+
+# alternative method to get user's groups
+# ---------------------------------------
+#if [ ! -r /etc/passwd ]; then
+#	echo "$SCRIPT_NAME: Invalid permissions. Cannot read /etc/passwd.";
+#	exit 1;
+#fi
+#USER=`cat /etc/passwd | grep ^$(whoami):`
+#USER_ID=`echo $USER | cut -f3 -d:`
+#PRIM_GROUP_ID=`echo $USER | cut -f4 -d:`

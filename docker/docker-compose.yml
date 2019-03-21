@@ -14,7 +14,7 @@ services:
             - db
         env_file: .env
     phpfpm:
-        container_name: "${COMPOSE_PROJECT_NAME}_phpfpm"
+        container_name: "${COMPOSE_PROJECT_NAME}_${COMPOSE_PHP_MODULE}"
         image: cubesdoo/php-fpm:latest
         volumes:
             - ../:/opt
@@ -25,7 +25,7 @@ services:
             - db
         env_file: .env
     nginx:
-        container_name: "${COMPOSE_PROJECT_NAME}_nginx"
+        container_name: "${COMPOSE_PROJECT_NAME}_${COMPOSE_WEB_SERVER}"
         image: nginx:latest
         ports:
             - "$EXTERNAL_PORT:80"

@@ -1,11 +1,7 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-	CONSOLE_CONTAINER="phpfpm"
-else
-	CONSOLE_CONTAINER=$1
-fi
-
+SCRIPT_ARG=$1;
+DOCK_USER=localuser;
 
 cd $(dirname "$0")
 
@@ -15,4 +11,14 @@ set -a
 . ".env"
 set +a
 
-docker exec -u localuser -it ${COMPOSE_PROJECT_NAME}_${CONSOLE_CONTAINER} bash
+if [ -z "$SCRIPT_ARG" ]; then
+	CONTAINER_ADDENDUM=$COMPOSE_PHP_MODULE
+else
+	CONTAINER_ADDENDUM=$SCRIPT_ARG
+
+    if [ "$SCRIPT_ARG" = "db" ]; then
+        DOCK_USER=root;
+    fi
+fi
+
+docker exec -u $DOCK_USER -it ${COMPOSE_PROJECT_NAME}_${CONTAINER_ADDENDUM} bash
