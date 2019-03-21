@@ -11,6 +11,7 @@
  */
 
 use Illuminate\Database\Seeder;
+use App\Lib\HelperPack;
 
 /**
  * Seeder for Users model
@@ -54,14 +55,12 @@ class UsersTableSeeder extends Seeder
         $this->command->info('Creating default users.');
         
         foreach($this->defaultUsers as $user) {
+            $email = HelperPack::generateEmailStr('cubes.rs', '.', $user);
+            
             factory(App\Models\User::class)->create([
                 'first_name' => $user['first_name'],
                 'last_name'  => $user['last_name'],
-                'email'      => 
-                    strtolower($user['first_name']) 
-                    . '.' 
-                    . strtolower($user['last_name']) 
-                    . '@company.com'
+                'email'      => $email
             ]);
         }
 
