@@ -67,65 +67,53 @@
 @endsection
 
 @push('footer_scripts')
-    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-    <script src="{{asset('/theme/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('/theme/plugins/datatables/dataTables.bootstrap4.min.js')}}"></script>
-
-    <script src="{{asset('/theme/plugins/datatables/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('/theme/plugins/datatables/buttons.bootstrap4.min.js')}}"></script>
     <!-- begin:page script -->
+    <script src="{{asset('/theme/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+    <!-- begin:default config scripts -->
+    @include('_layout.partials.datatable')
+    <!-- end:default config scripts -->
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#datatables').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    url: "@route('entities.datatable')",
-                    type: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    }
-                },
-                "columns": [
-                    {"data": "active"},
-                    {"data": "status"},
-                    {"data": "title"},
-                    {"data": "description"},
-                    {"data": "photo", orderable: false, searchable: false},
-                    {"data": "actions", orderable: false, searchable: false, "className": "text-right"}
-                ],
-                "pagingType": "full_numbers",
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "@lang('All')"]
-                ],
-                responsive: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "@lang('Search records')",
-                }
-            });
-    
-            var table = $('#datatable').DataTable();
-    
-            // Edit record
-            table.on('click', '.edit', function() {
-                $tr = $(this).closest('tr');
-                var data = table.row($tr).data();
-                alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
-            });
-    
-            // Delete a record
-            table.on('click', '.remove', function(e) {
-                $tr = $(this).closest('tr');
-                table.row($tr).remove().draw();
-                e.preventDefault();
-            });
-        
-            //Like record
-            table.on('click', '.like', function() {
-                alert('You clicked on Like button');
-            });
+        var table = $('#datatables').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "@route('entities.datatable')",
+                type: "POST",
+            },
+            "columns": [
+                {"data": "active"},
+                {"data": "status"},
+                {"data": "title"},
+                {"data": "description"},
+                {"data": "photo", orderable: false, searchable: false},
+                {"data": "actions", orderable: false, searchable: false, "className": "text-right"}
+            ],
+        });
+
+        // Delete record
+        table.on('click', '.delete', function() {
+            // fetch needed data from row
+
+            // show swal to make sure this is an intentional action
+
+            // make an ajax request
+
+            // show swal w/ the system-message
+            $tr = $(this).closest('tr');
+            var data = table.row($tr).data();
+            table.draw();
+            alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+        });
+
+        // De-/Activate a record
+        table.on('click', '.activate-deactivate', function(e) {
+            // fetch needed data from row
+
+            // make an ajax request
+            
+            // show swal w/ the system-message
+            $tr = $(this).closest('tr');
+            table.draw();
         });
     </script>
     <!-- end:page script -->

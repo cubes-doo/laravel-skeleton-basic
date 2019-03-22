@@ -54,7 +54,7 @@ class Example extends Model implements ActiveInactive
     /**
      * used to check which columns may be updated using mass-assignment
      */
-    protected $fillable = ['id', 'title', 'description', 'active', 'status'];
+    protected $fillable = ['id', 'title', 'description', 'active', 'status', 'created_by'];
 
     /**
      * The attributes that should be visible in arrays.

@@ -123,16 +123,16 @@ class EntitesController extends Controller
                         $query->where('title', 'like', "%" . request()['search']['value'] . "%");
                     }
                 })
-                ->editColumn('active', function ($example) {
-                    return view('entities.partials.table.active', compact('example'));
+                ->editColumn('active', function ($entity) {
+                    return view('entities.partials.table.active', compact('entity'));
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
                 ->editColumn('description', '{{str_cut($description, 30)}}')
-                ->editColumn('photo', function ($example) {
-                    return view('entities.partials.table.photo', compact('example'));
+                ->editColumn('photo', function ($entity) {
+                    return view('entities.partials.table.photo', compact('entity'));
                 })
-                ->addColumn('actions', function ($example) {
-                    return view('entities.partials.table.actions', compact('example'));
+                ->addColumn('actions', function ($entity) {
+                    return view('entities.partials.table.actions', compact('entity'));
                 })
                 ->rawColumns(['active', 'photo', 'actions'])
                 ->make(true)
@@ -145,6 +145,7 @@ class EntitesController extends Controller
 		
         // Primary goal: page rendering or retuning JSON
         #1 fetching needed data
+        $statuses = Entity::STATUSES;
         
         #2 normalization
         
@@ -153,7 +154,8 @@ class EntitesController extends Controller
         #4 retuning response
 		
 		return view('entities.create', [
-            'entity' => new Entity() // passed to avoid existence check on view script
+            'entity'   => new Entity(), // passed to avoid existence check on view script
+            'statuses' => $statuses
         ]);
     }
     
@@ -167,37 +169,37 @@ class EntitesController extends Controller
             // 1. required or nullable
             // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'title'        => 'required|string|max:255|min:2',
-            'category_id'  => 'required|int|exists:categories,id',
-            'phone_number' => [
-                'required', 'string', 
-                function ($attribute, $value, $fail) {
-                    if ($value === 'foo') {
-                        $fail($attribute.' is invalid.');
-                    }
-                }
+            'title'        => 'required|string|min:10|max:100',
+            'description'  => 'required|string|min:10|max:655',
+            'status' => [
+                'nullable', 'string', 'in:' . implode(',', Entity::STATUSES),
+                // function ($attribute, $value, $fail) {
+                //     if ($value === 'foo') {
+                //         $fail($attribute.' is invalid.');
+                //     }
+                // }
             ],
-            'due_date'     => 'required|date',
-            'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             'photo'        => 'nullable|file|mimes:jpg,png,gif',
-            'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
+            // 'due_date'     => 'required|date',
+            // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
+            // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
-        
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
         unset($data['photo']);
         // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
-        $data['due_date'] = Carbon::parse($data['due_date']);
+        // $data['due_date'] = Carbon::parse($data['due_date']);
         // always bcrypt passwords
-        $data['password'] = bcrypt($data['password']);
+        // $data['password'] = bcrypt($data['password']);
         
         #3 business logic check and throw ValidationException
-        if (auth()->user()->role != 'janitor') {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'cards' => 'Your role can\'t create this entity for some reason or another'
-            ]);
-        }
+        $data['created_by'] = auth()->user()->id;
+        // if (auth()->user()->role != 'janitor') {
+        //     throw \Illuminate\Validation\ValidationException::withMessages([
+        //         'cards' => 'Your role can\'t create this entity for some reason or another'
+        //     ]);
+        // }
         
         #4 model population
         $entity = new Entity();
@@ -207,7 +209,7 @@ class EntitesController extends Controller
         $entity->save();
         
         // sync many to many relationships
-        $entity->tags()->sync($data['tag_ids']);
+        // $entity->tags()->sync($data['tag_ids']);
         
         // if there is a file being uploaded (ex. photo)
         if($request->hasFile('photo') && $request->file('photo')->isValid()) {
@@ -237,6 +239,7 @@ class EntitesController extends Controller
 		
         // Primary goal: page rendering or retuning JSON
         #1 fetching needed data
+        $statuses = Entity::STATUSES;
         
         #2 normalization
         
@@ -245,7 +248,8 @@ class EntitesController extends Controller
         #4 retuning response
 		
 		return view('entities.edit', [
-			'entity' => $entity
+			'entity' => $entity,
+			'statuses' => $statuses
 		]);
     }
 	
@@ -257,45 +261,39 @@ class EntitesController extends Controller
         $data = $request->validate([
             // validation rules:
             // 1. required or nullable
-            // 2. modifier (string or int or date or numeric or file etc)
+            // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'title'        => 'required|string|max:255|min:2',
-            'category_id'  => 'required|int|exists:categories,id',
-            'phone_number' => [
-                'required', 'string', 
-                function ($attribute, $value, $fail) {
-                    if ($value === 'foo') {
-                        $fail($attribute.' is invalid.');
-                    }
-                }
+            'title'        => 'required|string|min:10|max:100',
+            'description'  => 'required|string|min:10|max:655',
+            'status' => [
+                'nullable', 'string', 'in:' . implode(',', Entity::STATUSES),
+                // function ($attribute, $value, $fail) {
+                //     if ($value === 'foo') {
+                //         $fail($attribute.' is invalid.');
+                //     }
+                // }
             ],
-            'due_date'     => 'required|date',
-            'status'       => 'required|in:' . implode(',', Entity::STATUSES),
             'photo'        => 'nullable|file|mimes:jpg,png,gif',
-            'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
+            // 'due_date'     => 'required|date',
+            // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
+            // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
-        
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
         unset($data['photo']);
         // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
-        $data['due_date'] = Carbon::parse($data['due_date']);
+        // $data['due_date'] = Carbon::parse($data['due_date']);
         // always bcrypt passwords
-        $data['password'] = bcrypt($data['password']);
+        // $data['password'] = bcrypt($data['password']);
         
         #3 business logic check and throw ValidationException
-        if ($entity->cards_count > 3) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'cards' => 'You exceed max card count'
-            ]);
-        }
-        
-        if($entity->status > $data['status']) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'status' => 'You can\'t return to previous status'
-            ]);
-        }
+        $data['created_by'] = auth()->user()->id;
+        // if (auth()->user()->role != 'janitor') {
+        //     throw \Illuminate\Validation\ValidationException::withMessages([
+        //         'cards' => 'Your role can\'t create this entity for some reason or another'
+        //     ]);
+        // }
         
         #4 model population
         $entity->fill($data);
@@ -304,7 +302,7 @@ class EntitesController extends Controller
         $entity->save();
         
         // sync many to many relationships
-        $entity->tags()->sync($data['tag_ids']);
+        // $entity->tags()->sync($data['tag_ids']);
         
         // if there is a file being uploaded (ex. photo)
         if($request->hasFile('photo') && $request->file('photo')->isValid()) {
@@ -345,7 +343,7 @@ class EntitesController extends Controller
     
     /**
      * Handles change in any one column. In this case it is a column that 
-     * denotes status, and will be appropriately called 'status'.
+     * denotes entity activity, and will be appropriately called 'active'.
      * Important rules:
      *      #1 only expose this method via routes with the POST or PATCH method
      *      #2 this method only changes the specified column and returns 
@@ -353,13 +351,11 @@ class EntitesController extends Controller
      *      #3 other business logic associated with this change must be 
      *          delegated to Event Listeners and/or Jobs
      */
-    public function changeStatus(Entity $entity)
-    {
-        $data = $this->request->validate([
-            'status' => 'required|in:' . implode(',', Entity::STATUSES)
+    public function changeActive(Entity $entity)
+    {    
+        $entity->update([
+            'active' => !$entity->active
         ]);
-        
-        $entity->update($data);
         
         // if ajax call is in place return JsonResource with message
         if($this->request->wantsJson()) {

@@ -1,6 +1,6 @@
-@unless(empty($example->photo))
+@unless(empty($entity->photo))
     <div class="img-container">
-        <img src="{{$example->columnFileUrl('photo')}}">
+        <img src="{{$entity->columnFileUrl('photo')}}">
     </div>
 @else
     <span>
