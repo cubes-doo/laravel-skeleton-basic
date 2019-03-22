@@ -53,6 +53,8 @@ class ViewServiceProvider extends ServiceProvider
             $routeName = $this->normalize($expression);
             return "<?= route('$routeName'); ?>";
         });
+
+        \Blade::component('_layout.partials.form.error', 'formError');
     }
     
     /**

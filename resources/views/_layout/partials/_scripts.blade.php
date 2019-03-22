@@ -18,6 +18,7 @@
 
 @include('_layout.partials.ajax')
 @include('_layout.partials.system_messages')
+@include('_layout.partials.validate')
 
 @stack('footer_scripts')
 
