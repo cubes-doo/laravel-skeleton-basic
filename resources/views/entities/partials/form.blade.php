@@ -1,5 +1,5 @@
 <!-- begin:form -->
-<form id="examples-form" method="POST" class="form-horizontal">
+<form id="examples-form" method="POST" class="form-horizontal" enctype="multipart/form-data">
     {{ csrf_field() }}
     <div class="form-group row">
         <label class="col-md-2 control-label">
