@@ -93,16 +93,26 @@
         // Delete record
         table.on('click', '.delete', function() {
             // fetch needed data from row
-
-            // show swal to make sure this is an intentional action
-
-            // make an ajax request
-
-            // show swal w/ the system-message
             $tr = $(this).closest('tr');
-            var data = table.row($tr).data();
-            table.draw();
-            alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+
+            entity = $tr.data('id')
+            // show swal to make sure this is an intentional action
+            Swal.fire({
+                title: "@lang('Are you sure you want to delete this?')",
+                text: "@lang('some or all data may be lost')",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "@lang('Yes')",
+                cancelButtonText: "@lang('No, cancel')"
+            }).then(function(result){
+                if (result.value) {
+                    // if user decides to proceed
+                    $.ajax({
+                        url: `/entities/${entity}/delete`,
+                        method: 'POST'
+                    });
+                }
+            });
         });
 
         // De-/Activate a record

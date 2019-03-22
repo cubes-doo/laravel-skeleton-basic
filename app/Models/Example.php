@@ -118,7 +118,7 @@ class Example extends Model implements ActiveInactive
     public function delete() 
     {
         // deleting many-to-many relationships
-        $this->tags()->sync([]);
+        // $this->tags()->sync([]);
         // delete children if needed
         //$this->exampleChildren()->delete();
         // delete all related files by columns
