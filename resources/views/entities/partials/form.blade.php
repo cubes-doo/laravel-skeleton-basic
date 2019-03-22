@@ -42,6 +42,19 @@
             @lang('Photo')
         </label>
         <div class="col-md-10">
+            @unless (empty($entity->photo))
+                <div id="example-photo" class="thumbnail mb-3 text-center">
+                    <img src="{{$entity->fileUrl('photo')}}" class="img-fluid rounded" width="400">
+                    <div class="caption p-2">
+                        <p class="mb-2">
+                            <button type="button" class="btn btn-danger waves-effect w-md waves-light delete-photo">
+                                <i class="mdi mdi-delete"></i>
+                                @lang('Delete photo')
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            @endunless
             <input type="file" name="photo" class="filestyle" data-buttonname="btn-secondary" data-buttontext="@lang('Choose file')">
             <span class="font-14 text-muted">.png .jpg .jpeg .gif</span>
             @formError(['field' => 'photo'])
@@ -87,6 +100,29 @@
                     extension: 'png|jpg|jpeg|gif'
                 }
             }
+        });
+
+        $('#example-photo').on('click', '.delete-photo', function() {
+            Swal.fire({
+                title: "@lang('Are you sure you want to delete this photo?')",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: "@lang('Yes')",
+                cancelButtonText: "@lang('No, cancel')"
+            }).then(function(result){
+                if (result.value) {
+                    // if user decides to proceed
+                    $.ajax({
+                        url: '/entities/{{$entity->id}}/delete-photo',
+                        method: 'POST',
+                        success: function(response){
+                            showSystemMessage(response.message);
+
+                            $('#example-photo').remove();
+                        },
+                    });
+                }
+            });
         });
     </script>
     <!-- begin:page script -->
