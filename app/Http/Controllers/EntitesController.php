@@ -340,7 +340,7 @@ class EntitesController extends Controller
         
         // if ajax call is in place return JsonResource with message
         if($this->request->wantsJson()) {
-            return JsonResource::make()->withSuccess(__('Entity has been saved!'));
+            return JsonResource::make()->withSuccess(__('Entity has been deleted!'));
         }
         //redirection with a message
         return redirect()->route('entities.list')->withSystemSuccess(__('Entity has been deleted!'));
