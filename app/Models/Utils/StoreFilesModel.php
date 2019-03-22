@@ -106,6 +106,8 @@ trait StoreFilesModel
         
         if(is_file($columnFilePath)) {
             unlink($columnFilePath);
+            $this->$column = null;
+            $this->save();
             return $columnFilePath;
         }
         
