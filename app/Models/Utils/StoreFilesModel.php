@@ -69,7 +69,7 @@ trait StoreFilesModel
             throw new \InvalidArgumentException('Unable to resolve file from request');
         }
 
-        $oldColumnFilePath = $this->columnFilePath($column);
+        $oldColumnFilePath = $this->filePath($column);
         if ($oldColumnFilePath && is_file($oldColumnFilePath)) {
             //remove old file
             @unlink($oldColumnFilePath);
