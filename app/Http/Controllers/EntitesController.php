@@ -135,6 +135,11 @@ class EntitesController extends Controller
                     return view('entities.partials.table.actions', compact('entity'));
                 })
                 ->rawColumns(['active', 'photo', 'actions'])
+                ->setRowAttr([
+                    'data-id' => function($entity) {
+                        return $entity->id;
+                    }
+                ])
                 ->make(true)
         ;
     }
