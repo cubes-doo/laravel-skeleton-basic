@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('{entity}/edit', 'EntitesController@edit')->name('edit');
         Route::post('{entity}/edit', 'EntitesController@update');
         Route::post('{entity}/delete', 'EntitesController@delete')->name('delete');
-        Route::post('{entity}/change-status', 'EntitesController@changeStatus')->name('change_status');
+        Route::post('{entity}/activate-deactivate', 'EntitesController@changeActive')->name('change_active');
         Route::post('{entity}/delete-photo', 'EntitesController@deletePhoto')->name('delete_photo');
     
         Route::name('child_entities.')->prefix('{masterEntity}/child-entities/')->group(function() {

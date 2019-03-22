@@ -93,9 +93,9 @@
         // Delete record
         table.on('click', '.delete', function() {
             // fetch needed data from row
-            $tr = $(this).closest('tr');
+            let $tr = $(this).closest('tr');
 
-            entity = $tr.data('id')
+            let entity = $tr.data('id');
             // show swal to make sure this is an intentional action
             Swal.fire({
                 title: "@lang('Are you sure you want to delete this?')",
@@ -118,12 +118,14 @@
         // De-/Activate a record
         table.on('click', '.activate-deactivate', function(e) {
             // fetch needed data from row
+            let $tr = $(this).closest('tr');
 
+            let entity = $tr.data('id');
             // make an ajax request
-            
-            // show swal w/ the system-message
-            $tr = $(this).closest('tr');
-            table.draw();
+            $.ajax({
+                url: `/entities/${entity}/activate-deactivate`,
+                method: 'POST'
+            });
         });
     </script>
     <!-- end:page script -->
