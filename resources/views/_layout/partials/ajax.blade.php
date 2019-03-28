@@ -14,11 +14,7 @@
             }
         },
         error: function(){
-            Swal.fire({
-                title: "@lang('Ooops..')",
-                text: "@lang('An error occured when trying to execute this action')",
-                type: 'error'
-            });
+            showSystemMessage("@lang('An error occured when trying to execute this action')", "error");
         }
     });
 </script>
