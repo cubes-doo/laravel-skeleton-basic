@@ -120,8 +120,8 @@ Add additional notes about how to deploy this on a live system
     - [Easy to use app for .json based translations in Laravel](https://github.com/christofferok/langly)
     - [jQuery DataTables API for Laravel 4|5](https://github.com/yajra/laravel-datatables)
  - for the brave
-    - test
-    - test
+    - [Sandi Metz - Code Smells & Refactoring (RailsConf2016)](https://www.youtube.com/watch?v=D4auWwMsEnY)
+    - [RubyConf 2015 - How to Stop Hating your Test Suite by Justin Searls](https://www.youtube.com/watch?v=VD51AkG8EZw)
 
 ## Built With
 
