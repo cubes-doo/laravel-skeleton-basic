@@ -17,7 +17,8 @@ use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 use App\Models\Utils\{
     ActiveInactive, 
     ActiveInactiveModel,
-    StoreFilesModel
+    StoreFilesModel,
+    CropImagesModelTrait
 };
 
 /**
@@ -29,7 +30,7 @@ use App\Models\Utils\{
  */
 class Example extends Model implements ActiveInactive 
 {
-    use ActiveInactiveModel, StoreFilesModel, SoftDeletes;
+    use ActiveInactiveModel, StoreFilesModel, CropImagesModelTrait, SoftDeletes;
     
     /**
      * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
@@ -61,7 +62,7 @@ class Example extends Model implements ActiveInactive
      *
      * @var array
      */
-    protected $visible = ['active', 'status', 'title', 'description', 'photo'];
+    protected $visible = ['active', 'status', 'title', 'description', 'photo', 'photo_resize'];
     
     /**
      * used to fetch certain attributes as Date objects
@@ -77,6 +78,25 @@ class Example extends Model implements ActiveInactive
      * https://laravel.com/docs/5.5/eloquent-relationships#touching-parent-timestamps
      */
     // protected $touches = ['exampleParent'];
+    
+    protected $imageResizeRecepies = [
+        
+        "photo_resize" => [
+            [
+                "type" => "fit",
+                "w" => 200,
+                "h" => 400,
+//            "width" => 200,
+//            "height" => 400,
+            ]
+//            if you wanna be redundant, go ahead :)
+//            [
+//                "type" => "fit",
+//                "w" => 800,
+//                "h" => 600,
+//            ],
+        ] 
+    ];
     
     
     /**

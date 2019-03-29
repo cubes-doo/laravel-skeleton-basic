@@ -26,6 +26,7 @@ class CreateExamplesTable extends Migration
             $table->string('title', 100);
             $table->longText('description');
             $table->string('photo')->nullable();
+            $table->string('photo_resize')->nullable();
             $table->timestamps();
         });
     }

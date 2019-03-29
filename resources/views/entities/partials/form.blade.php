@@ -61,6 +61,30 @@
             @endformError
         </div>
     </div>
+    <div class="form-group row">
+        <label class="col-md-2 control-label">
+            @lang('Resize photo')
+        </label>
+        <div class="col-md-10">
+            @unless (empty($entity->photo_resize))
+                <div id="example-photo_resize" class="thumbnail mb-3 text-center">
+                    <img src="{{$entity->fileUrl('photo_resize')}}" class="img-fluid rounded" width="400">
+                    <div class="caption p-2">
+                        <p class="mb-2">
+                            <button type="button" class="btn btn-danger waves-effect w-md waves-light delete-photo_resize">
+                                <i class="mdi mdi-delete"></i>
+                                @lang('Delete resized photo')
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            @endunless
+            <input type="file" name="photo_resize" class="filestyle" data-buttonname="btn-secondary" data-buttontext="@lang('Choose file')">
+            <span class="font-14 text-muted">.png .jpg .jpeg .gif</span>
+            @formError(['field' => 'photo_resize'])
+            @endformError
+        </div>
+    </div>
     <div class="form-group text-right m-b-0">
         <button class="btn btn-primary waves-effect waves-light" type="submit">
             @lang('Submit')

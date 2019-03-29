@@ -185,6 +185,7 @@ class EntitesController extends Controller
                 // }
             ],
             'photo'        => 'nullable|file|mimes:jpg,png,gif',
+            'photo_resize'        => 'nullable|file|mimes:jpg,png,gif',
             // 'due_date'     => 'required|date',
             // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
@@ -193,6 +194,7 @@ class EntitesController extends Controller
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
         unset($data['photo']);
+        unset($data['photo_resize']);
         // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
         // $data['due_date'] = Carbon::parse($data['due_date']);
         // always bcrypt passwords
@@ -220,6 +222,10 @@ class EntitesController extends Controller
         if($request->hasFile('photo') && $request->file('photo')->isValid()) {
             // entites should use the App\Models\Utils\StoreFilesModel trait
             $entity->storeFile('photo');
+        }
+        if($request->hasFile('photo_resize') && $request->file('photo_resize')->isValid()) {
+            // entites should use the App\Models\Utils\StoreFilesModel trait
+            $entity->storeFile('photo_resize');
         }
         
 		#6 Return propper response
