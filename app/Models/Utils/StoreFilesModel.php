@@ -1,52 +1,107 @@
 <?php
 
-/**
- * Class
- *
- * @category   class
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- */
-
 namespace App\Models\Utils;
 
 trait StoreFilesModel
 {
-    public static function storageDir()
+    /**
+     * The name of the storage disk to store files to
+     * @param string
+     */
+    protected static $defaultStorageDiskName = 'public';
+
+    /**
+     * The map of storage disk names by column names
+     */
+    protected static $columnStorageDiskMap = [];
+
+    /**
+     * @return string
+     */
+    public static function storageDiskName(string $column = null)
+    {
+        $storageDiskName = static::$defaultStorageDiskName;
+
+        if (!empty($column) && isset(static::$columnStorageDiskMap[$column])) {
+            $storageDiskName = static::$columnStorageDiskMap[$column];
+        }
+
+        return $storageDiskName;
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     */
+    public static function storageDisk(string $column = null)
+    {
+        $storageDiskName = static::storageDiskName($column);
+
+        return Storage::disk($storageDiskName);
+    }
+
+    /**
+     * @return string
+     */
+    public static function storageBaseDir()
     {
         return str_slug((new static())->getTable());
     }
+
+    /**
+     * @return string
+     */
+    public function storageBasePath($column)
+    {
+        $fileName = $this->fileName($column);
+        
+        if ($fileName) {
+            static::storageBaseDir() . '/' . $fileName;
+        }
+        
+        return null; 
+    }
     
+    /**
+     * @return string
+     */
     public function fileName($column)
     {
-        if ($this->$column) {
-            return $this[$this->primaryKey] . '_' . $column . '_' . $this->$column;
+        if ($this->getAttribute($column)) {
+            return $this[$this->primaryKey] . '_' . snake_case($column) . '_' . $this->getAttribute($column);
         }
         
         return null;
     }
     
+    /**
+     * @return string
+     */
 	public function fileUrl($column)
     {
         
-        $fileName = $this->fileName($column);
+        $storageBasePath = $this->storageBasePath($column);
         
-        if ($fileName) {
-            return url('/storage/' . static::storageDir() . '/' . $fileName);
+        if ($storageBasePath) {
+
+            return static::storageDisk($column)->url($storageBasePath);
         }
         
         return null;
 	}
     
+    /**
+     * @return string
+     */
     public function filePath($column)
     {
-        $fileName = $this->fileName($column);
+        $storageBasePath = $this->storageBasePath($column);
         
-        if ($fileName) {
-            return public_path('/storage/' . static::storageDir() . '/' . $fileName);
+        if ($storageBasePath) {
+
+            return static::storageDisk($column)->path($storageBasePath);
         }
         
-        return null; 
+        return null;
     }
     
     /**
@@ -69,48 +124,77 @@ trait StoreFilesModel
             throw new \InvalidArgumentException('Unable to resolve file from request');
         }
 
-        $oldColumnFilePath = $this->filePath($column);
-        if ($oldColumnFilePath && is_file($oldColumnFilePath)) {
-            //remove old file
-            @unlink($oldColumnFilePath);
-        }
+        //delete old file
+        $this->deleteFile($column);
         
-        if (preg_match('/(.*)\.([^\.]+)$/', $file->getClientOriginalName(), $matches)) {
-                
-            $this->$column = str_slug($matches[1]) . '.' . strtolower($matches[2]);
-        } else {
-            $this->$column = str_slug($file->getClientOriginalName());
-        }
+        $this->setAttribute($column, $this->filterFileOriginalName($file, $column));
         
-        if (empty($this[$this->primaryKey])) {
+        if (empty($this->exists)) {
+            //save model if it is a new record not saved in database to obtain autoincrement keys
             $this->save();
         }
         
-        $this->processFileBeforeStore($file, $column);
+        if (method_exists($this, 'processFileBeforeStore')) {
+            //class implements processFileBeforeStore try to execute it
+            $this->processFileBeforeStore($file, $column);
+        }
         
-        $file->storeAs(self::storageDir(), $this->fileName($column));
+        $file->storeAs(static::storageBaseDir(), $this->fileName($column), [
+            'disk' => static::storageDiskName($column)
+        ]);
         
         $this->save();
+        
+        if (method_exists($this, 'processFileAfterStore')) {
+            //class implements processFileAfterStore try to execute it
+            $this->processFileAfterStore($file, $column);
+        }
         
         return $this;
     }
     
+    /**
+     * @return \Illuminate\Database\Eloquent\Model Fluent interface
+     */
+    public function deleteFile($column)
+    {
+        $storageBasePath = $this->storageBasePath($column);
+
+        if ($storageBasePath && static::storageDisk($column)->exists($storageBasePath)) {
+            static::storageDisk($column)->delete($storageBasePath);
+        }
+
+        return $this;
+    }
+    
+    /**
+     * Left as an example for processFileBeforeStore
     protected function processFileBeforeStore(\Illuminate\Http\UploadedFile $file, $column)
     {
         
     }
+    */
     
-    public function deleteFile($column)
+    /**
+     * Left as an example for processFileBeforeStore
+    protected function processFileAfterStore(\Illuminate\Http\UploadedFile $file, $column)
     {
-        $columnFilePath = $this->filePath($column);
-        
-        if(is_file($columnFilePath)) {
-            unlink($columnFilePath);
-            $this->$column = null;
-            $this->save();
-            return $columnFilePath;
+        $newPath = $this->filePath($column);
+    }
+    */
+
+    /**
+     * @return string
+     */
+    protected function filterFileOriginalName(\Illuminate\Http\UploadedFile $file, $column)
+    {
+        if (preg_match('/(.*)\.([^\.]+)$/', $file->getClientOriginalName(), $matches)) {
+            //if file has an extension
+            $fileName = str_slug($matches[1]) . '.' . strtolower($matches[2]);
+        } else {
+            $fileName = str_slug($file->getClientOriginalName());
         }
-        
-        return false;
+
+        return $fileName;
     }
 }
