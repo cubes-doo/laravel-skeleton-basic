@@ -122,6 +122,8 @@ Add additional notes about how to deploy this on a live system
  - for the brave
     - [Sandi Metz - Code Smells & Refactoring (RailsConf2016)](https://www.youtube.com/watch?v=D4auWwMsEnY)
     - [RubyConf 2015 - How to Stop Hating your Test Suite by Justin Searls](https://www.youtube.com/watch?v=VD51AkG8EZw)
+    - [Justin Searls - Breaking up (with) your test suite (Ancient City Ruby 2014)](https://www.youtube.com/watch?v=9_3RsSvgRd4)
+    - [Justin Searls - The Failures of "Intro to TDD"](http://blog.testdouble.com/posts/2014-01-25-the-failures-of-intro-to-tdd)
 
 ## Built With
 
