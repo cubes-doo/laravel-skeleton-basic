@@ -92,3 +92,26 @@ if (!function_exists('suffix_number_format')) {
         return $n_format . $suffix;
     }
 }
+
+if (!function_exists('json_config')) {
+    /**
+     * Returns an array of configurations from a `.json` config file
+     * 
+     * Prereq.'s:
+     *  - the file whose configuration we want must be stored in the config/ folder
+     *  - the file whose configuration we want must be of type .json 
+     * 
+     * @param  string $fileName
+     * @return array
+     */
+    function json_config($fileName) 
+    {
+        $file = base_path('config' . DIRECTORY_SEPARATOR . $fileName . '.json');
+
+        if(!file_exists($file)) {
+            return [];
+        }
+
+        return json_decode(file_get_contents($file), true) ?? [];
+    }
+}
