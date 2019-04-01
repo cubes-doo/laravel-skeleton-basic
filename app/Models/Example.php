@@ -19,8 +19,8 @@ use App\Models\Utils\{
     ActiveInactiveModel,
     StoreFilesModel,
     CropImageModelTrait,
-    CropImageSingleModelTrait,
-    CropImageMultiModelTrait
+    CropImageSingleModelTrait
+    //CropImageMultiModelTrait
 };
 
 /**
@@ -33,7 +33,7 @@ use App\Models\Utils\{
 class Example extends Model implements ActiveInactive 
 {
     use ActiveInactiveModel, StoreFilesModel, CropImageModelTrait, 
-        CropImageSingleModelTrait, CropImageMultiModelTrait, SoftDeletes;
+        CropImageSingleModelTrait, SoftDeletes;
     
     /**
      * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
