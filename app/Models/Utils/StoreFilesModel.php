@@ -36,7 +36,7 @@ trait StoreFilesModel
     {
         $storageDiskName = static::storageDiskName($column);
 
-        return Storage::disk($storageDiskName);
+        return \Storage::disk($storageDiskName);
     }
 
     /**
@@ -55,7 +55,7 @@ trait StoreFilesModel
         $fileName = $this->fileName($column);
         
         if ($fileName) {
-            static::storageBaseDir() . '/' . $fileName;
+            return static::storageBaseDir() . '/' . $fileName;
         }
         
         return null; 
@@ -95,7 +95,7 @@ trait StoreFilesModel
     public function filePath($column)
     {
         $storageBasePath = $this->storageBasePath($column);
-
+        
         if ($storageBasePath) {
 
             return static::storageDisk($column)->path($storageBasePath);

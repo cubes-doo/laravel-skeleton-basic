@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
  */
 trait CropImageMultiModelTrait
 {
+    
+    
     /*
      * method signature as in StoreFilesModel (Trait)
      */
@@ -18,23 +20,19 @@ trait CropImageMultiModelTrait
             return FALSE;
         }
         
-        $newPath = $this->filePath($column);
+        $origImagePath =  $this->filePath($column);
         
-        dd($newPath);
+        $origImgInfo = pathinfo($origImagePath);
+        $basePath = $origImgInfo['dirname'];
         
-        foreach($this->multiImageResizeRecepies[$column] as $imageResizeRecipe) {
-
-            $resizedImage = $this->imageManipulate($newPath, 
+        foreach($this->multiImageResizeRecepies[$column] as $key => $imageResizeRecipe) {
+            
+            $resizedImage = $this->imageManipulate($origImagePath, 
                                   $imageResizeRecipe);
-            $resizedImage->save($this->storageBaseDir() . DIRECTORY_SEPARATOR . Str::random()); 
-            
-            $resizedFilename = $this->storageBaseDir() . DIRECTORY_SEPARATOR . Str::random();
-            
-            dd($resizedImage);
-            logger($resizedFilename);
-            logger(var_export($resizedImage));
-            // Instead of Intervention/Image->save()
-            \Storage::disk('public')->put( $resizedFilename, $resizedImage);
+            $resizedImage->save(
+                $basePath 
+                . DIRECTORY_SEPARATOR 
+                . $origImgInfo['filename'] . '_' . $key . "." . $origImgInfo['extension'] ?? ""); 
         }
     }
 }
