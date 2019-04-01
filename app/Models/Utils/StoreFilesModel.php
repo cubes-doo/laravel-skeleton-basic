@@ -95,7 +95,7 @@ trait StoreFilesModel
     public function filePath($column)
     {
         $storageBasePath = $this->storageBasePath($column);
-        
+
         if ($storageBasePath) {
 
             return static::storageDisk($column)->path($storageBasePath);

@@ -18,7 +18,9 @@ use App\Models\Utils\{
     ActiveInactive, 
     ActiveInactiveModel,
     StoreFilesModel,
-    CropImagesModelTrait
+    CropImageModelTrait,
+    CropImageSingleModelTrait,
+    CropImageMultiModelTrait
 };
 
 /**
@@ -30,7 +32,8 @@ use App\Models\Utils\{
  */
 class Example extends Model implements ActiveInactive 
 {
-    use ActiveInactiveModel, StoreFilesModel, CropImagesModelTrait, SoftDeletes;
+    use ActiveInactiveModel, StoreFilesModel, CropImageModelTrait, 
+        CropImageSingleModelTrait, CropImageMultiModelTrait, SoftDeletes;
     
     /**
      * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity
@@ -84,8 +87,8 @@ class Example extends Model implements ActiveInactive
         "photo_resize" => [
             [
                 "type" => "fit",
-                "w" => 200,
-                "h" => 400,
+                "w" => 1000,
+                "h" => 800,
 //            "width" => 200,
 //            "height" => 400,
             ]
@@ -96,6 +99,21 @@ class Example extends Model implements ActiveInactive
 //                "h" => 600,
 //            ],
         ] 
+    ];
+    
+    protected $multiImageResizeRecepies = [
+            "photo_resize" => [
+                [
+                    "type" => "fit",
+                    "w" => 200,
+                    "h" => 400
+                ],
+                [
+                    "type" => "fit",
+                    "w" => 800,
+                    "h" => 600
+                ],
+            ]
     ];
     
     

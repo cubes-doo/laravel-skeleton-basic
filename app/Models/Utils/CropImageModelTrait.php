@@ -3,7 +3,6 @@
 namespace App\Models\Utils;
 
 use Intervention\Image\Facades\Image;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -11,25 +10,29 @@ use Illuminate\Support\Facades\Log;
  * Classes using this trait should set '$this->imageResizeRecepies' to 
  * wanted image resize sizes.
  */
-trait CropImagesModelTrait  
+trait CropImageModelTrait  
 {
     
     /**
      * @var integer resize image according to specified width and height
      */
     private $ACTION_RESIZE = 'resize';
+    
     /**
      * @var integer crop image according to specified position, width and height
      */
     private $ACTION_CROP = "crop";
+    
     /**
      * @var integer fit image according to specified width and height
      */
     private $ACTION_FIT = "fit";
+    
     /**
      * @var integer JPEG encode image 
      */
     private $ACTION_JPG_ENCODE = "jpg-encode";
+    
     /**
      * @var string perform autocrop (width/2, height/2, posX/2, posY/2)
      */
@@ -41,16 +44,6 @@ trait CropImagesModelTrait
         "resize",
         "jpg-encode",
     ];
-
-            
-    /**
-     *  @var array  |  array of arrays where inner array has 2 members with dimensions 
-     *  $this->imageResizeRecepies = [
-            ["type => "fit", "w" => 200, "h" => NULL],
-            ["type => "fit", "w" => 600, "h" => NULL],
-            ["type => "fit", "w" => NULL, "h" => NULL]
-        ];  
-     */
 
     
     /*
@@ -203,6 +196,35 @@ trait CropImagesModelTrait
         
         return TRUE;
     }
+    
+    /**
+     * Read default config actions from config file
+     * 
+     * Config example:
+     *      [
+    *           'avatar' => [
+    *               "type" => "fit",
+    *               "w" => 120,
+    *               "h" => 60
+    *               // "width"
+    *               // "height"
+    *           ],
+    *           'second_size' => [
+    *               "type" => "crop",
+    *               "width" => 400
+    *               "height" => 400
+    *           ],
+    *      ]
+    */
+    private function getConfigActionRecipe($sizeName)
+    {
+        $defaults = [
+            'type' => 'fit',
+            'w' => 200
+        ];
+        
+        $recipes = config('crop-image-recipes.' . $sizeName, $defaults); 
+    }
 
     
     /**
@@ -214,32 +236,30 @@ trait CropImagesModelTrait
      * @param mixed $imageOrig file path or file object from request 
      *              (see Intervention\Image\AbstractDecoder\init() for 
      *               all possible input types)
-     * @param array        $actions     | actions to perform on image
+     * @param string|array        $actions     | actions to perform on image
      * 
      * @return Image
      */
-    private function imageManipulate($imageOrig, Array $actions)
+    private function imageManipulate($imageOrig, $actions)
     {
         
         // init new image instance of intervention.image.
         $image = Image::make($imageOrig);
         
-        //dd($actions);
-        // allow:
-        // [
-        //  'type' => ,
-        //  'width' => 'fit',
-        //  'height' => 'fit',
-        // ]
-        // 
-        // 
-        // 
+        if(is_string($actions)) {
+            $actions = [$this->getConfigActionRecipe($actions)];
+        }
+        
+        // accept array of arrays or only a single array
         if (isset($actions['type'])) {
             $actions = [$actions];
         }
         
         /* perform specified actions in order in which they are specified */
         foreach($actions as $action) {
+            
+             $action['w']= $action['width'] ?? $action['w'];
+             $action['h'] = $action['height'] ?? $action['h'];
 
             if($action['type'] == $this->ACTION_CROP) {
                 $this->cropImage($image, $action);
@@ -252,24 +272,11 @@ trait CropImagesModelTrait
             }
             if($action['type'] == $this->ACTION_JPG_ENCODE) {
                 $image->encode('jpg', 75);
-                $extension = 'jpeg';
+                $extension = 'jpeg'; // caller should set new extension suffix to the filename
             }
         }
 
         return $image;
-    }
-    
-    /*
-     * method signature as in StoreFilesModel (Trait)
-     */
-    public function processFileBeforeStore($originalImage, $column)
-    {
-        if(!isset($this->imageResizeRecepies[$column])) {
-            return FALSE;
-        }
-        $resizedImage = $this->imageManipulate($originalImage, 
-                              $this->imageResizeRecepies[$column]);
-        $resizedImage->save();    
     }
     
 }
