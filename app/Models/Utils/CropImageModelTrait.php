@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Log;
  */
 trait CropImageModelTrait  
 {
+    /*
+     * Name of this trait's config file
+     */
+    private $CONFIG_NAME = "crop-image-recipes";
     
     /**
      * @var integer resize image according to specified width and height
@@ -223,7 +227,8 @@ trait CropImageModelTrait
             'w' => 200
         ];
         
-        $recipes = config('crop-image-recipes.' . $sizeName, $defaults); 
+        $recipes = config("{$this->CONFIG_NAME}.$sizeName", $defaults); 
+        return $recipes;
     }
 
     
@@ -245,9 +250,9 @@ trait CropImageModelTrait
         
         // init new image instance of intervention.image.
         $image = Image::make($imageOrig);
-        
+
         if(is_string($actions)) {
-            $actions = [$this->getConfigActionRecipe($actions)];
+            $actions = $this->getConfigActionRecipe($actions);
         }
         
         // accept array of arrays or only a single array
@@ -258,8 +263,8 @@ trait CropImageModelTrait
         /* perform specified actions in order in which they are specified */
         foreach($actions as $action) {
             
-             $action['w']= $action['width'] ?? $action['w'];
-             $action['h'] = $action['height'] ?? $action['h'];
+            $action['w']= $action['width'] ?? ($action['w'] ?? null);
+            $action['h'] = $action['height'] ?? ($action['h'] ?? null);
 
             if($action['type'] == $this->ACTION_CROP) {
                 $this->cropImage($image, $action);
