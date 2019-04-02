@@ -1,15 +1,11 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace App\Models\Utils;
+use App\Model\Image;
 
 /**
  * Trait for models which are using 'images' table with Image model.
+ * This trait is coupled with Image model.
  */
 trait ImageableModelTrait {
     
@@ -23,35 +19,20 @@ trait ImageableModelTrait {
     }
     
     /**
-     * Store image into 'images' table
-     * 
-     * @param string $filename
-     * @param string $class
-     * 
-     * @return Object | class object using this trait (for method chaining)
-     */
-    public function storeImage($filename, $column, $class) 
-    {
-        $this->images()->create([
-            "name" => $filename,
-            "class" => $class
-        ]);
-        
-        $entity->storeFile($column);
-        
-        return $this;
-    }
-    
-    /**
-     * Delete image from 'images' table
+     * Delete one image from 'images' table
      * 
      * @param string $class
      * 
      * @return void
      */
-    public function deleteImage($class)
+    public function deleteImage($class=NULL)
     {
-        $this->images()->where('class', $class)->delete();
+        if($class) {
+            $this->images()->where('class', $class)->first()->delete();
+        }
+        else {
+            $this->images()->first()->delete();
+        }
     }
     
     /**
@@ -59,11 +40,17 @@ trait ImageableModelTrait {
      * 
      * @return void
      */
-    public function deleteImages()
+    public function deleteImages($class=NULL)
     {
-        $this->images()->delete();
+        $images = $this->images();
+        if($class) {
+            $images = $images->where('class', $class);
+        }
+        
+        $images->get()->map(function($item) {
+            $item->delete();
+        });
     }
-    
     
     /**
      * @param string $class
@@ -72,9 +59,9 @@ trait ImageableModelTrait {
      */
     public function getImageUrl($class)
     {
-        return $this->images()->where('class', $class)->first();
+        $image = $this->images()->where('class', $class)->first();
+        return $image->getUrl();
     }
-    
     
     /**
      * Get first image of a class
@@ -83,11 +70,14 @@ trait ImageableModelTrait {
      * 
      * @return Image
      */
-    public function getImage($class) 
+    public function getImage($class=FALSE) 
     {
-        return $this->images()
-                    ->where('class', $class)
-                    ->first();
+        if($class) {
+            return $this->images()
+                        ->where('class', $class)
+                        ->first();
+        }
+        return $this->images()->first();
     }
     
     /**
@@ -105,5 +95,31 @@ trait ImageableModelTrait {
                         ->get();
         }
         return $this->images()->get();
+    }
+    
+    
+    /**
+     * mixed $file (null|string|UploadedFile)
+     */
+    public function storeImage($class, $file, $newFilename=False)
+    {
+        $fileObj = null;
+        
+        if(is_null($file)) {
+            $fileObj = request()->file($class);
+        }
+        else if (is_string($file)) {
+            $fileObj = request()->file($file);
+        }
+        else {
+            $fileObj = $file;
+        }
+        
+        if(!$fileObj instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+            throw new \InvalidArgumentException;
+        }
+        
+        $stat = Image::storeImage($fileObj, $class, $newFilename);
+        return $stat;
     }
 }

@@ -8,22 +8,41 @@ trait StoreFilesModel
      * The name of the storage disk to store files to
      * @param string
      */
-    protected static $defaultStorageDiskName = 'public';
+    //protected static $defaultStorageDiskName = 'public';
 
     /**
      * The map of storage disk names by column names
      */
-    protected static $columnStorageDiskMap = [];
+    //protected static $columnStorageDiskMap = [];
+    
+    /**
+     * 
+     * @return string The storage disk name in filesystem config
+     */
+    public static function getDefaultStorageDiskName()
+    {
+        return property_exists(static::class, 'defaultStorageDiskName') ? static::$defaultStorageDiskName : 'public';
+    }
+    
+    /**
+     * 
+     * @return array Mapping of column vs disk name
+     */
+    public static function getColumnStorageDiskMap()
+    {
+        return property_exists(static::class, 'columnStorageDiskMap') ? static::$columnStorageDiskMap : [];
+    }
 
     /**
      * @return string
      */
     public static function storageDiskName(string $column = null)
     {
-        $storageDiskName = static::$defaultStorageDiskName;
+        $storageDiskName = static::getDefaultStorageDiskName();
+        $columnStorageDiskMap = static::getColumnStorageDiskMap();
 
-        if (!empty($column) && isset(static::$columnStorageDiskMap[$column])) {
-            $storageDiskName = static::$columnStorageDiskMap[$column];
+        if (!empty($column) && isset($columnStorageDiskMap[$column])) {
+            $storageDiskName = $columnStorageDiskMap[$column];
         }
 
         return $storageDiskName;
@@ -128,12 +147,12 @@ trait StoreFilesModel
         $this->deleteFile($column);
         
         $this->setAttribute($column, $this->filterFileOriginalName($file, $column));
-        
+
         if (empty($this->exists)) {
             //save model if it is a new record not saved in database to obtain autoincrement keys
             $this->save();
         }
-        
+
         if (method_exists($this, 'processFileBeforeStore')) {
             //class implements processFileBeforeStore try to execute it
             $this->processFileBeforeStore($file, $column);
