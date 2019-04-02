@@ -270,7 +270,8 @@ trait CropImageModelTrait
                 $this->cropImage($image, $action);
             }
             if($action['type'] == $this->ACTION_RESIZE) {
-                $this->resizeImage($image, $action['w'], $action['h'], $action['car']);
+                $this->resizeImage($image, $action['w'], $action['h'], 
+                                   $action['car'] ?? TRUE);
             }
             if($action['type'] == $this->ACTION_FIT) {
                 $this->fitImage($image, $action['w'], $action['h']);
