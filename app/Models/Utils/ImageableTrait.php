@@ -14,7 +14,7 @@ trait ImageableTrait
      */
     public function images()
     {
-        return $this->morphMany(get_class(), 'imageable');
+        return $this->morphMany('App\Models\Image', 'imageable');
     }
     
     /**
@@ -134,9 +134,13 @@ trait ImageableTrait
      *                        where this trait is used
      * @param mixed $file (null|string|UploadedFile)
      * @param $newFilename 
+     * 
+     * @return boolean
      */
-    public function storeImage($class, $file = NULL, $newFilename = FALSE)
+    public function storeImage($class, $file = NULL, $newFilename = NULL)
     {
+        $imageResizeRecepies = [];
+        
         if(is_null($file)) {
             $file = request()->file($class);
         }
@@ -149,6 +153,18 @@ trait ImageableTrait
             throw new \InvalidArgumentException;
         }
         
-        return Image::storeImage($file, $class, $newFilename);
+        if(isset($this->imageResizeRecepies)) {
+            $imageResizeRecepies = $this->imageResizeRecepies;
+        }
+        
+        if(isset($this->multiImageResizeRecepies)) {
+            $multiImageResizeRecepies = $this->multiImageResizeRecepies;
+        }
+
+        $imgObj = new \App\Models\Image;
+        $imgObj->storeImageWithActions($this, $file, $class, $imageResizeRecepies, 
+                                       $multiImageResizeRecepies, $newFilename);
+        
+        return TRUE;
     }
 }

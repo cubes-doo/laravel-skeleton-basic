@@ -208,15 +208,19 @@ trait CropImageModelTrait
      *      [
     *           'avatar' => [
     *               "type" => "fit",
-    *               "w" => 120,
-    *               "h" => 60
-    *               // "width"
-    *               // "height"
+    *               "w" => 120,     // key can also be 'width'
+    *               "h" => 60       // key can also be 'height'
     *           ],
-    *           'second_size' => [
-    *               "type" => "crop",
-    *               "width" => 400
-    *               "height" => 400
+    *           'second_size' => [              // can contain multiple actions 
+    *               [                           // in one recipe. In this example
+    *                  "type" => "resize",      // we first resize an image and
+    *                  "w" => 800               // then crop it.
+    *               ],
+    *               [
+    *                   "type" => "crop",
+    *                   "width" => 400
+    *                   "height" => 400
+    *               ]
     *           ],
     *      ]
     */

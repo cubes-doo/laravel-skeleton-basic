@@ -16,11 +16,12 @@ class CreateImagesTable extends Migration
     public function up()
     {
         Schema::create($this->tablename, function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
-            $table->string('class')->comment('possible values defined in the Image model');
+            $table->string('class')->comment('user defined class of image');
             $table->integer('imageable_id')->nullable()->comment('polymorphic relationship target id');
             $table->string('imageable_type')->nullable()->comment('polymorphic relationship table name');
+            $table->unsignedBigInteger('parent_id')->nullable();
         });
     }
 
