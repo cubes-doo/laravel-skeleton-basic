@@ -1,10 +1,10 @@
 @extends('_layout.layout')
 
-@section('head_title', __("Users Edit"))
+@section('head_title', __("Users: Edit"))
 
 @section('content')
     @include('_layout.partials.breadcrumbs', [
-        'pageTitle' => __('Users Edit'),
+        'pageTitle' => __('Users: Edit'),
         'breadcrumbs' => [
             url('/') => __('Home'),
             route('entities.list') => __('Users'),
