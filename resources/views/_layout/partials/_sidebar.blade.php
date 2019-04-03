@@ -23,6 +23,12 @@
                         <span>@lang('Entities')</span>
                     </a>
                 </li>
+                <li>
+                    <a class="@activeClass('users', 'active') @activeClass('users/*', 'active')" href="{{route('users.list')}}">
+                        <i class="mdi mdi-account-multiple"></i>
+                        <span>@lang('Users')</span>
+                    </a>
+                </li>
 
                 <li>
                     <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
