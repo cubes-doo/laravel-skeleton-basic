@@ -45,29 +45,57 @@
             </div>
         </div>
     </div>
+    <div class="form-horizontal">
+        <div class="form-group row">
+            <label class="col-md-2 control-label">
+                @lang('Image upload using `imagable`')
+            </label>
+            <div class="col-md-10">
+                @unless (empty($entity->image))
+                    <div id="example-image" class="thumbnail mb-3 text-center">
+                        <img src="{{$entity->fileUrl('image')}}" class="img-fluid rounded" width="400">
+                        <div class="caption p-2">
+                            <p class="mb-2">
+                                <button type="button" class="btn btn-danger waves-effect w-md waves-light delete-image">
+                                    <i class="mdi mdi-delete"></i>
+                                    @lang('Delete resized photo')
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                @endunless
+                <input type="file" name="image" class="filestyle" data-buttonname="btn-secondary" data-buttontext="@lang('Choose file')">
+                <span class="font-14 text-muted">.png .jpg .jpeg .gif</span>
+                @formError(['field' => 'image'])
+                @endformError
+            </div>
+        </div>
+        <div class="form-group text-right m-b-0">
+            <button id="submit-user" class="btn btn-primary waves-effect waves-light" type="submit">
+                @lang('Submit')
+            </button>
+            <a href="@route('users.list')" class="btn btn-secondary waves-effect m-l-5">
+                @lang('Cancel')
+            </a>
+        </div>
+    </div>
 </form>
-<div class="form-horizontal">
-    <div class="form-group row">
-        <div class="col-3"></div>
-        <form class="dropzone col-6" id="images-form"></form>
-        <span class="form-control @errorClass('images', 'is-invalid') d-none"></span>
-        @formError(['field' => 'images'])
-        @endformError
+
+<!-- SHOW UPLOADED AND RESIZED IMAGES -->
+@if(count($entity->images) > 0)
+    <div class="container-fluid">
+        @foreach($entity->images as $image)
+            <div class="row m-2">
+                <img src="{{ $image->getUrl() }}">
+            </div>
+        @endforeach
     </div>
-</div>
-<div class="form-horizontal">
-    <div class="form-group text-right m-b-0">
-        <button id="submit-user" class="btn btn-primary waves-effect waves-light" type="submit">
-            @lang('Submit')
-        </button>
-        <a href="@route('users.list')" class="btn btn-secondary waves-effect m-l-5">
-            @lang('Cancel')
-        </a>
-    </div>
-</div>
+@endif
+
 <!-- end:form -->
 @push('footer_scripts')
     <!-- begin:page script -->
+    <script src="{{asset('/theme/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js')}}"></script>
     <script src="{{asset('/theme/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
     <script src="{{asset('/theme/plugins/dropzone/js/dropzone.js')}}"></script>
     <script type="text/javascript">

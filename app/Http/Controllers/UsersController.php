@@ -46,6 +46,7 @@ use App\Http\Resources\Json as JsonResource;
  */
 class UsersController extends Controller 
 {
+    
     /**
      * @var Request
      */
@@ -174,10 +175,15 @@ class UsersController extends Controller
             'first_name' => 'required|string|min:2|max:100',
             'last_name'  => 'required|string|min:2|max:100',
             'email'      => 'required|string|email',
+            'image' => 'required|file|image'
             // 'due_date'     => 'required|date',
             // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
+        //dd($request->all());
+        //(new \App\Models\Image)->storeImageWithActions($request->file('image'), 'test');
+        //(new \App\Models\Image)->storeImageWithActions($request->file('image'), 'test');
+        
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
@@ -197,11 +203,13 @@ class UsersController extends Controller
         
         #4 model population
         $entity = new Entity();
+        
         $entity->fill($data);
         
         #5 saving data
         $entity->save();
         
+        $entity->storeImage('test', $request->file('image'));
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         

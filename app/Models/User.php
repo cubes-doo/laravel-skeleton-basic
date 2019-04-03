@@ -25,6 +25,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
+    use \App\Models\Utils\ImageableTrait;
 
     /**
      * Mass assignable attributes
@@ -42,5 +43,23 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+    ];
+    
+    protected $imageResizeRecepies = [
+        
+        "test" => [
+            [
+                "type" => "fit",
+                "w" => 400,
+                "h" => 400,
+            ]
+        ] 
+    ];
+
+    protected $multiImageResizeRecepies = [
+            "test" => [
+                'avatar' => "avatar",
+                'm' => "thumbnail"
+            ]
     ];
 }
