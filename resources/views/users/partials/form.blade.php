@@ -178,7 +178,7 @@
                 autoProcessQueue: false,
                 parallelUploads: 10,
                 maxFiles: 10,
-                paramName: 'images[]',
+                paramName: 'multiple_images[]',
                 url: '{{url()->current()}}',
                 addRemoveLinks: true,
                 uploadMultiple: true,

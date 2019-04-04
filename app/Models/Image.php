@@ -33,7 +33,8 @@ class Image extends Model
     
     /**
      * NOT IMPLEMENTED !
-     * Read images specifications which overrides those from cropImageXTrait
+     * Read images specifications which overrides those from imageResizeRecepies
+     * or multiImageResizeRecepies
      */
     private function readImagesSpecs()
     {
@@ -48,41 +49,68 @@ class Image extends Model
         }
         return [];
     }
-
+    
     /**
-     * Construct image filename
+     * Construct image filename from received filepath or file object.
      * 
-     * @param UploadedFile $file
-     * @param string $class
+     * @param string|UplodedFile $fileSrc
+     * @param integer $imageId  | Image ID in 'images' table
+     * @param string  $addendum | insert this string into filename
+     * @param booled  $path     | return absolute path containing new filename
      * 
      * @return string
      */
-    private static function constructImageFilename($file, $class)
+    public static function constructImageFilename($fileSrc, $imgId, $addendum, $path=FALSE)
     {
-        $filename = $file->getClientOriginalName();
-        $fileinfo = pathinfo($filename);
-        return str_slug($fileinfo['filename']) . '_' . $class . '.' . ($fileinfo['extension'] ?? '');
+        $templateStr = "%d-%s-%s.%s";
+        
+        if($fileSrc instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+            $file = $fileSrc;
+            $filepath = $file->getClientOriginalName();
+            $fileinfo = pathinfo($filepath);
+        }
+        elseif(is_string($fileSrc)) {
+            $filepath = $fileSrc;
+            $fileinfo = pathinfo($filepath);
+        }
+        else {
+            throw new \InvalidArgumentException("'\$addendum' parameter must be"
+                                              . "of type string or UploadedFile");
+        }
+        
+        $fnameBase = $fileinfo['filename'];
+        $ext = $fileinfo['extension'] ?? '';
+        
+        $newFilename = sprintf($templateStr, $imgId, $fnameBase, $addendum, $ext);
+        
+        if($path) {
+            return $fileinfo['dirname'] . DIRECTORY_SEPARATOR . $newFilename;
+        }
+        return $newFilename;
     }
     
     /**
      * Store image to hard-drive
      * 
      * @param UploadedFile $file
-     * @param string       $class
+     * @param integer      $imageId       | Image ID in 'images' table
+     * @param string       $nameAddendum  | insert this string in filename
      * @param mixed        $constructFilname (\Closure or string)
      * 
      * @return string|FALSE
      */
-    public static function storeImageToHdd($file, $class, \Closure $constructFilname=NULL) 
+    public static function storeImageToHdd($file, $imgId, $nameAddendum='', 
+                                           \Closure $constructFilname=NULL) 
     {
         if(is_string($constructFilname)) {
-            $fullFilename = $constructFilname;
+            $fullFilename = $imgId . $constructFilname;
         }               
         else if(is_callable($constructFilname)) {
-            $fullFilename = $constructFilname($file, $class);
+            $fullFilename = $constructFilname($file, $imgId, $nameAddendum);
         }               
         else {
-            $fullFilename = self::constructImageFilename($file, $class);
+            $fullFilename = self::constructImageFilename($file, $imgId, 
+                                                         $nameAddendum, FALSE);
         }
         
         try {
@@ -103,16 +131,21 @@ class Image extends Model
     public function storeImageWithActions($entity, $file, $class, $imageResizeRecepies=[], 
                                           $multiImageResizeRecepies=[], $constructFilnameFunc=NULL)
     {
+        
+        $origImgObj = $entity->images()->create([
+            "name" => "temporary",
+            "class" => $class
+        ]);
+        
         if (count($imageResizeRecepies) > 0) {
             $this->processFileBeforeStore($file, $class, $imageResizeRecepies);
         }
 
-        $origImgName = self::storeImageToHdd($file, $class, $constructFilnameFunc);
-                
-        $origImgObj = $entity->images()->create([
-            "name" => $origImgName,
-            "class" => $class
-        ]);
+        $origImgName = self::storeImageToHdd($file, $origImgObj->id, $class,
+                                             $constructFilnameFunc);
+        
+        $origImgObj->name = $origImgName;
+        $origImgObj->save();
         
         $origImgSavePath = $this->getImagesStoragePath() . $origImgName;
         
@@ -137,8 +170,10 @@ class Image extends Model
         return;
     }
     
-    /*
-     * method signature as in StoreFilesModel (Trait)
+    /**
+     * Process an image with image resize recepies using CropImageModelTrait
+     * 
+     * @return boolean
      */
     protected function processFileBeforeStore($originalImage, $class, $imageResizeRecepies)
     {
@@ -149,11 +184,13 @@ class Image extends Model
                               $imageResizeRecepies[$class]);
         $resizedImage->save();
         
-        return $resizedImage;
+        return TRUE;
     }
     
-    /*
-     * method signature as in StoreFilesModel (Trait)
+    /**
+     * Process an image with multiple resize recepies using CropImageModelTrait
+     * 
+     * @return boolean
      */
     public function processFileAfterStore($entity, $origImgId, $origImagePath, $class, 
                                           $multiImageResizeRecepies, $origImgName )
@@ -167,19 +204,23 @@ class Image extends Model
         
         foreach($multiImageResizeRecepies[$class] as $key => $imageResizeRecipe) {
             
+            $imgObj = $entity->images()->create([
+                        "name" => "temporary",
+                        "class" => $key,
+                        "parent_id" => $origImgId
+                    ]);
+            
             $resizedImage = $this->imageManipulate($origImagePath, 
                                   $imageResizeRecipe);
-            $resizedImage->save(
-                $basePath 
-                . DIRECTORY_SEPARATOR 
-                . $origImgInfo['filename'] . '_' . $key . "." . ($origImgInfo['extension'] ?? "") ); // TODO: insert common func for name construction
-            
-            $entity->images()->create([
-                "name" => $origImgInfo['filename'] . '_' . $key . "." . ($origImgInfo['extension'] ?? ""), // TODO: insert common func for name construction
-                "class" => $key,
-                "parent_id" => $origImgId
-            ]);
+            $newFilepath = self::constructImageFilename($origImagePath, $imgObj->id, 
+                                                        $key, TRUE);
+            $resizedImage->save($newFilepath);
+
+            $imgObj->name = basename($newFilepath);
+            $imgObj->save();
         }
+        
+        return TRUE;
     }
     
     /**
@@ -189,15 +230,18 @@ class Image extends Model
      */
     public function getUrl()
     {
-        return "/storage/" . self::IMAGE_FOLDER_NAME . "/" . $this->name;  
+        // TODO: get "/storage/" folder from laravel's \Storage facade
+        return "/storage/" . self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR . $this->name;  
     }
     
-    /*
+    /**
      * Get application's absolute storage path
+     * 
+     * @return string
      */
     protected function getStoragePath()
     {
-        return "/opt/public/storage/";
+        return "/opt/public/storage/"; // TODO: get path from laravel's \Storage facade
     }
     
     /**
@@ -207,7 +251,7 @@ class Image extends Model
      */
     protected function getImagesStoragePath()
     {
-        return $this->getStoragePath() . self::IMAGE_FOLDER_NAME . '/';
+        return $this->getStoragePath() . self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR;
     }
     
     /**
@@ -221,7 +265,8 @@ class Image extends Model
     }
     
     /**
-     * Izbrisi sliku sa hard-diska i izbrisi red iz baze podataka
+     * Erase image from the hard-drive and erase image's entry from the database 
+     * table
      * 
      * @return void
      */
@@ -230,14 +275,15 @@ class Image extends Model
         $stat = $this->deleteFileFromHdd();
         
         if(!$stat) {
-            Log::error(__METHOD__ . ": Image entry was deleted from the database in spite of previous error.");
+            Log::error(__METHOD__ . ": Image entry was deleted from the database " 
+                                  . " in spite of previous error.");
         }
         
         parent::delete();
     }
     
     /**
-     * Erase image file from the Hard-drive
+     * Erase image file from the hard-drive
      * 
      * @return boolean
      */
@@ -251,13 +297,14 @@ class Image extends Model
                 unlink($f);
             }
             catch (\Throwable $e) {
-                Log::error(__METHOD__ . "Cannot delete image '$f'. Exception encountered. Not enough permissions?");
+                Log::error(__METHOD__ . "Cannot delete image '$f'. Exception "
+                         . "encountered. Not enough permissions?");
                 return FALSE;
             }
         }
         else {
-            Log::error(__METHOD__ . ": Image constructed path '$f' from columns in "
-                     . "'images' table row is nonexistant to the server. "
+            Log::error(__METHOD__ . ": Image constructed path '$f' from columns "
+                     . "in 'images' table row is nonexistant to the server. "
                      . "Cannot delete that image file.");
             return FALSE;
         }

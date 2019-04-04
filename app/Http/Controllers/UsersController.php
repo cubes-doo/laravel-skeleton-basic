@@ -212,7 +212,7 @@ class UsersController extends Controller
         #5 saving data
         $entity->save();
         
-        $entity->storeImages('images');
+        $entity->storeImages('multiple_images');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -301,7 +301,7 @@ class UsersController extends Controller
         #5 saving data
         $entity->save();
         
-        $entity->storeImages('images');
+        $entity->storeImages('multiple_images');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -343,43 +343,43 @@ class UsersController extends Controller
     }
     
     /**
+     * Delete photo['s'] - Ajax call
      * Also abides by the rules used for the delete() method
      */
     public function deletePhoto(Request $request, Entity $entity)
     {
+        $message = __('User photo deleted!');
+        
         $request->validate([
-            "imageId" => ["nullable", "integer", "min:500", "exists:images,id"],
+            "imageId" => ["nullable", "integer", "min:1", "exists:images,id"],
             "deleteChildren" => ["nullable", "integer", "in:0,1"]
         ]);
-//        $validator = Validator::make($request->all(), [
-//            "imageId" => ["required", "integer", "exists:images,id"]
-//        ]);
-//        
-//        
-//        if ( ! $validator->passes() ) {   
-//            return  JsonResource::make(["status" => "FAIL", "errors" => $validator->errors()]);
-//        }
-  
-        // DELTE ALL IMAGES BOUND TO ENTITY
-        //$entity = Entity::find($request->id);
-//        $entity->deleteFile($request->column);
-//        $entity->{$request->column} = NULL;
-//        $entity->save();
         
-        // DELETE SINGLE IMAGE
-        \App\Models\Image::where('id', $request->imageId)->delete();
-        
-        // DELETE AN IMAGE AND ALL ITS CHILDREN
-        // IMPLEMENT
-        
-        return json_encode(["status" => "OK"]);
+        // Delete a single image (and its children if specified)
+        if($request->has('imageId')) {
+            
+            $imageObj = \App\Models\Image::where('id', $request->imageId);
+            
+            if($request->has('deleteChildren')) {
+                \App\Models\Image::where('parent_id', $imageObj->first()->id);
+                $message = __("User photo and it's children were deleted");
+            }
+            
+            $imageObj->first()->delete();
+        }
+        else {
+            // Delete all images bound to entity
+            $entity->deleteImages();
+            $message = __('All entity images were deleted');
+        }
         
         // if ajax call is in place return JsonResource with message
         if($this->request->wantsJson()) {
-            return JsonResource::make()->withSuccess(__('User photo deleted!'));
+            return JsonResource::make()->withSuccess($message);
         }
+        
         //redirection with a message
-        return redirect()->route('users.list')->withSystemSuccess(__('User photo deleted!'));
+        return redirect()->route('users.list')->withSystemSuccess($message);
     }
     
     /**
