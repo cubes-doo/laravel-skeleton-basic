@@ -14,6 +14,7 @@ namespace App\Http\Controllers;
 
 //change the request class if needed
 use Illuminate\Http\Request as Request;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Carbon;
 
@@ -165,6 +166,8 @@ class UsersController extends Controller
     public function store()
     {
         $request = $this->request;
+//        dd($request->file('images'));
+//        dd($request->all());
         
         #1 validation
         $data = $request->validate([
@@ -175,7 +178,7 @@ class UsersController extends Controller
             'first_name' => 'required|string|min:2|max:100',
             'last_name'  => 'required|string|min:2|max:100',
             'email'      => 'required|string|email',
-            'image' => 'required|file|image'
+            'images.*.*' => 'required|file|image'
             // 'due_date'     => 'required|date',
             // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
@@ -209,7 +212,7 @@ class UsersController extends Controller
         #5 saving data
         $entity->save();
         
-        $entity->storeImage('test', $request->file('image'));
+        $entity->storeImages('images');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -298,6 +301,7 @@ class UsersController extends Controller
         #5 saving data
         $entity->save();
         
+        $entity->storeImages('images');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -341,9 +345,34 @@ class UsersController extends Controller
     /**
      * Also abides by the rules used for the delete() method
      */
-    public function deletePhoto(Entity $entity)
+    public function deletePhoto(Request $request, Entity $entity)
     {
-        // $entity->deleteFile('photo');
+        $request->validate([
+            "imageId" => ["nullable", "integer", "min:500", "exists:images,id"],
+            "deleteChildren" => ["nullable", "integer", "in:0,1"]
+        ]);
+//        $validator = Validator::make($request->all(), [
+//            "imageId" => ["required", "integer", "exists:images,id"]
+//        ]);
+//        
+//        
+//        if ( ! $validator->passes() ) {   
+//            return  JsonResource::make(["status" => "FAIL", "errors" => $validator->errors()]);
+//        }
+  
+        // DELTE ALL IMAGES BOUND TO ENTITY
+        //$entity = Entity::find($request->id);
+//        $entity->deleteFile($request->column);
+//        $entity->{$request->column} = NULL;
+//        $entity->save();
+        
+        // DELETE SINGLE IMAGE
+        \App\Models\Image::where('id', $request->imageId)->delete();
+        
+        // DELETE AN IMAGE AND ALL ITS CHILDREN
+        // IMPLEMENT
+        
+        return json_encode(["status" => "OK"]);
         
         // if ajax call is in place return JsonResource with message
         if($this->request->wantsJson()) {

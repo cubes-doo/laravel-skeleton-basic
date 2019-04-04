@@ -125,6 +125,19 @@ class Image extends Model
     }
     
     /*
+     * Store image with processBefore and processAfter calls
+     */
+    public function storeImagesWithActions($entity, $files, $class, $imageResizeRecepies=[], 
+                                          $multiImageResizeRecepies=[], $constructFilnameFunc=NULL)
+    {
+        foreach ($files as $file) {
+            $this->storeImageWithActions($entity, $file, $class, $imageResizeRecepies, 
+                                          $multiImageResizeRecepies, $constructFilnameFunc);
+        }
+        return;
+    }
+    
+    /*
      * method signature as in StoreFilesModel (Trait)
      */
     protected function processFileBeforeStore($originalImage, $class, $imageResizeRecepies)

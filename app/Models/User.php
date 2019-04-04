@@ -46,8 +46,7 @@ class User extends Authenticatable
     ];
     
     protected $imageResizeRecepies = [
-        
-        "test" => [
+        "multiple_images" => [
             [
                 "type" => "fit",
                 "w" => 400,
@@ -57,7 +56,7 @@ class User extends Authenticatable
     ];
 
     protected $multiImageResizeRecepies = [
-            "test" => [
+            "multiple_images" => [
                 'avatar' => "avatar",
                 'm' => "thumbnail"
             ]

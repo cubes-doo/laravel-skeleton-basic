@@ -2,6 +2,7 @@
 
 namespace App\Models\Utils;
 use App\Model\Image;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Trait for models which are using 'images' table with Image model.
@@ -9,6 +10,22 @@ use App\Model\Image;
  */
 trait ImageableTrait
 {
+    
+    public static function bootImageableTrait()
+    {
+        /* morphMap for Image model */
+        Relation::morphMap([
+            static::getImagableMorphKey() => static::class
+        ]);
+    }
+    
+    
+    public static function getImagableMorphKey()
+    {
+        return (new static())->getTable();
+    }
+    
+    
     /*
      * Establishes a polymorphic 'one-to-many' relationship with 'images' table
      */
@@ -125,7 +142,6 @@ trait ImageableTrait
         return $images->get();
     }
     
-    
     /**
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
@@ -167,4 +183,45 @@ trait ImageableTrait
         
         return TRUE;
     }
+    
+    
+    /**
+     * Store multiple images in a single call
+     * 
+     * @param type $class
+     * @param type $file
+     * @param type $newFilename
+     * @throws \InvalidArgumentException
+     */
+    public function storeImages($class, $files = NULL, $newFilename = NULL)
+    {
+        $imageResizeRecepies = [];
+        
+        if(is_null($files)) {
+            $files = collect(request()->file($class))->flatten()->toArray();
+        }
+        
+        if (is_string($files)) {
+            $files = collect(request()->file($files))->flatten()->toArray();
+        }
+        
+        foreach($files as $file) {
+            if(!$file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+                throw new \InvalidArgumentException;
+            }
+        }
+        
+        if(isset($this->imageResizeRecepies)) {
+            $imageResizeRecepies = $this->imageResizeRecepies;
+        }
+        
+        if(isset($this->multiImageResizeRecepies)) {
+            $multiImageResizeRecepies = $this->multiImageResizeRecepies;
+        }
+        
+        $imgObj = new \App\Models\Image;
+        $imgObj->storeImagesWithActions($this, $files, $class, $imageResizeRecepies, 
+                                       $multiImageResizeRecepies, $newFilename);
+    }
+    
 }

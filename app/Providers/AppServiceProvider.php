@@ -17,10 +17,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         
-        /* morphMap for Image model */
-        Relation::morphMap([
-            'users' => \App\Models\User::class
-        ]);
+//        /* morphMap for Image model */
+//        Relation::morphMap([
+//            'users' => \App\Models\User::class
+//        ]);
     }
     
     /**
