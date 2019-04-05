@@ -95,29 +95,27 @@
 </div>
 
 <!-- SHOW UPLOADED AND RESIZED IMAGES -->
-@if(count($entity->images) > 0)
+@if(count($entity->images()->where('class', 'multiple_images')->get()) > 0)
     <div>
         <div class="d-flex justify-content-end">
-            <button id="img_delete_all" class="btn btn-danger waves-effect">
+            <button data-image-class="multiple_images" class="btn btn-danger waves-effect del-img-btn">
                 <i class="mdi mdi-delete"></i>
                 Delete all images
             </button>
         </div>
         <ul class="list-unstyled slick">
-            @foreach($entity->images as $image)
-                <li class="position-relative text-center">
-                    <figure>
+            @foreach($entity->images()->parents()->where('class', 'multiple_images')->get() as $parentImage)
+                <li class="position-relative text-center imageable-image">
+                    <figure class="">
                         <div class="hovereffect">
-                            <img src="{{ $image->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
+                            <img src="{{ $parentImage->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
                             <div class="overlay d-flex align-items-center align-content-center">
                                 <div class="action m-auto">
-                                    @if ($loop->first)
-                                        <button class="btn btn-danger btn-bordered waves-effect w-md waves-light">
-                                            <i class="mdi mdi-delete-sweep"></i>
-                                        </button>
-                                        |
-                                    @endif
-                                    <button class="btn btn-danger btn-bordered waves-effect w-md waves-light">
+                                    <button data-image-id="{{$parentImage->id}}" data-delete-children="true" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
+                                        <i class="mdi mdi-delete-sweep"></i>
+                                    </button>
+                                    |
+                                    <button data-image-id="{{$parentImage->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
                                         <i class="mdi mdi-delete"></i>
                                     </button>
                                 </div>
@@ -125,6 +123,22 @@
                         </div>
                     </figure>
                 </li>
+                @foreach ($parentImage->getChildren() as $image)
+                    <li class="position-relative text-center imageable-image">
+                        <figure class="">
+                            <div class="hovereffect">
+                                <img src="{{ $image->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
+                                <div class="overlay d-flex align-items-center align-content-center">
+                                    <div class="action m-auto">
+                                        <button data-image-id="{{$image->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
+                                            <i class="mdi mdi-delete"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </figure>
+                    </li>
+                @endforeach
             @endforeach
         </ul>
     </div>

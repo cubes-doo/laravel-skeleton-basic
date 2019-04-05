@@ -213,6 +213,11 @@ class UsersController extends Controller
         $entity->save();
         
         $entity->storeImages('multiple_images');
+
+        $entity->storeImage('orig_image_multiple');
+        $entity->storeImage('orig_image_resized_multiple');
+        $entity->storeImage('orig_image_resized');
+        $entity->storeImage('orig_image');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -302,6 +307,11 @@ class UsersController extends Controller
         $entity->save();
         
         $entity->storeImages('multiple_images');
+        
+        $entity->storeImage('orig_image_multiple');
+        $entity->storeImage('orig_image_resized_multiple');
+        $entity->storeImage('orig_image_resized');
+        $entity->storeImage('orig_image');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
@@ -351,25 +361,27 @@ class UsersController extends Controller
         $message = __('User photo deleted!');
         
         $request->validate([
-            "imageId" => ["nullable", "integer", "min:1", "exists:images,id"],
-            "deleteChildren" => ["nullable", "integer", "in:0,1"]
+            "imageId" => ["nullable", "integer", "exists:images,id"],
+            "deleteChildren" => ["nullable", "boolean"],
+            "imageClass" => ["nullable", "string"]
         ]);
         
         // Delete a single image (and its children if specified)
         if($request->has('imageId')) {
             
-            $imageObj = \App\Models\Image::where('id', $request->imageId);
+            $imageObj = \App\Models\Image::find($request->imageId);
             
             if($request->has('deleteChildren')) {
-                \App\Models\Image::where('parent_id', $imageObj->first()->id);
+                $imageObj->getChildren()->map(function($item){
+                    $item->delete();
+                });
                 $message = __("User photo and it's children were deleted");
             }
             
-            $imageObj->first()->delete();
-        }
-        else {
+            $imageObj->delete();
+        } else {
             // Delete all images bound to entity
-            $entity->deleteImages();
+            $entity->deleteImages($request->imageClass, true);
             $message = __('All entity images were deleted');
         }
         

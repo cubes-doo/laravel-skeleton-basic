@@ -217,24 +217,35 @@
         // Remove image - ajax call
         $(".del-img-btn").on('click', function(e) {
             
-            let imageId = $(this).data('id');
             let btnObj = $(this);
+            let imageId = btnObj.attr('data-image-id');
+            let deleteChildren = btnObj.attr('data-delete-children');
+            let imageClass = btnObj.attr('data-image-class');
+            let data = {};
+
+            if(imageId) {
+                data["imageId"] = imageId;
+            }
+
+            if(deleteChildren) {
+                data["deleteChildren"] = 1;
+            }
+
+            if(imageClass) {
+                data["imageClass"] = imageClass;
+            }
                     
             $.ajax({
                 url: blade.ajax.deleteImage,
                 method: 'POST',
-                data: {
-                    "imageId": imageId,
-                    "deleteChildren" : true
-                    },
+                data: data,
                 success: function() { }
             })
             .done(function(result) {
-                result = JSON.parse(result);
-                showSystemMessage(blade.imgDelSuccessText);
+                showSystemMessage(result.message);
 
                 // detach image elements group from the slider (slick)
-                btnObj.closest('li').detach();
+                btnObj.closest('.imageable-image').detach();
                 
             }).fail(function(result) {
                 console.log(result);
