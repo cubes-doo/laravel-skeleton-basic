@@ -213,7 +213,6 @@
                 },
             }
         });
-
        
         // Remove image - ajax call
         $(".del-img-btn").on('click', function(e) {
