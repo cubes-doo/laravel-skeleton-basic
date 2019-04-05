@@ -33,7 +33,9 @@
                 </div>
                 <div class="card-body">
                     <div class="row justify-content-center">
-                        <div class="col-12">
+                        <div class="col-1">
+                        </div>
+                        <div class="col-10">
                             @include('users.partials.form')
                         </div>
                     </div>

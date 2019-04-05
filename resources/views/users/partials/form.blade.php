@@ -43,6 +43,7 @@
         .dropzone {
             margin-top: 30px;
             border: 1px dashed #f44109;
+            border-radius: 0.5rem;
             background-color: rgba(244, 190, 180, 0.1);
             display: flex;
             align-items: center;
@@ -99,32 +100,73 @@
         </div>
     </div>
 </form>
-<div class="form-horizontal">
-    <div class="form-group row">
-        <form class="dropzone col-12" id="images-form"></form>
-        <span class="form-control @errorClass('images', 'is-invalid') d-none"></span>
-        @formError(['field' => 'multiple_images'])
-        @endformError
-    </div>
-</div>
 
-<!-- SHOW UPLOADED AND RESIZED IMAGES -->
-@if(count($entity->images) > 0)
-    <div>
-        <ul class="list-unstyled slick">
-            @foreach($entity->images as $image)
-            <li class="position-relative text-center">
-                <figure>
-                    <button data-id="{{ $image->id }}" class="btn btn-danger py-1 del-img-btn" style="position: absolute; top:5px; left:50%; transform: translateX(-50%);">Delete</button>
-                    <img src="{{ $image->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
-                </figure>
-            </li>
-            @endforeach
-        </ul>
-        <button id="img_delete_all" class="btn btn-danger ">Delete all images</button>
-    </div>
-@endif
-<div class="form-horizontal">
+<p class="text-muted m-b-20">
+    When you want to store multiple images on a Model (Entity), we reccommend using the <code>Imageable</code> trait.
+    <br>
+    All images related to Models that use the <code>Imageable</code> trait will be stored in the same folder by default, 
+    and a record of them will be stored in the <code>`images`</code> table. This is also a nifty piece of normalization for your DB, 
+    since you are not storing Model specific images in that Models table - <q>mise en place</q> - in one place ;)
+    <br>
+    Here are some examples of its usage:
+</p>
+<!-- begin:multiple_images -->
+@include('users.partials.form.multiple_images')
+<!-- end:multiple_images -->
+<p class="text-muted m-b-20">
+    <pre>
+        <code>
+            +----+---------------------------------------------------+-----------------+--------------+----------------+
+            | id |                       name                        |      class      | imageable_id | imageable_type |
+            +----+---------------------------------------------------+-----------------+--------------+----------------+
+            | 1  |    {myAwesomeImageName}_{multiple_images}.jpg     | multiple_images |      7       |      user      |
+            +----+---------------------------------------------------+-----------------+--------------+----------------+
+            | 2  | {myAwesomeImageName}_{multiple_images_avatar}.jpg |     avatar      |      7       |      user      |
+            +----+---------------------------------------------------+-----------------+--------------+----------------+
+            | 2  |  {myAwesomeImageName}_{multiple_images_icon}.jpg  |      icon       |      7       |      user      |
+            +----+---------------------------------------------------+-----------------+--------------+----------------+
+        </code>
+    </pre>
+    <b>!!!Important terms:</b> 
+    <ul>
+        <li><b>class:</b> ["multiple_images", "avatar", "icon"] - the name of the size recipe (if set) or of the attribute that holds images related to the User </li>
+        <li><b>imageable_id:</b> <code>id</code> of the User the image record is associated with</li>
+        <li><b>imageable_type:</b> the string associated to the User class in the <code>app/Providers/AppServiceProvider</code> </li>
+    </ul>
+    This field was defined as <code>multiple_images</code> & has 3 resize recipes; one resizes the original image & the other 2 make thumbs from the original.
+    <br>
+    Every image can be deleted. The resized original also has the option to delete itself w/ all of its thumbs. We can also delete all images of this User.
+</p>
+<hr>
+<div class="form-horizontal mt-1">
+    <!-- begin:orig_image_multiple -->
+    @include('users.partials.form.orig_image_multiple')
+    <!-- end:orig_image_multiple -->
+    <p class="text-muted m-b-20">
+        This field was defined as <code>orig_image_multiple</code> & has 2 resize recipes both of which make thumbs, while the original stayes unmodified.
+    </p>
+    <hr>    
+    <!-- begin:orig_image_resized_multiple -->
+    @include('users.partials.form.orig_image_resized_multiple')
+    <!-- end:orig_image_resized_multiple -->
+    <p class="text-muted m-b-20">
+        This field was defined as <code>orig_image_resized_multiple</code> & has 3 resize recipes; one resizes the original image & the other 2 make thumbs from the original.
+    </p>
+    <hr>
+    <!-- begin:orig_image_resized -->
+    @include('users.partials.form.orig_image_resized')
+    <!-- end:orig_image_resized -->
+    <p class="text-muted m-b-20">
+        This field was defined as <code>orig_image_resized</code> & has 2 resize recipes both of which just modify the original (no thumbs will be created).
+    </p>
+    <hr>
+    <!-- begin:orig_image -->
+    @include('users.partials.form.orig_image')
+    <!-- end:orig_image -->
+    <p class="text-muted m-b-20">
+        This field was defined as <code>orig_image</code> & has no resize recipes; i.e. the image is stored as is.
+    </p>
+
     <div class="form-group text-right m-b-0">
         <button id="submit-user" class="btn btn-primary waves-effect waves-light" type="submit">
             @lang('Submit')
@@ -138,9 +180,8 @@
 <!-- end:form -->
 @push('footer_scripts')
     <!-- begin:page script -->
+    <script src="{{asset('/theme/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js')}}"></script>
     <script src="{{asset('/theme/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
-    <script src="{{asset('/theme/plugins/dropzone/js/dropzone.js')}}"></script>
-    <script src="{{asset('/theme/plugins/slick/slick.min.js')}}"></script>
     <script type="text/javascript">
         var blade = {
             ajax: {
@@ -149,7 +190,7 @@
             imgDelSuccessText: "Image deleted"
         };
         
-        Dropzone.autoDiscover = false;
+        $(".filestyle").filestyle();
 
         $('#users-form [maxlength]').maxlength({
             threshold: 20,
@@ -173,95 +214,34 @@
             }
         });
 
-        $(document).ready(function(){
-            var imagesDrop = new Dropzone('form#images-form', {
-                autoProcessQueue: false,
-                parallelUploads: 10,
-                maxFiles: 10,
-                paramName: 'images[]',
-                url: '{{url()->current()}}',
-                addRemoveLinks: true,
-                uploadMultiple: true,
-                acceptedFiles: ".png,.jpg,.gif,.bmp,.jpeg",
-                init: function () {
-                    var myDropzone = this;
-
-                    // Update selector to match your button
-                    $("#submit-user").click(function (e) {
-                        $('#users-form').valid();
-                        if(myDropzone.getQueuedFiles().length !== 0) {
-                            e.preventDefault();
-                            myDropzone.processQueue();
-                        } else {
-                            $('#users-form').submit();
-                        }
-                    });
-
-                    this.on('sending', function(file, xhr, formData) {
-                        // Append all form inputs to the formData Dropzone will POST
-                        var data = $('#users-form').serializeArray();
-                        $.each(data, function(key, el) {
-                            formData.append(el.name, el.value);
-                        });
-                    });
-
-                    this.on('successmultiple', function(file, xhr, formData) {
-                        showSystemMessage(xhr.message);
-                        // Append all form inputs to the formData Dropzone will POST
-                        window.location.replace("@route('users.list')");
-                    });
-
-                    this.on('resetFiles', function() {
-                        this.removeAllFiles();
-                    });
-                }
-            });
-
-            $('button:reset').on('click', function(e) {
-                $('#users-form')[0].reset();
-                imagesDrop.emit('resetFiles');
-            });
-        });
-
-    $('.slick').slick({
-           arrows: true,
-           dots: false,
-           speed: 700,
-           slidesToShow: 3,
-           adaptiveHeight: true,
-           slidesToScroll: 3,
-           prevArrow: "<span class='fa fa-chevron-left'></span>",
-           nextArrow: "<span class='fa fa-chevron-right'></span>"
-       });
        
-       
-    // Remove image - ajax call
-    $(".del-img-btn").on('click', function(e) {
-        
-        let imageId = $(this).data('id');
-        let btnObj = $(this);
-                
-        $.ajax({
-            url: blade.ajax.deleteImage,
-            method: 'POST',
-            data: {
-                   "imageId": imageId,
-                   "deleteChildren" : true
-                  },
-            success: function() { }
-        })
-        .done(function(result) {
-            result = JSON.parse(result);
-            showSystemMessage(blade.imgDelSuccessText);
-
-            // detach image elements group from the slider (slick)
-            btnObj.closest('li').detach();
+        // Remove image - ajax call
+        $(".del-img-btn").on('click', function(e) {
             
-        }).fail(function(result) {
-            console.log(result);
-            showSystemMessage(JSON.stringify(result.responseJSON.errors), 'error');
+            let imageId = $(this).data('id');
+            let btnObj = $(this);
+                    
+            $.ajax({
+                url: blade.ajax.deleteImage,
+                method: 'POST',
+                data: {
+                    "imageId": imageId,
+                    "deleteChildren" : true
+                    },
+                success: function() { }
+            })
+            .done(function(result) {
+                result = JSON.parse(result);
+                showSystemMessage(blade.imgDelSuccessText);
+
+                // detach image elements group from the slider (slick)
+                btnObj.closest('li').detach();
+                
+            }).fail(function(result) {
+                console.log(result);
+                showSystemMessage(JSON.stringify(result.responseJSON.errors), 'error');
+            });
         });
-    });
     </script>
     <!-- begin:page script -->
 @endpush
