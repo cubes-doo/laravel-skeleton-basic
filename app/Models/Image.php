@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 use App\Models\Utils\CropImageModelTrait;
 
@@ -33,12 +34,32 @@ class Image extends Model
     public static $imageDisk;
     
     
+//  You can put image resize recepies directly in this model:
+//   protected $imageResizeRecepies = [
+//       ...
+//   ];
+//    
+//   protected $multiImageResizeRecepies = [
+//       ...
+//   ];
+        
+    
     /*
      * Morph relation with imagable entities
      */
     public function imageable()
     {
         return $this->morphTo();
+    }
+    
+    public function scopeParents($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+    
+    public function scopeChildren($query)
+    {
+        return $query->whereNotNull('parent_id');
     }
     
     /**
@@ -52,12 +73,12 @@ class Image extends Model
     private function mergeRecepies(&$recipeArrStack)
     {
         if(isset($this->multiImageResizeRecepies)) {
-            $recipeArrStack[self::RR_MULTI] = array_merge($recipeArrStack[self::RR_MULTI], 
-                                                          $this->multiImageResizeRecepies);
+            $recipeArrStack[self::RR_MULTI] = array_merge($this->multiImageResizeRecepies,
+                                                          $recipeArrStack[self::RR_MULTI]);
         }
         if(isset($this->imageResizeRecepies)) {
-            $recipeArrStack[self::RR_SINGLE] = array_merge($recipeArrStack[self::RR_SINGLE],
-                                                           $this->imageResizeRecepies);
+            $recipeArrStack[self::RR_SINGLE] = array_merge($this->imageResizeRecepies, 
+                                                           $recipeArrStack[self::RR_SINGLE]);
         }
     }
     
@@ -89,9 +110,9 @@ class Image extends Model
                                               . "of type string or UploadedFile");
         }
         
-        $fnameBase = $fileinfo['filename'];
+        $fnameBase = Str::slug($fileinfo['filename']);
         $ext = $fileinfo['extension'] ?? '';
-        
+        $addendum = Str::slug($addendum);
         $newFilename = sprintf($templateStr, $imgId, $fnameBase, $addendum, $ext);
         
         if($path) {
@@ -114,7 +135,7 @@ class Image extends Model
                                            $constructFilname=NULL) 
     {
         if(is_string($constructFilname)) {
-            $fullFilename = $imgId . $constructFilname;
+            $fullFilename = $imgId . Str::slug($constructFilname);
         }               
         else if(is_callable($constructFilname)) {
             $fullFilename = $constructFilname($file, $imgId, $nameAddendum);
@@ -142,7 +163,7 @@ class Image extends Model
     public function storeImageWithActions($entity, $file, $class, $imgRecepiesStack,  
                                           $constructFilnameFunc=NULL)
     {
-        //$this->mergeRecepies($imgRecepiesStack); // UNTESTED
+        $this->mergeRecepies($imgRecepiesStack);
         
         $origImgObj = $entity->images()->create([
             "name" => "temporary",
@@ -244,16 +265,6 @@ class Image extends Model
     {
         $parentImgObj = $this;
         return Image::where('parent_id', $parentImgObj->id)->get();
-    }
-
-    public function scopeParents($query)
-    {
-        return $query->whereNull('parent_id');
-    }
-
-    public function scopeChildren($query)
-    {
-        return $query->whereNotNull('parent_id');
     }
     
     /**
