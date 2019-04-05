@@ -137,6 +137,10 @@ trait ImageableTrait
         if (is_string($file)) {
             $file = request()->file($file);
         }
+
+        if(empty($file)) {
+            return;
+        }
         
         if(!$file instanceof UploadedFile) {
             throw new \InvalidArgumentException;
@@ -171,6 +175,10 @@ trait ImageableTrait
         
         if (is_string($files)) {
             $files = collect(request()->file($files))->flatten()->toArray();
+        }
+
+        if(empty($files)) {
+            return;
         }
         
         foreach($files as $file) {
