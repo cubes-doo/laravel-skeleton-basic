@@ -2,7 +2,7 @@
 
 namespace App\Models\Utils;
 
-trait StoreFilesModel
+trait StoreFilesTrait
 {
     /**
      * The name of the storage disk to store files to

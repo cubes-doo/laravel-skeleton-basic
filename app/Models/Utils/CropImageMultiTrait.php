@@ -7,12 +7,12 @@ use Illuminate\Support\Str;
 /**
  * Trait depending on CropImagesModelTrait
  */
-trait CropImageMultiModelTrait
+trait CropImageMultiTrait
 {
     
     
     /*
-     * method signature as in StoreFilesModel (Trait)
+     * method signature as in StoreFilesTrait
      */
     public function processFileAfterStore($originalImage, $column)
     {

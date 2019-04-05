@@ -15,12 +15,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 use App\Models\Utils\{
-    ActiveInactive, 
-    ActiveInactiveModel,
-    StoreFilesModel,
-    CropImageModelTrait,
-    CropImageSingleModelTrait,
-    CropImageMultiModelTrait
+    ActiveInactiveInterface, 
+    ActiveInactiveTrait,
+    StoreFilesTrait,
+    CropImageTrait,
+    CropImageSingleTrait,
+    CropImageMultiTrait
 };
 
 /**
@@ -30,10 +30,10 @@ use App\Models\Utils\{
  * @package    Cubes
  * @copyright  Cubes d.o.o.
  */
-class Example extends Model implements ActiveInactive 
+class Example extends Model implements ActiveInactiveInterface 
 {
-    use ActiveInactiveModel, StoreFilesModel, CropImageModelTrait, 
-         CropImageSingleModelTrait, CropImageMultiModelTrait, SoftDeletes;
+    use ActiveInactiveTrait, StoreFilesTrait, CropImageTrait, 
+    CropImageSingleTrait, CropImageMultiTrait, SoftDeletes;
     
     /**
      * Constants: must be declared for non-arbitrary values, that will always correspond to an attribute in Entity

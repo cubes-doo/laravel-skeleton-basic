@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
  * Classes using this trait should set '$this->imageResizeRecepies' to 
  * wanted image resize sizes.
  */
-trait CropImageModelTrait  
+trait CropImageTrait  
 {
     /*
      * Name of this trait's config file

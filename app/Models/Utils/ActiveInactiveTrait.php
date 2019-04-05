@@ -12,7 +12,7 @@ namespace App\Models\Utils;
  *
  * @author aleksa
  */
-trait ActiveInactiveModel
+trait ActiveInactiveTrait
 {
     protected $activeField = 'active';
     

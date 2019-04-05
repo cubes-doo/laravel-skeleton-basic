@@ -223,7 +223,7 @@ class UsersController extends Controller
         
         // if there is a file being uploaded (ex. photo)
         // if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        //     // entites should use the App\Models\Utils\StoreFilesModel trait
+        //     // entites should use the App\Models\Utils\StoreFilesTrait trait
         //     $entity->storeFile('photo');
         // }
         
@@ -317,7 +317,7 @@ class UsersController extends Controller
         
         // if there is a file being uploaded (ex. photo)
         // if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        //     // entites should use the App\Models\Utils\StoreFilesModel trait
+        //     // entites should use the App\Models\Utils\StoreFilesTrait trait
         //     $entity->storeFile('photo');
         // }
         

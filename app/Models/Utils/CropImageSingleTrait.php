@@ -5,10 +5,10 @@ namespace App\Models\Utils;
 /**
  * Trait depending on CropImagesModelTrait
  */
-trait CropImageSingleModelTrait 
+trait CropImageSingleTrait 
 {
     /*
-     * method signature as in StoreFilesModel (Trait)
+     * method signature as in StoreFilesTrait
      */
     public function processFileBeforeStore($originalImage, $column)
     {

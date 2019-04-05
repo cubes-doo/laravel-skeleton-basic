@@ -12,7 +12,7 @@ namespace App\Models\Utils;
  *
  * @author aleksa
  */
-interface ActiveInactive
+interface ActiveInactiveInterface
 {
     const ACTIVE   = true;
     const INACTIVE = false;

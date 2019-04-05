@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
-use App\Models\Utils\CropImageModelTrait;
+use App\Models\Utils\CropImageTrait;
 
 /*
  * Image model
@@ -16,7 +16,7 @@ use App\Models\Utils\CropImageModelTrait;
  */
 class Image extends Model
 {
-    use CropImageModelTrait;
+    use CropImageTrait;
     
     const IMAGE_FOLDER_NAME = "images";
     
@@ -183,7 +183,7 @@ class Image extends Model
     }
     
     /**
-     * Process an image with image resize recepies using CropImageModelTrait
+     * Process an image with image resize recepies using CropImageTrait
      * 
      * @return boolean
      */
@@ -200,7 +200,7 @@ class Image extends Model
     }
     
     /**
-     * Process an image with multiple resize recepies using CropImageModelTrait
+     * Process an image with multiple resize recepies using CropImageTrait
      * 
      * @return boolean
      */
