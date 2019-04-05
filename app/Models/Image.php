@@ -10,13 +10,23 @@ use App\Models\Utils\CropImageModelTrait;
 /*
  * Image model
  * 
- * Relation::morphMap() is set in AppServiceProvider.
+ * Relation::morphMap() is set in ImageableTrait or AppServiceProvider.
+ * 
+ * TODO: Get paths for 'server-storage' and 'public-storage' form \Storage.
  */
 class Image extends Model
 {
     use CropImageModelTrait;
     
     const IMAGE_FOLDER_NAME = "images";
+    
+    /*
+     * Constants used for merging recepies arrays ( see mergeRecepies() and 
+     * storeImageWithActions() )
+     * RR - Resize Recipe
+     */
+    const RR_SINGLE = "single";
+    const RR_MULTI = "multi";
     
     public $timestamps = FALSE;
     protected $guarded = [];
@@ -32,22 +42,23 @@ class Image extends Model
     }
     
     /**
-     * NOT IMPLEMENTED !
-     * Read images specifications which overrides those from imageResizeRecepies
-     * or multiImageResizeRecepies
+     * Read image resize recepies from this model and merge them with 
+     * $recipeArrStack.
+     * 
+     * @param Array $recipeArrStack
+     * 
+     * @return void
      */
-    private function readImagesSpecs()
+    private function mergeRecepies(&$recipeArrStack)
     {
-        if(isset($this->imagableClasses)) {
-            return $this->imagableClasses;
+        if(isset($this->multiImageResizeRecepies)) {
+            $recipeArrStack[self::RR_MULTI] = array_merge($recipeArrStack[self::RR_MULTI], 
+                                                          $this->multiImageResizeRecepies);
         }
         if(isset($this->imageResizeRecepies)) {
-            return array_keys($this->imageResizeRecepies);
+            $recipeArrStack[self::RR_SINGLE] = array_merge($recipeArrStack[self::RR_SINGLE],
+                                                           $this->imageResizeRecepies);
         }
-        if(isset($this->multiImageResizeRecepies)) {
-            return array_keys($this->multiImageResizeRecepies);
-        }
-        return [];
     }
     
     /**
@@ -100,7 +111,7 @@ class Image extends Model
      * @return string|FALSE
      */
     public static function storeImageToHdd($file, $imgId, $nameAddendum='', 
-                                           \Closure $constructFilname=NULL) 
+                                           $constructFilname=NULL) 
     {
         if(is_string($constructFilname)) {
             $fullFilename = $imgId . $constructFilname;
@@ -128,17 +139,18 @@ class Image extends Model
     /*
      * Store image with processBefore and processAfter calls
      */
-    public function storeImageWithActions($entity, $file, $class, $imageResizeRecepies=[], 
-                                          $multiImageResizeRecepies=[], $constructFilnameFunc=NULL)
+    public function storeImageWithActions($entity, $file, $class, $imgRecepiesStack,  
+                                          $constructFilnameFunc=NULL)
     {
+        //$this->mergeRecepies($imgRecepiesStack); // UNTESTED
         
         $origImgObj = $entity->images()->create([
             "name" => "temporary",
             "class" => $class
         ]);
         
-        if (count($imageResizeRecepies) > 0) {
-            $this->processFileBeforeStore($file, $class, $imageResizeRecepies);
+        if (count($imgRecepiesStack[self::RR_SINGLE]) > 0) {
+            $this->processFileBeforeStore($file, $class, $imgRecepiesStack[self::RR_SINGLE]);
         }
 
         $origImgName = self::storeImageToHdd($file, $origImgObj->id, $class,
@@ -149,9 +161,9 @@ class Image extends Model
         
         $origImgSavePath = $this->getImagesStoragePath() . $origImgName;
         
-        if (count($multiImageResizeRecepies) > 0) { 
-            $this->processFileAfterStore($entity, $origImgObj->id, $origImgSavePath, $class, 
-                                         $multiImageResizeRecepies, $origImgName);
+        if (count($imgRecepiesStack[self::RR_MULTI]) > 0) { 
+            $this->processFileAfterStore($entity, $origImgObj->id, $origImgSavePath, 
+                                         $class, $imgRecepiesStack[self::RR_MULTI]);
         }
         
         return $origImgName;
@@ -160,12 +172,12 @@ class Image extends Model
     /*
      * Store image with processBefore and processAfter calls
      */
-    public function storeImagesWithActions($entity, $files, $class, $imageResizeRecepies=[], 
-                                          $multiImageResizeRecepies=[], $constructFilnameFunc=NULL)
+    public function storeImagesWithActions($entity, $files, $class, $imgRecepiesStack, 
+                                           $constructFilnameFunc=NULL)
     {
         foreach ($files as $file) {
-            $this->storeImageWithActions($entity, $file, $class, $imageResizeRecepies, 
-                                          $multiImageResizeRecepies, $constructFilnameFunc);
+            $this->storeImageWithActions($entity, $file, $class, $imgRecepiesStack, 
+                                         $constructFilnameFunc);
         }
         return;
     }
@@ -181,7 +193,7 @@ class Image extends Model
             return FALSE;
         }
         $resizedImage = $this->imageManipulate($originalImage, 
-                              $imageResizeRecepies[$class]);
+                                               $imageResizeRecepies[$class]);
         $resizedImage->save();
         
         return TRUE;
@@ -193,7 +205,7 @@ class Image extends Model
      * @return boolean
      */
     public function processFileAfterStore($entity, $origImgId, $origImagePath, $class, 
-                                          $multiImageResizeRecepies, $origImgName )
+                                          $multiImageResizeRecepies)
     {
         if(!isset($multiImageResizeRecepies[$class])) {
             return FALSE;
@@ -211,7 +223,7 @@ class Image extends Model
                     ]);
             
             $resizedImage = $this->imageManipulate($origImagePath, 
-                                  $imageResizeRecipe);
+                                                   $imageResizeRecipe);
             $newFilepath = self::constructImageFilename($origImagePath, $imgObj->id, 
                                                         $key, TRUE);
             $resizedImage->save($newFilepath);

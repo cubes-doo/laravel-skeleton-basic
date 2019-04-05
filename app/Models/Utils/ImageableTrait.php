@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models\Utils;
-use App\Model\Image;
+use App\Models\Image;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
@@ -10,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 trait ImageableTrait
 {
-    
+    /**
+     * Make morph map relation ( string(morphKey) pointing to class namespace )
+     */
     public static function bootImageableTrait()
     {
         /* morphMap for Image model */
@@ -19,7 +22,9 @@ trait ImageableTrait
         ]);
     }
     
-    
+    /*
+     * Get model's protected property $table as morph key.
+     */
     public static function getImagableMorphKey()
     {
         return (new static())->getTable();
@@ -32,59 +37,6 @@ trait ImageableTrait
     public function images()
     {
         return $this->morphMany('App\Models\Image', 'imageable');
-    }
-    
-    /**
-     * Delete one image from 'images' table
-     * 
-     * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
-     *                        where this trait is used
-     * @return void
-     */
-    public function deleteImage($class = NULL, $deleteChildren = TRUE)
-    {
-        $images = $this->images();
-        
-        if(!empty($class)) {
-            $images = $images->where('class', $class);
-        }
-
-        $first = $images()->first();
-
-        if($deleteChildren) {
-            $images->where('parent_id', $first->id)->delete();
-        }
-
-        $first->delete();
-    }
-    
-    /**
-     * Delete all images bound to the model using this trait, from 'images' table.
-     * 
-     * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
-     *                        where this trait is used
-     * @return void
-     */
-    public function deleteImages($class = NULL, $deleteChildren = true)
-    {
-        $images = $this->images();
-        
-        if(!empty($class)) {
-            $images = $images->where('class', $class);
-        }
-        
-        $images->get()->map(function($item, $key) use($deleteChildren, $images) {
-            if($deleteChildren) {
-                $images->where('parent_id', $item->id)->delete();
-            }
-            $item->delete();
-        });
     }
     
     /**
@@ -143,6 +95,29 @@ trait ImageableTrait
     }
     
     /**
+     * Return image resize recepies (single and multi) stack of arrays.
+     * 
+     * @return Array
+     */
+    private function getImgRecepiesStack()
+    {
+        $imgRecepiesStack = [
+            Image::RR_SINGLE => [],
+            Image::RR_MULTI => []
+        ];
+        
+        if(isset($this->imageResizeRecepies)) {
+            $imgRecepiesStack[Image::RR_SINGLE] = $this->imageResizeRecepies;
+        }
+        
+        if(isset($this->multiImageResizeRecepies)) {
+            $imgRecepiesStack[Image::RR_MULTI] = $this->multiImageResizeRecepies;
+        }
+        
+        return $imgRecepiesStack;
+    }
+    
+    /**
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
@@ -155,8 +130,6 @@ trait ImageableTrait
      */
     public function storeImage($class, $file = NULL, $newFilename = NULL)
     {
-        $imageResizeRecepies = [];
-        
         if(is_null($file)) {
             $file = request()->file($class);
         }
@@ -165,21 +138,15 @@ trait ImageableTrait
             $file = request()->file($file);
         }
         
-        if(!$file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+        if(!$file instanceof UploadedFile) {
             throw new \InvalidArgumentException;
         }
         
-        if(isset($this->imageResizeRecepies)) {
-            $imageResizeRecepies = $this->imageResizeRecepies;
-        }
-        
-        if(isset($this->multiImageResizeRecepies)) {
-            $multiImageResizeRecepies = $this->multiImageResizeRecepies;
-        }
+        $imgRecepiesStack = $this->getImgRecepiesStack();
 
-        $imgObj = new \App\Models\Image;
-        $imgObj->storeImageWithActions($this, $file, $class, $imageResizeRecepies, 
-                                       $multiImageResizeRecepies, $newFilename);
+        $imgObj = new Image();
+        $imgObj->storeImageWithActions($this, $file, $class, $imgRecepiesStack, 
+                                       $newFilename);
         
         return TRUE;
     }
@@ -189,14 +156,15 @@ trait ImageableTrait
      * Store multiple images in a single call
      * 
      * @param type $class
-     * @param type $file
+     * @param type $files
      * @param type $newFilename
+     * 
      * @throws \InvalidArgumentException
+     * 
+     * @return boolean
      */
     public function storeImages($class, $files = NULL, $newFilename = NULL)
     {
-        $imageResizeRecepies = [];
-        
         if(is_null($files)) {
             $files = collect(request()->file($class))->flatten()->toArray();
         }
@@ -206,22 +174,70 @@ trait ImageableTrait
         }
         
         foreach($files as $file) {
-            if(!$file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
+            if(!$file instanceof UploadedFile) {
                 throw new \InvalidArgumentException;
             }
         }
         
-        if(isset($this->imageResizeRecepies)) {
-            $imageResizeRecepies = $this->imageResizeRecepies;
+        $imgRecepiesStack = $this->getImgRecepiesStack();
+        
+        $imgObj = new Image();
+        $imgObj->storeImagesWithActions($this, $files, $class, $imgRecepiesStack, 
+                                        $newFilename);
+        return TRUE;
+    }
+    
+    /**
+     * Delete one image from 'images' table
+     * 
+     * @param string $class - !!!NOT A PHP CLASS
+     *                        examples:
+     *                          "avatar", "icon" ...
+     *                        i.e. an image (or image size) associated to the model 
+     *                        where this trait is used
+     * @return void
+     */
+    public function deleteImage($class = NULL, $deleteChildren = TRUE)
+    {
+        $images = $this->images();
+        
+        if(!empty($class)) {
+            $images = $images->where('class', $class);
+        }
+
+        $first = $images()->first();
+
+        if($deleteChildren) {
+            $images->where('parent_id', $first->id)->delete();
+        }
+
+        $first->delete();
+    }
+    
+    /**
+     * Delete all images bound to the model using this trait, from 'images' table.
+     * 
+     * @param string $class - !!!NOT A PHP CLASS
+     *                        examples:
+     *                          "avatar", "icon" ...
+     *                        i.e. an image (or image size) associated to the model 
+     *                        where this trait is used
+     * @return void
+     */
+    public function deleteImages($class = NULL, $deleteChildren = true)
+    {
+        $images = $this->images();
+        
+        if(!empty($class)) {
+            $images = $images->where('class', $class);
         }
         
-        if(isset($this->multiImageResizeRecepies)) {
-            $multiImageResizeRecepies = $this->multiImageResizeRecepies;
-        }
-        
-        $imgObj = new \App\Models\Image;
-        $imgObj->storeImagesWithActions($this, $files, $class, $imageResizeRecepies, 
-                                       $multiImageResizeRecepies, $newFilename);
+        $images->get()->map(function($item, $key) use($deleteChildren, $images) {
+            if($deleteChildren) {
+                $images->where('parent_id', $item->id)->delete();
+            }
+            $item->delete();
+        });
     }
     
 }
