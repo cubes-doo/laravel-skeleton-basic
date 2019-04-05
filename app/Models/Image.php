@@ -234,6 +234,27 @@ class Image extends Model
         
         return TRUE;
     }
+
+    /**
+     * Get all children images
+     * 
+     * @return Collection
+     */
+    public function getChildren()
+    {
+        $parentImgObj = $this;
+        return Image::where('parent_id', $parentImgObj->id)->get();
+    }
+
+    public function scopeParents($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    public function scopeChildren($query)
+    {
+        return $query->whereNotNull('parent_id');
+    }
     
     /**
      * Return image URL
