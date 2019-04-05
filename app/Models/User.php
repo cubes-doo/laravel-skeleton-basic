@@ -46,13 +46,13 @@ class User extends Authenticatable
     ];
     
     protected $imageResizeRecepies = [
-        'multiple_images' => [
-            [
-                'type' => 'fit',
-                'w' => 400,
-                'h' => 400,
-            ],
-        ],
+//        'multiple_images' => [
+//            [
+//                'type' => 'fit',
+//                'w' => 400,
+//                'h' => 400,
+//            ],
+//        ],
         'orig_image_resized_multiple' => [
             [
                 'type' => 'fit',

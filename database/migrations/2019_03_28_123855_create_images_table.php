@@ -22,6 +22,7 @@ class CreateImagesTable extends Migration
             $table->integer('imageable_id')->nullable()->comment('polymorphic relationship target id');
             $table->string('imageable_type')->nullable()->comment('polymorphic relationship table name');
             $table->unsignedBigInteger('parent_id')->nullable();
+            $table->foreign('parent_id')->references('id')->on('images')->onDelete('SET NULL');
         });
     }
 

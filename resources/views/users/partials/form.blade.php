@@ -116,22 +116,22 @@
 <p class="text-muted m-b-20">
     <pre>
         <code>
-            +----+---------------------------------------------------+-----------------+--------------+----------------+
-            | id |                       name                        |      class      | imageable_id | imageable_type |
-            +----+---------------------------------------------------+-----------------+--------------+----------------+
-            | 1  |    {myAwesomeImageName}_{multiple_images}.jpg     | multiple_images |      7       |      user      |
-            +----+---------------------------------------------------+-----------------+--------------+----------------+
-            | 2  | {myAwesomeImageName}_{multiple_images_avatar}.jpg |     avatar      |      7       |      user      |
-            +----+---------------------------------------------------+-----------------+--------------+----------------+
-            | 2  |  {myAwesomeImageName}_{multiple_images_icon}.jpg  |      icon       |      7       |      user      |
-            +----+---------------------------------------------------+-----------------+--------------+----------------+
+            +----+--------------------------------------------------------+-----------------+--------------+----------------+-------------+
+            | id |                         name                           |      class      | imageable_id | imageable_type |  parent_id  |
+            +----+--------------------------------------------------------+-----------------+--------------+----------------+-------------+
+            | 1  |   {id}-{myAwesomeImageName}-{multiple_images}.jpg      | multiple_images |      7       |      user      |     NULL    |
+            +----+--------------------------------------------------------+-----------------+--------------+----------------+-------------+
+            | 2  | {id}-{myAwesomeImageName}-{multiple_images_avatar}.jpg |     avatar      |      7       |      user      |      1      |
+            +----+--------------------------------------------------------+-----------------+--------------+----------------+-------------+
+            | 2  | {id}-{myAwesomeImageName}-{multiple_images_icon}.jpg   |      icon       |      7       |      user      |      1      |
+            +----+--------------------------------------------------------+-----------------+--------------+----------------+-------------+
         </code>
     </pre>
     <b>!!!Important terms:</b> 
     <ul>
         <li><b>class:</b> ["multiple_images", "avatar", "icon"] - the name of the size recipe (if set) or of the attribute that holds images related to the User </li>
         <li><b>imageable_id:</b> <code>id</code> of the User the image record is associated with</li>
-        <li><b>imageable_type:</b> the string associated to the User class in the <code>app/Providers/AppServiceProvider</code> </li>
+        <li><b>imageable_type:</b> the string associated to the User class which is currently set automatically with <code>Relation::morphMap()</code> to entity's <code>protected $table</code> value inside <code>ImageableTrait::boot()</code> method (Note: could be also set in <code>app/Providers/AppServiceProvider</code>) </li>
     </ul>
     This field was defined as <code>multiple_images</code> & has 3 resize recipes; one resizes the original image & the other 2 make thumbs from the original.
     <br>
