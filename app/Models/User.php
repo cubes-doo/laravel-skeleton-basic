@@ -46,19 +46,41 @@ class User extends Authenticatable
     ];
     
     protected $imageResizeRecepies = [
-        "multiple_images" => [
+        'multiple_images' => [
             [
-                "type" => "fit",
-                "w" => 400,
-                "h" => 400,
+                'type' => 'fit',
+                'w' => 400,
+                'h' => 400,
+            ],
+        ],
+        'orig_image_resized_multiple' => [
+            [
+                'type' => 'fit',
+                'w' => 350,
+                'h' => 200,
             ]
-        ] 
+        ],
+        'orig_image_resized' => [
+            [
+                'type' => 'fit',
+                'w' => 100,
+                'h' => 500,
+            ]
+        ],
     ];
 
     protected $multiImageResizeRecepies = [
-            "multiple_images" => [
-                'avatar' => "avatar",
-                'm' => "thumbnail"
-            ]
+        'multiple_images' => [
+            'avatar' => 'avatar',
+            'icon' => 'thumbnail'
+        ],
+        'orig_image_multiple' => [
+            'avatar' => 'avatar',
+            'icon' => 'thumbnail'
+        ],
+        'orig_image_resized_multiple' => [
+            'avatar' => 'avatar',
+            'icon' => 'thumbnail'
+        ]
     ];
 }
