@@ -1,6 +1,7 @@
 @push('head_links')
     <link href="{{asset('/theme/plugins/dropzone/css/dropzone.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('/theme/plugins/slick/slick.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('/theme/plugins/bootstrap-jasny/bootstrap-jasny.min.css')}}" rel="stylesheet" />
     <style>
         .dz-progress {
         /* progress bar covers file name */
@@ -182,6 +183,7 @@
     <!-- begin:page script -->
     <script src="{{asset('/theme/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js')}}"></script>
     <script src="{{asset('/theme/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+    <script src="{{asset('/theme/plugins/bootstrap-jasny/bootstrap-jasny.min.js')}}"></script>
     <script type="text/javascript">
         var blade = {
             ajax: {
@@ -215,7 +217,7 @@
         });
        
         // Remove image - ajax call
-        $(".del-img-btn").on('click', function(e) {
+        $(".del-multi-img-btn").on('click', function(e) {
             
             let btnObj = $(this);
             let imageId = btnObj.attr('data-image-id');

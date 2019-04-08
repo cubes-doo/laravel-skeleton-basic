@@ -40,6 +40,18 @@ trait ImageableTrait
     }
     
     /**
+     * Determine if entity has image of this class
+     * 
+     * @param string $class
+     * 
+     * @return boolean
+     */
+    public function hasImage($class)
+    {
+        return $this->images()->where('class', $class)->count() > 0;
+    }
+    
+    /**
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
@@ -49,7 +61,8 @@ trait ImageableTrait
      */
     public function getImageUrl($class)
     {
-        return $this->images()->where('class', $class)->first()->getUrl();
+        $image =  $this->images()->where('class', $class)->first();
+        return $image ? $image->getUrl() : '';
     }
     
     /**
@@ -287,12 +300,21 @@ trait ImageableTrait
             $images = $images->where('class', $class);
         }
         
-        $images->get()->map(function($item, $key) use($deleteChildren, $images) {
+        if(!$images) {
+            return FALSE;
+        }
+        
+        $images->get()->map(function($item, $key) use($deleteChildren) {
             if($deleteChildren) {
-                $images->where('parent_id', $item->id)->delete();
+                $this->images()->where('parent_id', $item->id)
+                               ->get()
+                               ->map(function($subitem, $subkey) {
+                                    $subitem->delete();
+                                });
             }
             $item->delete();
         });
+        
     }
     
 }

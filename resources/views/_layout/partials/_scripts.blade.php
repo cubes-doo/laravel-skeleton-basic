@@ -16,6 +16,8 @@
 <script src="{{asset('/theme/assets/js/jquery.core.js')}}"></script>
 <script src="{{asset('/theme/assets/js/jquery.app.js')}}"></script>
 
+<script src="{{asset('/custom/js/main.js')}}"></script>
+
 @include('_layout.partials.ajax')
 @include('_layout.partials.system_messages')
 @include('_layout.partials.validate')

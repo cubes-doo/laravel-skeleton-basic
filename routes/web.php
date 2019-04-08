@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('{entity}/edit',          $c . 'edit')->name('edit');
         Route::post('{entity}/edit',         $c . 'update');
         Route::post('{entity}/delete',       $c . 'delete')->name('delete');
-        Route::post('{entity}/delete-photo', $c . 'deletePhoto')->name('delete_photo');
+        Route::any('{entity}/delete-photo', $c . 'deletePhoto')->name('delete_photo');
     });
 
     /**

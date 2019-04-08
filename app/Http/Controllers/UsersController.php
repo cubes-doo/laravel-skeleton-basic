@@ -166,8 +166,7 @@ class UsersController extends Controller
     public function store()
     {
         $request = $this->request;
-//        dd($request->file('images'));
-//        dd($request->all());
+        //dd($request->all());
         
         #1 validation
         $data = $request->validate([
@@ -358,7 +357,7 @@ class UsersController extends Controller
      */
     public function deletePhoto(Request $request, Entity $entity)
     {
-        $message = __('User photo deleted!');
+        $message = __("User photo and it's children were deleted");
         
         $request->validate([
             "imageId" => ["nullable", "integer", "exists:images,id"],
@@ -375,14 +374,14 @@ class UsersController extends Controller
                 $imageObj->getChildren()->map(function($item){
                     $item->delete();
                 });
-                $message = __("User photo and it's children were deleted");
             }
             
             $imageObj->delete();
         } else {
             // Delete all images bound to entity
-            $entity->deleteImages($request->imageClass, true);
-            $message = __('All entity images were deleted');
+            $entity->deleteImages($request->imageClass, TRUE);
+            $message = __("Images with a class '{$request->imageClass}' and it's "
+                        . "children were deleted.");
         }
         
         // if ajax call is in place return JsonResource with message

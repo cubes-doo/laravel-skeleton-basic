@@ -7,10 +7,10 @@
         success: function(response){
             showSystemMessage(response.message);
 
-            if($('#datatables').DataTable()) {
+            if($('#datatables').length > 0) {
                 $('#datatables').DataTable().draw();
             } else {
-                console.log('no datatables to reload; must have id "datatables"');
+                console.log('No datatables to reload');
             }
         },
         error: function(){

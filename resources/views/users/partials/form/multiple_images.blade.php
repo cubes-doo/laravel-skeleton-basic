@@ -98,7 +98,7 @@
 @if(count($entity->images()->where('class', 'multiple_images')->get()) > 0)
     <div>
         <div class="d-flex justify-content-end">
-            <button data-image-class="multiple_images" class="btn btn-danger waves-effect del-img-btn">
+            <button data-image-class="multiple_images" class="btn btn-danger waves-effect del-multi-img-btn">
                 <i class="mdi mdi-delete"></i>
                 Delete all images
             </button>
@@ -111,11 +111,11 @@
                             <img src="{{ $parentImage->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
                             <div class="overlay d-flex align-items-center align-content-center">
                                 <div class="action m-auto">
-                                    <button data-image-id="{{$parentImage->id}}" data-delete-children="true" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
+                                    <button data-image-id="{{$parentImage->id}}" data-delete-children="true" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-multi-img-btn">
                                         <i class="mdi mdi-delete-sweep"></i>
                                     </button>
                                     |
-                                    <button data-image-id="{{$parentImage->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
+                                    <button data-image-id="{{$parentImage->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-multi-img-btn">
                                         <i class="mdi mdi-delete"></i>
                                     </button>
                                 </div>
@@ -130,7 +130,7 @@
                                 <img src="{{ $image->getUrl() }}" style='margin: 0 auto; width: auto !important; height: auto !important;'>
                                 <div class="overlay d-flex align-items-center align-content-center">
                                     <div class="action m-auto">
-                                        <button data-image-id="{{$image->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-img-btn">
+                                        <button data-image-id="{{$image->id}}" class="btn btn-danger btn-bordered waves-effect w-md waves-light del-multi-img-btn">
                                             <i class="mdi mdi-delete"></i>
                                         </button>
                                     </div>
