@@ -334,7 +334,7 @@ class Image extends Model
     public function deleteFileFromHdd()
     {
         $f = $this->getPath();
-        Log::debug("deleting '$f' image form HDD");
+        //Log::debug("deleting '$f' image form HDD");
 
         if(file_exists($f) && is_file($f)) {
             try {

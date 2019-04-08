@@ -196,6 +196,45 @@ trait ImageableTrait
     }
     
     /**
+     * Update an image.
+     * Implemented as 'delete old' - 'create new'.
+     * 
+     * @param string $class 
+     * @param $newFilename 
+     * 
+     * @return boolean
+     */
+    public function updateImage($class, $file = NULL, $newFilename = NULL)
+    {
+        if(is_null($file)) {
+            $file = request()->file($class);
+        }
+        
+        if (is_string($file)) {
+            $file = request()->file($file);
+        }
+
+        if(empty($file)) {
+            return;
+        }
+        
+        if(!$file instanceof UploadedFile) {
+            throw new \InvalidArgumentException;
+        }
+        
+        // Delete previous image and its children
+        $this->deleteImage($class, TRUE);
+        
+        $imgRecepiesStack = $this->getImgRecepiesStack();
+
+        $imgObj = new Image();
+        $imgObj->storeImageWithActions($this, $file, $class, $imgRecepiesStack, 
+                                       $newFilename);
+        
+        return TRUE;
+    }
+    
+    /**
      * Delete one image from 'images' table
      * 
      * @param string $class - !!!NOT A PHP CLASS
@@ -213,10 +252,18 @@ trait ImageableTrait
             $images = $images->where('class', $class);
         }
 
-        $first = $images()->first();
+        $first = $images->first();
+        
+        if(!$first) {
+            return FALSE;
+        }
 
         if($deleteChildren) {
-            $images->where('parent_id', $first->id)->delete();
+            $this->images()->where('parent_id', $first->id)
+                           ->get()
+                           ->map(function($item, $key) {
+                                $item->delete();
+                            });
         }
 
         $first->delete();
@@ -232,7 +279,7 @@ trait ImageableTrait
      *                        where this trait is used
      * @return void
      */
-    public function deleteImages($class = NULL, $deleteChildren = true)
+    public function deleteImages($class = NULL, $deleteChildren = TRUE)
     {
         $images = $this->images();
         

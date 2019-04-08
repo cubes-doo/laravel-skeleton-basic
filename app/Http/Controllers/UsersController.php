@@ -308,10 +308,10 @@ class UsersController extends Controller
         
         $entity->storeImages('multiple_images');
         
-        $entity->storeImage('orig_image_multiple');
-        $entity->storeImage('orig_image_resized_multiple');
-        $entity->storeImage('orig_image_resized');
-        $entity->storeImage('orig_image');
+        $entity->updateImage('orig_image_multiple');
+        $entity->updateImage('orig_image_resized_multiple');
+        $entity->updateImage('orig_image_resized');
+        $entity->updateImage('orig_image');
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
         
