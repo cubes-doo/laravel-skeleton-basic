@@ -13,12 +13,12 @@ use App\Models\Utils\CropImageTrait;
  * 
  * Relation::morphMap() is set in ImageableTrait or AppServiceProvider.
  * 
- * TODO: Get paths for 'server-storage' and 'public-storage' form \Storage.
  */
 class Image extends Model
 {
     use CropImageTrait;
     
+    const STORAGE_DISK = "public";
     const IMAGE_FOLDER_NAME = "images";
     
     /*
@@ -31,7 +31,6 @@ class Image extends Model
     
     public $timestamps = FALSE;
     protected $guarded = [];
-    public static $imageDisk;
     
     
 //  You can put image resize recepies directly in this model:
@@ -147,7 +146,7 @@ class Image extends Model
         
         try {
             $file->storeAs(self::IMAGE_FOLDER_NAME, $fullFilename, [
-                'disk' => "public"
+                'disk' => self::STORAGE_DISK
             ]);
         } catch (\Throwable $e) {
             $fullFilename = FALSE;
@@ -235,6 +234,8 @@ class Image extends Model
         $origImgInfo = pathinfo($origImagePath);
         $basePath = $origImgInfo['dirname'];
         
+        //dd($origImgInfo);
+        
         foreach($multiImageResizeRecepies[$class] as $key => $imageResizeRecipe) {
             
             $imgObj = $entity->images()->create([
@@ -274,18 +275,28 @@ class Image extends Model
      */
     public function getUrl()
     {
-        // TODO: get "/storage/" folder from laravel's \Storage facade
-        return "/storage/" . self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR . $this->name;  
+        return \Storage::url(self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR . $this->name);  
     }
     
     /**
+     * Return object \Storage pertaining to set storage disk.
+     * 
+     * @return Object
+     */
+    private static function getStorageDisk()
+    {
+        return \Storage::disk(self::STORAGE_DISK);
+    }
+    
+    /**
+     * NOT USED !!!
      * Get application's absolute storage path
      * 
      * @return string
      */
-    protected function getStoragePath()
+    public static function getStoragePath()
     {
-        return "/opt/public/storage/"; // TODO: get path from laravel's \Storage facade
+        return self::getStorageDisk()->path("");
     }
     
     /**
@@ -295,7 +306,7 @@ class Image extends Model
      */
     protected function getImagesStoragePath()
     {
-        return $this->getStoragePath() . self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR;
+        return self::getStorageDisk()->path(self::IMAGE_FOLDER_NAME) . DIRECTORY_SEPARATOR;
     }
     
     /**
@@ -335,6 +346,11 @@ class Image extends Model
     {
         $f = $this->getPath();
         //Log::debug("deleting '$f' image form HDD");
+        
+        // Use \Storage for deletion ??
+        /*
+         * self::getStorageDisk()->delete(self::IMAGE_FOLDER_NAME . DIRECTORY_SEPARATOR . $this->name)
+         */
 
         if(file_exists($f) && is_file($f)) {
             try {

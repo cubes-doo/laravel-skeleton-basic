@@ -15,7 +15,7 @@ trait CropImageTrait
     /*
      * Name of this trait's config file
      */
-    private $CONFIG_NAME = "crop-image-recipes";
+    private $CONFIG_NAME = "crop_image_recipes";
     
     /**
      * @var integer resize image according to specified width and height

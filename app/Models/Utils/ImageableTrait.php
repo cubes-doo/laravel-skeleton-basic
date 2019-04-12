@@ -48,7 +48,7 @@ trait ImageableTrait
      */
     public function hasImage($class)
     {
-        return $this->images()->where('class', $class)->count() > 0;
+        return $this->images->where('class', $class)->count() > 0;
     }
     
     /**
@@ -61,8 +61,8 @@ trait ImageableTrait
      */
     public function getImageUrl($class)
     {
-        $image =  $this->images()->where('class', $class)->first();
-        return $image ? $image->getUrl() : '';
+        $image =  $this->images->where('class', $class)->first();
+        return $image ? $image->getUrl() : NULL;
     }
     
     /**
@@ -77,7 +77,7 @@ trait ImageableTrait
      */
     public function getImage($class = NULL) 
     {
-        $images = $this->images();
+        $images = $this->images;
 
         if(!empty($class)) {
             $images = $images->where('class', $class);
@@ -98,13 +98,13 @@ trait ImageableTrait
      */
     public function getImages($class = NULL) 
     {
-        $images = $this->images();
+        $images = $this->images;
 
         if(!empty($class)) {
             $images = $images->where('class', $class);
         }
 
-        return $images->get();
+        return $images;
     }
     
     /**
@@ -259,7 +259,7 @@ trait ImageableTrait
      */
     public function deleteImage($class = NULL, $deleteChildren = TRUE)
     {
-        $images = $this->images();
+        $images = $this->images;
         
         if(!empty($class)) {
             $images = $images->where('class', $class);
@@ -272,8 +272,7 @@ trait ImageableTrait
         }
 
         if($deleteChildren) {
-            $this->images()->where('parent_id', $first->id)
-                           ->get()
+            $this->images->where('parent_id', $first->id)
                            ->map(function($item, $key) {
                                 $item->delete();
                             });
@@ -294,7 +293,7 @@ trait ImageableTrait
      */
     public function deleteImages($class = NULL, $deleteChildren = TRUE)
     {
-        $images = $this->images();
+        $images = $this->images;
         
         if(!empty($class)) {
             $images = $images->where('class', $class);
@@ -304,10 +303,9 @@ trait ImageableTrait
             return FALSE;
         }
         
-        $images->get()->map(function($item, $key) use($deleteChildren) {
+        $images->map(function($item, $key) use($deleteChildren) {
             if($deleteChildren) {
-                $this->images()->where('parent_id', $item->id)
-                               ->get()
+                $this->images->where('parent_id', $item->id)
                                ->map(function($subitem, $subkey) {
                                     $subitem->delete();
                                 });

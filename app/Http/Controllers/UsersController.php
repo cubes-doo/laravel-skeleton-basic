@@ -166,7 +166,6 @@ class UsersController extends Controller
     public function store()
     {
         $request = $this->request;
-        //dd($request->all());
         
         #1 validation
         $data = $request->validate([
@@ -182,10 +181,6 @@ class UsersController extends Controller
             // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
             // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
         ]);
-        //dd($request->all());
-        //(new \App\Models\Image)->storeImageWithActions($request->file('image'), 'test');
-        //(new \App\Models\Image)->storeImageWithActions($request->file('image'), 'test');
-        
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
@@ -217,14 +212,9 @@ class UsersController extends Controller
         $entity->storeImage('orig_image_resized_multiple');
         $entity->storeImage('orig_image_resized');
         $entity->storeImage('orig_image');
+        
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
-        
-        // if there is a file being uploaded (ex. photo)
-        // if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        //     // entites should use the App\Models\Utils\StoreFilesTrait trait
-        //     $entity->storeFile('photo');
-        // }
         
 		#6 Return propper response
 		
@@ -311,15 +301,10 @@ class UsersController extends Controller
         $entity->updateImage('orig_image_resized_multiple');
         $entity->updateImage('orig_image_resized');
         $entity->updateImage('orig_image');
+        
         // sync many to many relationships
         // $entity->tags()->sync($data['tag_ids']);
-        
-        // if there is a file being uploaded (ex. photo)
-        // if($request->hasFile('photo') && $request->file('photo')->isValid()) {
-        //     // entites should use the App\Models\Utils\StoreFilesTrait trait
-        //     $entity->storeFile('photo');
-        // }
-        
+        // 
 		#6 Return propper response
 		
 		// if ajax call is in place return JsonResource with message
@@ -357,7 +342,7 @@ class UsersController extends Controller
      */
     public function deletePhoto(Request $request, Entity $entity)
     {
-        $message = __("User photo and it's children were deleted");
+        $message = __("User photo was deleted");
         
         $request->validate([
             "imageId" => ["nullable", "integer", "exists:images,id"],
@@ -371,6 +356,7 @@ class UsersController extends Controller
             $imageObj = \App\Models\Image::find($request->imageId);
             
             if($request->has('deleteChildren')) {
+                $message = __("User photo and it's children were deleted");
                 $imageObj->getChildren()->map(function($item){
                     $item->delete();
                 });
