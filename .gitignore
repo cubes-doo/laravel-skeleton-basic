@@ -13,4 +13,5 @@
 /nbproject
 /.vscode
 /.php_cs.cache
-/docker/.env
+/docker/*
+/docker-compose/*
