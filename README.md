@@ -35,7 +35,7 @@ composer create-project cubes-doo/laravel-skeleton-basic newProjectName
 Now, if you want to use docker, first pull docker utillity files from our 'docker-compose' git repository:
 
 ```
-git clone https://github.com/cubes-doo/docker-compose.git && rm -rf docker-compose/.git && mv docker-compose docker
+git clone https://github.com/cubes-doo/docker-compose.git docker
 ```
 
 Next, lets copy the `docker/.env.example` to a new `docker/.env` file
