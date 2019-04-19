@@ -94,7 +94,7 @@
                 <span class="text-danger">*</span>
             </label>
             <div class="col-md-10">
-                <input type="text" name="email" value="{{old('email', $entity->email)}}" class="form-control @errorClass('email', 'is-invalid')" placeholder="@lang('Enter a Email')" @if($entity->id === auth()->user()->id) disabled @endif>
+                <input type="text" name="email" value="{{old('email', $entity->email)}}" class="form-control @errorClass('email', 'is-invalid')" placeholder="@lang('Enter a Email')">
                 @formError(['field' => 'email'])
                 @endformError
             </div>

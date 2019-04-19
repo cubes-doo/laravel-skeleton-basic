@@ -38,6 +38,11 @@ use Illuminate\Support\Carbon;
 use App\Models\User as Entity;
 use App\Http\Resources\Json as JsonResource;
 
+/*
+ * Dedicated class for create/edit validation
+ */
+use App\Http\Requests\UserRequest;
+
 /**
  * Example Controller for describing standards
  * 
@@ -163,40 +168,22 @@ class UsersController extends Controller
         ]);
     }
     
-    public function store()
+    public function store(UserRequest $request)
     {
-        $request = $this->request;
         
-        #1 validation
-        $data = $request->validate([
-            // validation rules:
-            // 1. required or nullable
-            // 2. modifier (string, int, date, numeric, file, etc)
-            // 3. validation rules specific to modifier
-            'first_name' => 'required|string|min:2|max:100',
-            'last_name'  => 'required|string|min:2|max:100',
-            'email'      => 'required|string|email',
-            'images.*.*' => 'required|file|image'
-            // 'due_date'     => 'required|date',
-            // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
-            // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
-        ]);
-        
-        #2 normalization = remove keys from $data that are files, and filter/normalize some values
-        // always unset file keys, it will be processed on request object directly
-        // unset($data['photo']);
-        // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
-        // $data['due_date'] = Carbon::parse($data['due_date']);
-        // always bcrypt passwords
-        // $data['password'] = bcrypt($data['password']);
+        # 1 validation
+        # Validation is specified within UserRequest class
+        # For situation when validation rules are created and called directly in 
+        # controller - see EntitiesController.
+        # get validated data
+        $data = $request->validated();
+
+        #2 normalization = remove keys from $data that are files, and 
+        # filter/normalize some values
+        $data['password'] = bcrypt('psst!@#');
         
         #3 business logic check and throw ValidationException
-        $data['password'] = bcrypt('psst!@#');
-        // if (auth()->user()->role != 'janitor') {
-        //     throw \Illuminate\Validation\ValidationException::withMessages([
-        //         'cards' => 'Your role can\'t create this entity for some reason or another'
-        //     ]);
-        // }
+        # no businness logic to check in this method
         
         #4 model population
         $entity = new Entity();
@@ -212,9 +199,6 @@ class UsersController extends Controller
         $entity->storeImage('orig_image_resized_multiple');
         $entity->storeImage('orig_image_resized');
         $entity->storeImage('orig_image');
-        
-        // sync many to many relationships
-        // $entity->tags()->sync($data['tag_ids']);
         
 		#6 Return propper response
 		
@@ -248,46 +232,17 @@ class UsersController extends Controller
 		]);
     }
 	
-    public function update(Entity $entity)
+    public function update(UserRequest $request, Entity $entity)
     {
-        $request = $this->request;
-        $required = 'required';
-        
-        if($entity->id === auth()->user()->id) {
-            $required = 'nullable';
-        }
-
         #1 validation
-        $data = $request->validate([
-            // validation rules:
-            // 1. required or nullable
-            // 2. modifier (string, int, date, numeric, file, etc)
-            // 3. validation rules specific to modifier
-            'first_name' => 'required|string|min:2|max:100',
-            'last_name'  => 'required|string|min:2|max:100',
-            'email'      => $required . '|string|email',
-            // 'due_date'     => 'required|date',
-            // 'status'       => 'required|string|in:' . implode(',', Entity::STATUSES),
-            // 'tag_ids'      => 'nullable|array|exists:tags,id', // many to many relationship
-        ]);
+        # get validated data
+        $data = $request->validated();
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
-        if($entity->id === auth()->user()->id) {
-            unset($data['email']);
-        }
-        // always unset file keys, it will be processed on request object directly
-        // unset($data['photo']);
-        // always use \Illuminate\Support\Carbon for this, because it is tied to the Time Zone of the application
-        // $data['due_date'] = Carbon::parse($data['due_date']);
-        // always bcrypt passwords
-        // $data['password'] = bcrypt($data['password']);
+        # no normalization is necessary for this method
         
         #3 business logic check and throw ValidationException
-        // if (auth()->user()->role != 'janitor') {
-        //     throw \Illuminate\Validation\ValidationException::withMessages([
-        //         'cards' => 'Your role can\'t create this entity for some reason or another'
-        //     ]);
-        // }
+        # no businness logic to check in this method
         
         #4 model population
         $entity->fill($data);
@@ -302,9 +257,6 @@ class UsersController extends Controller
         $entity->updateImage('orig_image_resized');
         $entity->updateImage('orig_image');
         
-        // sync many to many relationships
-        // $entity->tags()->sync($data['tag_ids']);
-        // 
 		#6 Return propper response
 		
 		// if ajax call is in place return JsonResource with message
