@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateImagesTable extends Migration
 {
-    private $tablename = "images";
+    private $tablename = 'images';
     
     /**
      * Run the migrations.

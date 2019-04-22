@@ -9,12 +9,11 @@
 namespace App\Models\Utils;
 
 /**
- *
  * @author aleksa
  */
 interface ActiveInactiveInterface
 {
-    const ACTIVE   = true;
+    const ACTIVE = true;
     const INACTIVE = false;
     
     public function isActive(): bool;

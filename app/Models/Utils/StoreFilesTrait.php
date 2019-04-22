@@ -6,6 +6,7 @@ trait StoreFilesTrait
 {
     /**
      * The name of the storage disk to store files to
+     *
      * @param string
      */
     //protected static $defaultStorageDiskName = 'public';
@@ -16,7 +17,6 @@ trait StoreFilesTrait
     //protected static $columnStorageDiskMap = [];
     
     /**
-     * 
      * @return string The storage disk name in filesystem config
      */
     public static function getDefaultStorageDiskName()
@@ -25,7 +25,6 @@ trait StoreFilesTrait
     }
     
     /**
-     * 
      * @return array Mapping of column vs disk name
      */
     public static function getColumnStorageDiskMap()
@@ -41,7 +40,7 @@ trait StoreFilesTrait
         $storageDiskName = static::getDefaultStorageDiskName();
         $columnStorageDiskMap = static::getColumnStorageDiskMap();
 
-        if (!empty($column) && isset($columnStorageDiskMap[$column])) {
+        if (! empty($column) && isset($columnStorageDiskMap[$column])) {
             $storageDiskName = $columnStorageDiskMap[$column];
         }
 
@@ -67,6 +66,8 @@ trait StoreFilesTrait
     }
 
     /**
+     * @param mixed $column
+     *
      * @return string
      */
     public function storageBasePath($column)
@@ -77,10 +78,12 @@ trait StoreFilesTrait
             return static::storageBaseDir() . '/' . $fileName;
         }
         
-        return null; 
+        return null;
     }
     
     /**
+     * @param mixed $column
+     *
      * @return string
      */
     public function fileName($column)
@@ -93,22 +96,24 @@ trait StoreFilesTrait
     }
     
     /**
+     * @param mixed $column
+     *
      * @return string
      */
-	public function fileUrl($column)
+    public function fileUrl($column)
     {
-        
         $storageBasePath = $this->storageBasePath($column);
         
         if ($storageBasePath) {
-
             return static::storageDisk($column)->url($storageBasePath);
         }
         
         return null;
-	}
+    }
     
     /**
+     * @param mixed $column
+     *
      * @return string
      */
     public function filePath($column)
@@ -116,7 +121,6 @@ trait StoreFilesTrait
         $storageBasePath = $this->storageBasePath($column);
         
         if ($storageBasePath) {
-
             return static::storageDisk($column)->path($storageBasePath);
         }
         
@@ -126,20 +130,18 @@ trait StoreFilesTrait
     /**
      * @param string $column
      * @param string|\Illuminate\Http\UploadedFile $file
+     *
      * @return mixed $this fluent interface
      */
     public function storeFile($column, $file = null)
     {
-        if (is_string($file) && !empty($file)) {
-
+        if (is_string($file) && ! empty($file)) {
             $file = request()->file($file);
-
-        } else if ($file === null) {
-
+        } elseif ($file === null) {
             $file = request()->file($column);
         }
 
-        if (!($file instanceof \Illuminate\Http\UploadedFile)) {
+        if (! ($file instanceof \Illuminate\Http\UploadedFile)) {
             throw new \InvalidArgumentException('Unable to resolve file from request');
         }
 
@@ -159,7 +161,7 @@ trait StoreFilesTrait
         }
         
         $file->storeAs(static::storageBaseDir(), $this->fileName($column), [
-            'disk' => static::storageDiskName($column)
+            'disk' => static::storageDiskName($column),
         ]);
         
         $this->save();
@@ -173,6 +175,8 @@ trait StoreFilesTrait
     }
     
     /**
+     * @param mixed $column
+     *
      * @return \Illuminate\Database\Eloquent\Model Fluent interface
      */
     public function deleteFile($column)
@@ -190,9 +194,10 @@ trait StoreFilesTrait
      * Left as an example for processFileBeforeStore
     protected function processFileBeforeStore(\Illuminate\Http\UploadedFile $file, $column)
     {
-        
+
     }
-    */
+     * @param mixed $column
+     */
     
     /**
      * Left as an example for processFileBeforeStore
@@ -200,7 +205,7 @@ trait StoreFilesTrait
     {
         $newPath = $this->filePath($column);
     }
-    */
+     */
 
     /**
      * @return string

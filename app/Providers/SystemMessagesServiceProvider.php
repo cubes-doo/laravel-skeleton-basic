@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Http\{Request, Response, RedirectResponse};
+use Illuminate\Http\{RedirectResponse, Request, Response};
 
 class SystemMessagesServiceProvider extends ServiceProvider
 {
@@ -16,23 +16,23 @@ class SystemMessagesServiceProvider extends ServiceProvider
     public function boot()
     {
         $key = self::KEY;
-        $systemMessage = function ($text, $type = 'success') use($key) {
+        $systemMessage = function ($text, $type = 'success') use ($key) {
             session()->flash($key, ['type' => $type, 'text' => $text]);
             return $this;
         };
-        $systemError = function ($text) use($key) {
+        $systemError = function ($text) use ($key) {
             session()->flash($key, ['type' => 'error', 'text' => $text]);
             return $this;
         };
-        $systemWarning = function ($text) use($key) {
+        $systemWarning = function ($text) use ($key) {
             session()->flash($key, ['type' => 'warning', 'text' => $text]);
             return $this;
         };
-        $systemInfo = function ($text) use($key) {
+        $systemInfo = function ($text) use ($key) {
             session()->flash($key, ['type' => 'info', 'text' => $text]);
             return $this;
         };
-        $systemSuccess = function ($text) use($key) {
+        $systemSuccess = function ($text) use ($key) {
             session()->flash($key, ['type' => 'success', 'text' => $text]);
             return $this;
         };
@@ -47,16 +47,16 @@ class SystemMessagesServiceProvider extends ServiceProvider
         Response::macro('withSystemSuccess', $systemSuccess);
         RedirectResponse::macro('withSystemSuccess', $systemSuccess);
         
-        Request::macro('getSystemMessage', function() use($key) {
+        Request::macro('getSystemMessage', function () use ($key) {
             return session()->get($key);
         });
-        Request::macro('getSystemMessageText', function() use($key) {
+        Request::macro('getSystemMessageText', function () use ($key) {
             $systemMessage = session()->get($key);
             if (is_array($systemMessage) && isset($systemMessage['text'])) {
                 return $systemMessage['text'];
             }
         });
-        Request::macro('getSystemMessageKey', function() use($key) {
+        Request::macro('getSystemMessageKey', function () use ($key) {
             return $key;
         });
     }

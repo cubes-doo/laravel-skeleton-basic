@@ -29,25 +29,23 @@ class ViewServiceProvider extends ServiceProvider
 
         // add custom blade directives
         \Blade::directive('activeClass', function ($expression) {
-            list($pattern, $class) = 
+            list($pattern, $class) =
                 explode(
-                    ',', 
+                    ',',
                     $this->normalize($expression)
-                )
-            ;
+                );
             return "<?= request()->is('$pattern') ? '$class' : ''; ?>";
-        }); 
+        });
         
         \Blade::directive('errorClass', function ($expression) {
-            list($pattern, $class) = 
+            list($pattern, $class) =
                 explode(
-                    ',', 
+                    ',',
                     $this->normalize($expression)
-                )
-            ;
+                );
             
             return '<?= $errors->has("' . $pattern . '") ? \'' . $class . '\' : ""; ?>';
-        }); 
+        });
         
         \Blade::directive('route', function ($expression) {
             $routeName = $this->normalize($expression);
@@ -59,13 +57,14 @@ class ViewServiceProvider extends ServiceProvider
     
     /**
      * Removes quotes & other characters passed to blade directives
-     * 
-     * When calling directives, the expressions given as parameters sometimes 
-     * are quoted, even though this is not necessary. 
-     * This method removes quotes, along with parentheses and 
+     *
+     * When calling directives, the expressions given as parameters sometimes
+     * are quoted, even though this is not necessary.
+     * This method removes quotes, along with parentheses and
      * blank space characters, there by approximating the actual value to be used.
-     * 
+     *
      * @param string $expression
+     *
      * @return string
      */
     protected function normalize(string $expression): string

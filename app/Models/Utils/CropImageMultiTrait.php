@@ -2,8 +2,6 @@
 
 namespace App\Models\Utils;
 
-use Illuminate\Support\Str;
-
 /**
  * Trait depending on CropImagesModelTrait
  */
@@ -16,23 +14,25 @@ trait CropImageMultiTrait
      */
     public function processFileAfterStore($originalImage, $column)
     {
-        if(!isset($this->multiImageResizeRecepies[$column])) {
-            return FALSE;
+        if (! isset($this->multiImageResizeRecepies[$column])) {
+            return false;
         }
         
-        $origImagePath =  $this->filePath($column);
+        $origImagePath = $this->filePath($column);
         
         $origImgInfo = pathinfo($origImagePath);
         $basePath = $origImgInfo['dirname'];
         
-        foreach($this->multiImageResizeRecepies[$column] as $key => $imageResizeRecipe) {
-            
-            $resizedImage = $this->imageManipulate($origImagePath, 
-                                  $imageResizeRecipe);
+        foreach ($this->multiImageResizeRecepies[$column] as $key => $imageResizeRecipe) {
+            $resizedImage = $this->imageManipulate(
+                $origImagePath,
+                $imageResizeRecipe
+            );
             $resizedImage->save(
-                $basePath 
-                . DIRECTORY_SEPARATOR 
-                . $origImgInfo['filename'] . '_' . $key . "." . $origImgInfo['extension'] ?? ""); 
+                $basePath
+                . DIRECTORY_SEPARATOR
+                . $origImgInfo['filename'] . '_' . $key . '.' . $origImgInfo['extension'] ?? ''
+            );
         }
     }
 }
