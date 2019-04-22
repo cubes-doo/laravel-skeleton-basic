@@ -147,10 +147,6 @@ Add additional notes about how to deploy this on a live system
 * [Laravel 5.8](https://laravel.com/docs/5.8/) - The web framework used
 * [Docker](https://docs.docker.com/) - Containerization platform
 
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/cubes-doo/laravel-skeleton-basic/releases). 
