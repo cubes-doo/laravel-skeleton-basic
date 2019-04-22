@@ -6,6 +6,7 @@ $rules = [
     'no_multiline_whitespace_before_semicolons' => true,
     'no_short_echo_tag' => true,
     'no_unused_imports' => true,
+    'no_empty_comment' => true,
     'not_operator_with_successor_space' => true,
     'no_useless_else' => true,
     'ordered_imports' => [
@@ -24,6 +25,17 @@ $rules = [
     'ternary_operator_spaces' => true,
     'trailing_comma_in_multiline_array' => true,
     'trim_array_spaces' => true,
+
+    'no_trailing_comma_in_singleline_array' => false,
+    'single_import_per_statement' => false,
+    //'header_comment' => [ // for file-level comment deletion
+    //    'header' => '',
+    //],
+    'binary_operator_spaces' => [
+        'operators' => [
+            '=' => 'single_space',
+        ]
+    ],
 ];
 
 return PhpCsFixer\Config::create()
