@@ -2,11 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 /**
- * Policies and models that they apply to should be included 
+ * Policies and models that they apply to should be included
  * (using the keyword <b>"use"</b>) like so:
  * <code>
  * |use    App\Policies\SomePolicyName,
@@ -14,16 +13,17 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
  * |       App\Models\SomeOtherModelName,
  * |       ...
  * |       App\Models\SomeFinalModelToWhomThePolicyShouldBeAppliedTo;
- * </code> 
- *  
+ * </code>
+ *
  * Other rules:
  * #1 Keep the <$policies> array clean!
  * #2 No long-term code commenting, please!
  * #3 Remove inclusions that are no longer necessary!
- * 
+ *
  * @category   class
- * @package    Cubes
+ *
  * @copyright  2015-2018 Cubes d.o.o.
+ *
  * @version    GIT: 1.0.0
  */
 class AuthServiceProvider extends ServiceProvider
@@ -45,7 +45,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }

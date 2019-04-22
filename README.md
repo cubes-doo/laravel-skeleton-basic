@@ -147,10 +147,6 @@ Add additional notes about how to deploy this on a live system
 * [Laravel 5.8](https://laravel.com/docs/5.8/) - The web framework used
 * [Docker](https://docs.docker.com/) - Containerization platform
 
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/cubes-doo/laravel-skeleton-basic/releases). 
@@ -161,14 +157,3 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Aleksa Cvijić** - *Developer* - [acvi](https://github.com/ACvijic)
 
 See also the list of [contributors](https://github.com/cubes-doo/laravel-skeleton-basic/graphs/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-

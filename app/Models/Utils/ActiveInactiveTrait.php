@@ -9,7 +9,6 @@
 namespace App\Models\Utils;
 
 /**
- *
  * @author aleksa
  */
 trait ActiveInactiveTrait
@@ -29,7 +28,7 @@ trait ActiveInactiveTrait
     public function scopeActive($query)
     {
         $query->where(
-            $this->getTable() . '.' . $this->activeField, 
+            $this->getTable() . '.' . $this->activeField,
             self::ACTIVE
         );
     }
@@ -37,7 +36,7 @@ trait ActiveInactiveTrait
     public function scopeInactive($query)
     {
         $query->where(
-            $this->getTable() . '.' . $this->activeField, 
+            $this->getTable() . '.' . $this->activeField,
             self::INACTIVE
         );
     }

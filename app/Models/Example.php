@@ -6,6 +6,7 @@
  * PHP version 7.2
  *
  * @category   class
+ *
  * @copyright  Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
@@ -15,24 +16,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
 
 use App\Models\Utils\{
-    ActiveInactiveInterface, 
+    ActiveInactiveInterface,
     ActiveInactiveTrait,
-    StoreFilesTrait,
-    CropImageTrait,
+    CropImageMultiTrait,
     CropImageSingleTrait,
-    CropImageMultiTrait
+    CropImageTrait,
+    StoreFilesTrait
 };
 
 /**
  * Example Model for describing standards
- * 
+ *
  * @category   Class
- * @package    Cubes
+ *
  * @copyright  Cubes d.o.o.
  */
-class Example extends Model implements ActiveInactiveInterface 
+class Example extends Model implements ActiveInactiveInterface
 {
-    use ActiveInactiveTrait, StoreFilesTrait, CropImageTrait, 
+    use ActiveInactiveTrait, StoreFilesTrait, CropImageTrait,
     CropImageSingleTrait, CropImageMultiTrait, SoftDeletes;
     
     /**
@@ -42,7 +43,7 @@ class Example extends Model implements ActiveInactiveInterface
         'status1',
         'status2',
         'status3',
-        'status4'
+        'status4',
     ];
     
     const STATUS_1 = 'status1';
@@ -84,25 +85,25 @@ class Example extends Model implements ActiveInactiveInterface
     
     protected $imageResizeRecepies = [
         
-        "photo_resize" => [
+        'photo_resize' => [
             [
-                "type" => "fit",
-                "w" => 1000,
-                "h" => 800,
+                'type' => 'fit',
+                'w' => 1000,
+                'h' => 800,
 //            "width" => 200,
 //            "height" => 400,
-            ]
+            ],
 //            if you wanna be redundant, go ahead :)
 //            [
 //                "type" => "fit",
 //                "w" => 800,
 //                "h" => 600,
 //            ],
-        ] 
+        ],
     ];
     
     protected $multiImageResizeRecepies = [
-            "photo_resize" => [
+            'photo_resize' => [
 //                's' => [
 //                    "type" => "fit",
 //                    "w" => 200,
@@ -113,16 +114,16 @@ class Example extends Model implements ActiveInactiveInterface
 //                    "w" => 800,
 //                    "h" => 600
 //                ],
-                'avatar' => "avatar",
-                'm' => "thumbnail"
-            ]
+                'avatar' => 'avatar',
+                'm' => 'thumbnail',
+            ],
     ];
     
     
     /**
      * Relationships: must be declared for all related models, even if they will never be used
      */
-    public function exampleParent() 
+    public function exampleParent()
     {
         return $this->belongsTo('App\Models\ExampleParent');
     }
@@ -132,18 +133,20 @@ class Example extends Model implements ActiveInactiveInterface
         return $this->hasMany('App\Models\Tag');
     }
     
-    public function exampleChild() 
+    public function exampleChild()
     {
         return $this->hasOne('App\Models\ExampleChild');
     }
     
-    public function exampleChildren() 
+    public function exampleChildren()
     {
         return $this->hasMany('App\Models\ExampleChild');
     }
     
     /**
      * Local Scopes: must be declared to avoid code repetition when querying the entity against its own table or any related table
+     *
+     * @param mixed $query
      */
     public function scopeMy($query)
     {
@@ -152,10 +155,10 @@ class Example extends Model implements ActiveInactiveInterface
     
     /**
      * Overriding delete method if delete logic is complicated & is a HARD delete.
-     * 
+     *
      * DO NOT DO THIS IF SOFT DELETE!!!
      */
-    public function delete() 
+    public function delete()
     {
         // deleting many-to-many relationships
         // $this->tags()->sync([]);

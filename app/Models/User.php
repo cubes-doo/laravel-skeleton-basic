@@ -6,6 +6,7 @@
  * PHP version 7.2
  *
  * @category   class
+ *
  * @copyright  Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
@@ -17,9 +18,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Model for the appplication user
- * 
+ *
  * @category   Class
- * @package    Cubes
+ *
  * @copyright  Cubes d.o.o.
  */
 class User extends Authenticatable
@@ -58,29 +59,29 @@ class User extends Authenticatable
                 'type' => 'fit',
                 'w' => 350,
                 'h' => 200,
-            ]
+            ],
         ],
         'orig_image_resized' => [
             [
                 'type' => 'fit',
                 'w' => 100,
                 'h' => 500,
-            ]
+            ],
         ],
     ];
 
     protected $multiImageResizeRecepies = [
         'multiple_images' => [
             'avatar' => 'avatar',
-            'icon' => 'thumbnail'
+            'icon' => 'thumbnail',
         ],
         'orig_image_multiple' => [
             'avatar' => 'avatar',
-            'icon' => 'thumbnail'
+            'icon' => 'thumbnail',
         ],
         'orig_image_resized_multiple' => [
             'avatar' => 'avatar',
-            'icon' => 'thumbnail'
-        ]
+            'icon' => 'thumbnail',
+        ],
     ];
 }

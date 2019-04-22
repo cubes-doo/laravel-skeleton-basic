@@ -6,8 +6,10 @@
  * PHP version 7.2
  *
  * @category   class
+ *
  * @copyright  2015-2018 Cubes d.o.o.
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
  * @version    GIT: 1.0.0
  */
 
@@ -21,24 +23,24 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 /**
  * Example Job for describing standards
- * 
+ *
  * Used for resource-heavy, recurring and/or time-consuming tasks.
- * 
- *  - __construct(): 
- *  - handle(): 
- *  - protected methods: 
- *  - properties: 
- * 
+ *
+ *  - __construct():
+ *  - handle():
+ *  - protected methods:
+ *  - properties:
+ *
  * @category   Class
- * @package    Cubes
+ *
  * @copyright  2015-2018 Cubes d.o.o.
+ *
  * @version    GIT: 1.0.0
  */
 class ExampleJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, 
-        SerializesModels
-    ;
+    use Dispatchable, InteractsWithQueue, Queueable,
+        SerializesModels;
     
     protected $example;
     
@@ -49,15 +51,14 @@ class ExampleJob implements ShouldQueue
     
     public function handle()
     {
-        
     }
     
-    public function getExample() 
+    public function getExample()
     {
         return $this->example;
     }
 
-    public function setExample($example) 
+    public function setExample($example)
     {
         $this->example = $example;
     }

@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Models\Utils;
+
 use App\Models\Image;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Trait for models which are using 'images' table with Image model.
@@ -18,7 +19,7 @@ trait ImageableTrait
     {
         /* morphMap for Image model */
         Relation::morphMap([
-            static::getImagableMorphKey() => static::class
+            static::getImagableMorphKey() => static::class,
         ]);
     }
     
@@ -41,9 +42,9 @@ trait ImageableTrait
     
     /**
      * Determine if entity has image of this class
-     * 
+     *
      * @param string $class
-     * 
+     *
      * @return boolean
      */
     public function hasImage($class)
@@ -55,31 +56,33 @@ trait ImageableTrait
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
+     *
      * @return string
      */
     public function getImageUrl($class)
     {
-        $image =  $this->images->where('class', $class)->first();
-        return $image ? $image->getUrl() : NULL;
+        $image = $this->images->where('class', $class)->first();
+        return $image ? $image->getUrl() : null;
     }
     
     /**
      * Get first image of a class
-     * 
+     *
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
+     *
      * @return Image
      */
-    public function getImage($class = NULL) 
+    public function getImage($class = null)
     {
         $images = $this->images;
 
-        if(!empty($class)) {
+        if (! empty($class)) {
             $images = $images->where('class', $class);
         }
         
@@ -88,19 +91,20 @@ trait ImageableTrait
     
     /**
      * Get all images or images of a class
-     * 
+     *
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
+     *
      * @return Collection
      */
-    public function getImages($class = NULL) 
+    public function getImages($class = null)
     {
         $images = $this->images;
 
-        if(!empty($class)) {
+        if (! empty($class)) {
             $images = $images->where('class', $class);
         }
 
@@ -109,21 +113,21 @@ trait ImageableTrait
     
     /**
      * Return image resize recepies (single and multi) stack of arrays.
-     * 
+     *
      * @return Array
      */
     private function getImgRecepiesStack()
     {
         $imgRecepiesStack = [
             Image::RR_SINGLE => [],
-            Image::RR_MULTI => []
+            Image::RR_MULTI => [],
         ];
         
-        if(isset($this->imageResizeRecepies)) {
+        if (isset($this->imageResizeRecepies)) {
             $imgRecepiesStack[Image::RR_SINGLE] = $this->imageResizeRecepies;
         }
         
-        if(isset($this->multiImageResizeRecepies)) {
+        if (isset($this->multiImageResizeRecepies)) {
             $imgRecepiesStack[Image::RR_MULTI] = $this->multiImageResizeRecepies;
         }
         
@@ -134,16 +138,16 @@ trait ImageableTrait
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
      * @param mixed $file (null|string|UploadedFile)
-     * @param $newFilename 
-     * 
+     * @param $newFilename
+     *
      * @return boolean
      */
-    public function storeImage($class, $file = NULL, $newFilename = NULL)
+    public function storeImage($class, $file = null, $newFilename = null)
     {
-        if(is_null($file)) {
+        if (is_null($file)) {
             $file = request()->file($class);
         }
         
@@ -151,38 +155,43 @@ trait ImageableTrait
             $file = request()->file($file);
         }
 
-        if(empty($file)) {
+        if (empty($file)) {
             return;
         }
         
-        if(!$file instanceof UploadedFile) {
+        if (! $file instanceof UploadedFile) {
             throw new \InvalidArgumentException;
         }
         
         $imgRecepiesStack = $this->getImgRecepiesStack();
 
         $imgObj = new Image();
-        $imgObj->storeImageWithActions($this, $file, $class, $imgRecepiesStack, 
-                                       $newFilename);
+        $imgObj->storeImageWithActions(
+            $this,
+            $file,
+            $class,
+            $imgRecepiesStack,
+            $newFilename
+        );
         
-        return TRUE;
+        return true;
     }
     
     
     /**
      * Store multiple images in a single call
-     * 
+     *
      * @param type $class
      * @param type $files
      * @param type $newFilename
-     * 
+     *
      * @throws \InvalidArgumentException
-     * 
+     *
      * @return boolean
      */
-    public function storeImages($class, $files = NULL, $newFilename = NULL)
+    public function storeImages($class, $files = null, $newFilename = null)
     {
-        if(is_null($files)) {
+        if (is_null($files)) {
             $files = collect(request()->file($class))->flatten()->toArray();
         }
         
@@ -190,12 +199,12 @@ trait ImageableTrait
             $files = collect(request()->file($files))->flatten()->toArray();
         }
 
-        if(empty($files)) {
+        if (empty($files)) {
             return;
         }
         
-        foreach($files as $file) {
-            if(!$file instanceof UploadedFile) {
+        foreach ($files as $file) {
+            if (! $file instanceof UploadedFile) {
                 throw new \InvalidArgumentException;
             }
         }
@@ -203,23 +212,29 @@ trait ImageableTrait
         $imgRecepiesStack = $this->getImgRecepiesStack();
         
         $imgObj = new Image();
-        $imgObj->storeImagesWithActions($this, $files, $class, $imgRecepiesStack, 
-                                        $newFilename);
-        return TRUE;
+        $imgObj->storeImagesWithActions(
+            $this,
+            $files,
+            $class,
+            $imgRecepiesStack,
+            $newFilename
+        );
+        return true;
     }
     
     /**
      * Update an image.
      * Implemented as 'delete old' - 'create new'.
-     * 
-     * @param string $class 
-     * @param $newFilename 
-     * 
+     *
+     * @param string $class
+     * @param $newFilename
+     * @param null|mixed $file
+     *
      * @return boolean
      */
-    public function updateImage($class, $file = NULL, $newFilename = NULL)
+    public function updateImage($class, $file = null, $newFilename = null)
     {
-        if(is_null($file)) {
+        if (is_null($file)) {
             $file = request()->file($class);
         }
         
@@ -227,55 +242,62 @@ trait ImageableTrait
             $file = request()->file($file);
         }
 
-        if(empty($file)) {
+        if (empty($file)) {
             return;
         }
         
-        if(!$file instanceof UploadedFile) {
+        if (! $file instanceof UploadedFile) {
             throw new \InvalidArgumentException;
         }
         
         // Delete previous image and its children
-        $this->deleteImage($class, TRUE);
+        $this->deleteImage($class, true);
         
         $imgRecepiesStack = $this->getImgRecepiesStack();
 
         $imgObj = new Image();
-        $imgObj->storeImageWithActions($this, $file, $class, $imgRecepiesStack, 
-                                       $newFilename);
+        $imgObj->storeImageWithActions(
+            $this,
+            $file,
+            $class,
+            $imgRecepiesStack,
+            $newFilename
+        );
         
-        return TRUE;
+        return true;
     }
     
     /**
      * Delete one image from 'images' table
-     * 
+     *
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
+     * @param mixed $deleteChildren
+     *
      * @return void
      */
-    public function deleteImage($class = NULL, $deleteChildren = TRUE)
+    public function deleteImage($class = null, $deleteChildren = true)
     {
         $images = $this->images;
         
-        if(!empty($class)) {
+        if (! empty($class)) {
             $images = $images->where('class', $class);
         }
 
         $first = $images->first();
         
-        if(!$first) {
-            return FALSE;
+        if (! $first) {
+            return false;
         }
 
-        if($deleteChildren) {
+        if ($deleteChildren) {
             $this->images->where('parent_id', $first->id)
-                           ->map(function($item, $key) {
-                                $item->delete();
-                            });
+                           ->map(function ($item, $key) {
+                               $item->delete();
+                           });
         }
 
         $first->delete();
@@ -283,36 +305,36 @@ trait ImageableTrait
     
     /**
      * Delete all images bound to the model using this trait, from 'images' table.
-     * 
+     *
      * @param string $class - !!!NOT A PHP CLASS
      *                        examples:
      *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model 
+     *                        i.e. an image (or image size) associated to the model
      *                        where this trait is used
+     * @param mixed $deleteChildren
+     *
      * @return void
      */
-    public function deleteImages($class = NULL, $deleteChildren = TRUE)
+    public function deleteImages($class = null, $deleteChildren = true)
     {
         $images = $this->images;
         
-        if(!empty($class)) {
+        if (! empty($class)) {
             $images = $images->where('class', $class);
         }
         
-        if(!$images) {
-            return FALSE;
+        if (! $images) {
+            return false;
         }
         
-        $images->map(function($item, $key) use($deleteChildren) {
-            if($deleteChildren) {
+        $images->map(function ($item, $key) use ($deleteChildren) {
+            if ($deleteChildren) {
                 $this->images->where('parent_id', $item->id)
-                               ->map(function($subitem, $subkey) {
-                                    $subitem->delete();
-                                });
+                               ->map(function ($subitem, $subkey) {
+                                   $subitem->delete();
+                               });
             }
             $item->delete();
         });
-        
     }
-    
 }
