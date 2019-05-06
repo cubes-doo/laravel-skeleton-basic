@@ -31,6 +31,35 @@
                 </li>
 
                 <li>
+                    <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>@lang('DT examples')</span> <span class="menu-arrow"></span></a>
+                    <ul class="nav-second-level nav" aria-expanded="true">
+                        <li>
+                            <a class="" href="{{ route('datatables.primary.list') }}">
+                                <i class="mdi mdi-account-multiple"></i>
+                                <span>@lang('without relations')</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ route('datatables.with_parent.list') }}">
+                                <i class="mdi mdi-account-multiple"></i>
+                                <span>@lang('with belongsTo/parent')</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ route('datatables.with_child.list') }}">
+                                <i class="mdi mdi-account-multiple"></i>
+                                <span>@lang('with hasOne/child')</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ route('datatables.with_children.list') }}">
+                                <i class="mdi mdi-account-multiple"></i>
+                                <span>@lang('with hasMany/children')</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="true">
                         <li><a href="javascript: void(0);">Level 1.1</a></li>
