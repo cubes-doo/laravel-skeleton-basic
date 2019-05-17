@@ -21,7 +21,7 @@ use App\Models\Utils\{
     CropImageMultiTrait,
     CropImageSingleTrait,
     CropImageTrait,
-    StoreFilesTrait
+    FileableTrait
 };
 
 /**
@@ -33,7 +33,7 @@ use App\Models\Utils\{
  */
 class Example extends Model implements ActiveInactiveInterface
 {
-    use ActiveInactiveTrait, StoreFilesTrait, CropImageTrait,
+    use ActiveInactiveTrait, FileableTrait, CropImageTrait,
     CropImageSingleTrait, CropImageMultiTrait, SoftDeletes;
     
     /**
