@@ -1,6 +1,6 @@
 @extends('_layout.layout')
 
-@section('head_title', __("Entities"))
+@section('head_title', __("Datatables without relations"))
 
 @push('head_links')
     <link href="{{asset('/theme/plugins/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css"/>    
@@ -9,19 +9,35 @@
 
 @section('content')
     @include('_layout.partials.breadcrumbs', [
-        'pageTitle' => __("Entities"),
+        'pageTitle' => __("Datatables without relations"),
         'breadcrumbs' => [
             url('/') => __('Home')
         ]
     ])
     <div class="row">
         <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted mb-0 text-center font-weight-bold">
+                        Datatable with data from entity model collection.
+                    </p>
+                    <p class="text-muted mb-0 text-center">
+                        PHP code for this datatable is very simple.
+                        <br>
+                        <b>Defining columns, searching and filtering is determined here in javascript</b>
+                    </p>
+                </div>
+                <!-- end content-->
+            </div>
+        <!--  end card  -->
+        </div>
+        <div class="col-md-12">
         <div class="card">
             <div class="card-header card-header-primary card-header-icon">
                 <div class="d-flex justify-content-between">
                     <h4 class="card-title"></h4>
                     <!-- begin:title-toolbar -->
-                    <a href="@route('entities.create')" class="btn btn-primary btn-round">
+                    <a href="javascript:;" class="btn btn-primary btn-round">
                         <span class="btn-label">
                             <i class="mdi mdi-plus-circle-outline"></i>
                         </span>
@@ -75,45 +91,7 @@
             "columns": [
                 {"data": "title"},
                 {"data": "actions", orderable: false, searchable: false, "className": "text-right"}
-            ],
-        });
-
-        // Delete record
-        table.on('click', '.delete', function() {
-            // fetch needed data from row
-            let $tr = $(this).closest('tr');
-
-            let entity = $tr.data('id');
-            // show swal to make sure this is an intentional action
-            Swal.fire({
-                title: "@lang('Are you sure you want to delete this?')",
-                text: "@lang('some or all data may be lost')",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: "@lang('Yes')",
-                cancelButtonText: "@lang('No, cancel')"
-            }).then(function(result){
-                if (result.value) {
-                    // if user decides to proceed
-                    $.ajax({
-                        url: `/entities/${entity}/delete`,
-                        method: 'POST'
-                    });
-                }
-            });
-        });
-
-        // De-/Activate a record
-        table.on('click', '.activate-deactivate', function(e) {
-            // fetch needed data from row
-            let $tr = $(this).closest('tr');
-
-            let entity = $tr.data('id');
-            // make an ajax request
-            $.ajax({
-                url: `/entities/${entity}/activate-deactivate`,
-                method: 'POST'
-            });
+            ]
         });
     </script>
     <!-- end:page script -->

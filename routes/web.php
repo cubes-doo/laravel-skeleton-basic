@@ -65,41 +65,21 @@ Route::middleware(['auth'])->group(function () {
         $c = 'DatatablesController@';
         Route::get('', $c . 'primaryShow')->name('list');
         Route::post('datatable', $c . 'primary')->name('datatable');
-        Route::get('create', $c . 'create')->name('create');
-        Route::post('create', $c . 'store');
-        Route::get('{entity}/edit', $c . 'edit')->name('edit');
-        Route::post('{entity}/edit', $c . 'update');
-        Route::post('{entity}/delete', $c . 'delete')->name('delete');
     });
     Route::name('datatables.with_parent.')->prefix('/datatables-with-parent/')->group(function () {
         $c = 'DatatablesController@';
         Route::get('', $c . 'parentShow')->name('list');
         Route::post('datatable', $c . 'withParent')->name('datatable');
-        Route::get('create', $c . 'create')->name('create');
-        Route::post('create', $c . 'store');
-        Route::get('{entity}/edit', $c . 'edit')->name('edit');
-        Route::post('{entity}/edit', $c . 'update');
-        Route::post('{entity}/delete', $c . 'delete')->name('delete');
     });
     Route::name('datatables.with_child.')->prefix('/datatables-with-child/')->group(function () {
         $c = 'DatatablesController@';
         Route::get('', $c . 'childShow')->name('list');
         Route::post('datatable', $c . 'withChild')->name('datatable');
-        Route::get('create', $c . 'create')->name('create');
-        Route::post('create', $c . 'store');
-        Route::get('{entity}/edit', $c . 'edit')->name('edit');
-        Route::post('{entity}/edit', $c . 'update');
-        Route::post('{entity}/delete', $c . 'delete')->name('delete');
     });
     Route::name('datatables.with_children.')->prefix('/datatables-with-children/')->group(function () {
         $c = 'DatatablesController@';
         Route::get('', $c . 'childrenShow')->name('list');
         Route::post('datatable', $c . 'withChildren')->name('datatable');
-        Route::get('create', $c . 'create')->name('create');
-        Route::post('create', $c . 'store');
-        Route::get('{entity}/edit', $c . 'edit')->name('edit');
-        Route::post('{entity}/edit', $c . 'update');
-        Route::post('{entity}/delete', $c . 'delete')->name('delete');
     });
     
 

@@ -1,6 +1,6 @@
 @extends('_layout.layout')
 
-@section('head_title', __("Entities"))
+@section('head_title', __("Datatables with parent"))
 
 @push('head_links')
     <link href="{{asset('/theme/plugins/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css"/>    
@@ -9,19 +9,73 @@
 
 @section('content')
     @include('_layout.partials.breadcrumbs', [
-        'pageTitle' => __("Entities"),
+        'pageTitle' => __("Datatables with parent relation"),
         'breadcrumbs' => [
             url('/') => __('Home')
         ]
     ])
     <div class="row">
         <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <p class="text-muted mb-0 text-center font-weight-bold">
+                        Datatable with data from entity model with parent relation.
+                    </p>
+                    <p class="text-muted mb-0 text-center">
+                        In backend we needed to define sql query for fetching, sorting/ordering and filtering data.
+                        <br>
+                        That code has been divided into couple steps:
+                    </p>
+                    <ul class="list-unstyled text-center">
+                        <li>
+                            <p>
+                                1. Defining ( populating ) entity and parent table variables (example: $entityTable = 'dt_primary')
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                2. Defining select (array of column names) for sql query
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                3. Define sql query with select and join methods
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                4. Define filter for columns of entity and parent tables
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                5. Add parent columns to datatable
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                6. Define ordering of parent columns with additional ordering by entity column
+                            </p>
+                        </li>
+                    </ul>
+                    <p class="text-muted mb-0 text-center">
+                        You need to pay attention when naming parent (relation) columns when you write code for query-filtering-ordering. Names must match. 
+                    </p>
+                    <p class="text-muted mb-0 text-center font-weight-bold">
+                        Defining columns is determined here in javascript but also in correspond "Controller@action"
+                    </p>
+                </div>
+                <!-- end content-->
+            </div>
+        <!--  end card  -->
+        </div>
+        <div class="col-md-12">
         <div class="card">
             <div class="card-header card-header-primary card-header-icon">
                 <div class="d-flex justify-content-between">
                     <h4 class="card-title"></h4>
                     <!-- begin:title-toolbar -->
-                    <a href="@route('entities.create')" class="btn btn-primary btn-round">
+                    <a href="javascript:;" class="btn btn-primary btn-round">
                         <span class="btn-label">
                             <i class="mdi mdi-plus-circle-outline"></i>
                         </span>
@@ -78,45 +132,7 @@
                 {"data": "title"},
                 {"data": "parent", "name":"parent"},
                 {"data": "actions", orderable: false, searchable: false, "className": "text-right"}
-            ],
-        });
-
-        // Delete record
-        table.on('click', '.delete', function() {
-            // fetch needed data from row
-            let $tr = $(this).closest('tr');
-
-            let entity = $tr.data('id');
-            // show swal to make sure this is an intentional action
-            Swal.fire({
-                title: "@lang('Are you sure you want to delete this?')",
-                text: "@lang('some or all data may be lost')",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: "@lang('Yes')",
-                cancelButtonText: "@lang('No, cancel')"
-            }).then(function(result){
-                if (result.value) {
-                    // if user decides to proceed
-                    $.ajax({
-                        url: `/entities/${entity}/delete`,
-                        method: 'POST'
-                    });
-                }
-            });
-        });
-
-        // De-/Activate a record
-        table.on('click', '.activate-deactivate', function(e) {
-            // fetch needed data from row
-            let $tr = $(this).closest('tr');
-
-            let entity = $tr.data('id');
-            // make an ajax request
-            $.ajax({
-                url: `/entities/${entity}/activate-deactivate`,
-                method: 'POST'
-            });
+            ]
         });
     </script>
     <!-- end:page script -->
