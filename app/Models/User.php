@@ -15,6 +15,7 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Junges\ACL\Traits\UsersTrait;
 
 /**
  * Model for the appplication user
@@ -27,6 +28,7 @@ class User extends Authenticatable
 {
     use Notifiable;
     use \App\Models\Utils\ImageableTrait;
+    use UsersTrait;
 
     /**
      * Mass assignable attributes
