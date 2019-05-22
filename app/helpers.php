@@ -125,3 +125,40 @@ if (! function_exists('json_config')) {
         return json_decode(file_get_contents($file), true) ?? [];
     }
 }
+
+if (! function_exists('get_models')) {
+    /**
+     * Returns an array of model names
+     *
+     * Models are looked for in app/Models/ and namespaced further with dot syntax.
+     *
+     * @return array
+     */
+    function get_models()
+    {
+        $path    = app_path() . '/Models';
+        $out     = [];
+        $results = scandir($path);
+
+        foreach ($results as $result) {
+            if ($result === '.' || $result === '..') {
+                continue;
+            }
+            
+            $filename = $path . '/' . $result;
+            if (is_dir($filename)) {
+                if($result !== 'Utils') {
+                    $out = array_merge($out, array_map(function($v) use($result) {
+                        $result = snake_case(substr($result,0,-4));
+                        return $result . '.' . $v;
+                    }, get_models($filename)));
+                }
+            }else{
+                $result = snake_case(substr($result,0,-4));
+                $out[] = $result;
+            }
+        }
+
+        return $out;
+    }
+}
