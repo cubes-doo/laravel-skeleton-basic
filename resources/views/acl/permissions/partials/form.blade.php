@@ -63,7 +63,7 @@
         <button class="btn btn-primary waves-effect waves-light" type="submit">
             @lang('Submit')
         </button>
-        <a href="@route('permissions.list')" class="btn btn-secondary waves-effect m-l-5">
+        <a href="@route('acl.permissions.list')" class="btn btn-secondary waves-effect m-l-5">
             @lang('Cancel')
         </a>
     </div>

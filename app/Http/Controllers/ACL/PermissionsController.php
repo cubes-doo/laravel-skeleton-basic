@@ -11,10 +11,12 @@
  * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ACL;
 
 //change the request class if needed
 use Illuminate\Support\Carbon;
+
+use App\Http\Controllers\Controller;
 
 use Junges\ACL\Http\Models\Permission as Entity;
 
@@ -94,7 +96,7 @@ class PermissionsController extends Controller
         //!!! OBLIGATORY IF JOIN IS USED!!!
         // $query->select('permissions.*');
         
-        return view('permissions.all');
+        return view('acl.permissions.all');
     }
     
     public function datatable()
@@ -107,7 +109,7 @@ class PermissionsController extends Controller
                     }
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('permissions.partials.table.actions', compact('entity'));
+                    return view('acl.permissions.partials.table.actions', compact('entity'));
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([
@@ -130,7 +132,7 @@ class PermissionsController extends Controller
         
         #4 retuning response
         
-        return view('permissions.create', [
+        return view('acl.permissions.create', [
             'entity' => new Entity(), // passed to avoid existence check on view script
             'models' => get_models(),
         ]);
@@ -203,7 +205,7 @@ class PermissionsController extends Controller
         
         #4 retuning response
         
-        return view('permissions.edit', [
+        return view('acl.permissions.edit', [
             'entity' => $entity
         ]);
     }

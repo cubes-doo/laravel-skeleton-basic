@@ -21,7 +21,7 @@
                 <div class="d-flex justify-content-between">
                     <h4 class="card-title"></h4>
                     <!-- begin:title-toolbar -->
-                    <a href="@route('permissions.create')" class="btn btn-primary btn-round">
+                    <a href="@route('acl.permissions.create')" class="btn btn-primary btn-round">
                         <span class="btn-label">
                             <i class="mdi mdi-plus-circle-outline"></i>
                         </span>
@@ -69,7 +69,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                url: "@route('permissions.datatable')",
+                url: "@route('acl.permissions.datatable')",
                 type: "POST",
             },
             "columns": [
@@ -96,7 +96,7 @@
                 if (result.value) {
                     // if user decides to proceed
                     $.ajax({
-                        url: `/permissions/${entity}/delete`,
+                        url: `/acl/permissions/${entity}/delete`,
                         method: 'POST'
                     });
                 }

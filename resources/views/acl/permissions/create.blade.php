@@ -1,13 +1,13 @@
 @extends('_layout.layout')
 
-@section('head_title', __("Permissions: Edit"))
+@section('head_title', __("Permissions: Create"))
 
 @section('content')
     @include('_layout.partials.breadcrumbs', [
-        'pageTitle' => __('Permissions: Edit'),
+        'pageTitle' => __('Permissions: Create'),
         'breadcrumbs' => [
             url('/') => __('Home'),
-            route('permissions.list') => __('Permissions'),
+            route('acl.permissions.list') => __('Permissions'),
         ]
     ])
     <div class="row">
@@ -22,7 +22,7 @@
                             @lang('Reset')
                         </button>
                         &nbsp;
-                        <a href="@route('permissions.list')" class="btn btn-primary btn-round">
+                        <a href="@route('acl.permissions.list')" class="btn btn-primary btn-round">
                             <span class="btn-label">
                                 <i class="mdi mdi-keyboard-backspace"></i>
                             </span>
@@ -36,7 +36,7 @@
                         <div class="col-lg-3">
                         </div>
                         <div class="col-lg-6">
-                            @include('permissions.partials.form')
+                            @include('acl.permissions.partials.form')
                         </div>
                     </div>
                 </div>

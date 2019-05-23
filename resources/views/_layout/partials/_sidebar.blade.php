@@ -37,7 +37,7 @@
                     </a>
                     <ul class="nav-second-level nav" aria-expanded="true">
                         <li>
-                            <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="{{route('permissions.list')}}">
+                            <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="{{route('acl.permissions.list')}}">
                                 @lang('Permissions')
                             </a>
                         </li>
