@@ -30,12 +30,19 @@
                     </a>
                 </li>
                 <li>
-                    <a class="@activeClass('permissions', 'active') @activeClass('permissions/*', 'active')" href="{{route('permissions.list')}}">
+                    <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="javascript: void(0);" aria-expanded="true">
                         <i class="mdi mdi-key"></i>
-                        <span>@lang('Permissions')</span>
+                        <span>@lang('ACL')</span> 
+                        <span class="menu-arrow"></span>
                     </a>
+                    <ul class="nav-second-level nav" aria-expanded="true">
+                        <li>
+                            <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="{{route('permissions.list')}}">
+                                @lang('Permissions')
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-
                 <li>
                     <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>@lang('DT examples')</span> <span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="true">
