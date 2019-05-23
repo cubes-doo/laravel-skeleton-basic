@@ -29,6 +29,12 @@
                         <span>@lang('Users')</span>
                     </a>
                 </li>
+                <li>
+                    <a class="@activeClass('permissions', 'active') @activeClass('permissions/*', 'active')" href="{{route('permissions.list')}}">
+                        <i class="mdi mdi-key"></i>
+                        <span>@lang('Permissions')</span>
+                    </a>
+                </li>
 
                 <li>
                     <a href="javascript: void(0);" aria-expanded="true"><i class="fi-share"></i> <span>@lang('DT examples')</span> <span class="menu-arrow"></span></a>

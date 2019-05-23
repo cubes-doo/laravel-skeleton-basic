@@ -80,7 +80,7 @@ class HelperPack
         $permissions = [];
         foreach(['create', 'read', 'update', 'delete'] as $action) {
             $permissions[$action] = [
-                'name' => ucfirst($action) . ' a ' . studly_case($model),
+                'name' => studly_case($model) . ': ' . ucfirst($action),
                 'slug' => $model . ':' . $action,
             ];
         }
