@@ -84,7 +84,7 @@
 
         $("#permissions-form").validate({
             rules: {
-                title: {
+                name: {
                     required: true,
                     rangelength: [3, 100]
                 },
