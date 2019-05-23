@@ -184,7 +184,7 @@ class PermissionsController extends Controller
         }
         
         //redirection with a message
-        return redirect()->route('permissions.list')->withSystemSuccess(__('Permission has been saved!'));
+        return redirect()->route('acl.permissions.list')->withSystemSuccess(__('Permission has been saved!'));
     }
     
     /**
@@ -254,7 +254,7 @@ class PermissionsController extends Controller
         }
         
         //redirection with a message
-        return redirect()->route('permissions.list')->withSystemSuccess(__('Permission has been saved!'));
+        return redirect()->route('acl.permissions.list')->withSystemSuccess(__('Permission has been saved!'));
     }
     
     /**
@@ -274,6 +274,6 @@ class PermissionsController extends Controller
             return JsonResource::make()->withSuccess(__('Permission has been deleted!'));
         }
         //redirection with a message
-        return redirect()->route('permissions.list')->withSystemSuccess(__('Permission has been deleted!'));
+        return redirect()->route('acl.permissions.list')->withSystemSuccess(__('Permission has been deleted!'));
     }
 }
