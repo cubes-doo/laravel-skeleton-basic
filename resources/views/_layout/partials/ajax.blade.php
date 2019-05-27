@@ -5,7 +5,9 @@
             'Accept': 'application/json'
         },
         success: function(response){
-            showSystemMessage(response.message);
+            if(response.message) {
+                showSystemMessage(response.message);
+            }
 
             if($('#datatables').length > 0) {
                 $('#datatables').DataTable().draw();
@@ -13,8 +15,9 @@
                 console.log('No datatables to reload');
             }
         },
-        error: function(){
+        error: function(e){
             showSystemMessage("@lang('An error occured when trying to execute this action')", "error");
+            console.error(e);
         }
     });
 </script>
