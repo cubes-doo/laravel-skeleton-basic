@@ -94,6 +94,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('{entity}/delete', $c . 'delete')->name('delete');
             Route::post('selection',       $c . 'selection')->name('selection');
         });
+        
+        Route::name('groups.')->prefix('/roles/')->group(function () {
+            $c = 'GroupsController@';
+            Route::get('',                 $c . 'all')->name('list');
+            Route::post('datatable',       $c . 'datatable')->name('datatable');
+            Route::get('create',           $c . 'create')->name('create');
+            Route::post('create',          $c . 'store');
+            Route::get('{entity}/edit',    $c . 'edit')->name('edit');
+            Route::post('{entity}/edit',   $c . 'update');
+            Route::post('{entity}/delete', $c . 'delete')->name('delete');
+        });
     });
 
     /*

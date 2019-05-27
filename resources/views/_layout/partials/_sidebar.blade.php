@@ -30,15 +30,20 @@
                     </a>
                 </li>
                 <li>
-                    <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="javascript: void(0);" aria-expanded="true">
+                    <a class="@activeClass('acl/*', 'active')" href="javascript: void(0);" aria-expanded="true">
                         <i class="mdi mdi-key"></i>
                         <span>@lang('ACL')</span> 
                         <span class="menu-arrow"></span>
                     </a>
                     <ul class="nav-second-level nav" aria-expanded="true">
                         <li>
-                            <a class="@activeClass('permissions', 'active')@activeClass('permissions/*', 'active')" href="{{route('acl.permissions.list')}}">
+                            <a class="@activeClass('acl/permissions', 'active')@activeClass('acl/permissions/*', 'active')" href="{{route('acl.permissions.list')}}">
                                 @lang('Permissions')
+                            </a>
+                        </li>
+                        <li>
+                            <a class="@activeClass('acl/groups', 'active')@activeClass('acl/groups/*', 'active')" href="{{route('acl.groups.list')}}">
+                                @lang('Roles')
                             </a>
                         </li>
                     </ul>
