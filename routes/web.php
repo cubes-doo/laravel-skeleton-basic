@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('{entity}/edit',    $c . 'edit')->name('edit');
             Route::post('{entity}/edit',   $c . 'update');
             Route::post('{entity}/delete', $c . 'delete')->name('delete');
+            Route::post('selection',       $c . 'selection')->name('selection');
         });
     });
 

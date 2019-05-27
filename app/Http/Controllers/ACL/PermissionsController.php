@@ -39,6 +39,7 @@ use Junges\ACL\Http\Models\Permission as Entity;
  */
 use Illuminate\Http\Request as Request;
 use App\Http\Resources\Json as JsonResource;
+use App\Http\Resources\Select2\PermissionGroup;
 
 /**
  * Example Controller for describing standards
@@ -275,5 +276,30 @@ class PermissionsController extends Controller
         }
         //redirection with a message
         return redirect()->route('acl.permissions.list')->withSystemSuccess(__('Permission has been deleted!'));
+    }
+
+    public function selection()
+    {
+        $permissions = Entity::query();
+        $data = $this->request->validate([
+            'q' => 'nullable|string'
+        ]);
+        
+        if(!empty($data['q'])) {
+            $permissions->where(function($q) use($data) {
+                $s = ['LIKE', '%' . $data['q'] . '%'];
+                $q->orWhere('name', ...$s);
+                $q->orWhere('description', ...$s);
+            });
+        }
+
+        $permissions = $permissions->get();
+
+        // return EntityResource::make($permissions);
+        return PermissionGroup::collection(
+            $permissions->groupBy(function ($item, $key) {
+                return explode(':', $item->slug)[0];
+            })->values()
+        );
     }
 }
