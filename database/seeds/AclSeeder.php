@@ -43,6 +43,41 @@ class AclSeeder extends Seeder
             'user:read'
         ],
     ];
+
+    protected $entityActions = [
+        'datatable_child' => [
+            'name' => 'Datatable Child',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'datatable_parent' => [
+            'name' => 'Datatable Parent',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'datatable_primary' => [
+            'name' => 'Datatable Primary',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'example' => [
+            'name' => 'Example',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'file' => [
+            'name' => 'File',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'collection' => [
+            'name' => 'Collection',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ], 
+        'collection.image' => [
+            'name' => 'Collection Image',
+            'actions' => ['create', 'read', 'update', 'delete', 'crop']
+        ], 
+        'user' => [
+            'name' => 'User',
+            'actions' => ['create', 'read', 'update', 'delete']
+        ]
+    ];
     
     /**
      * Runs the DB seed
@@ -63,8 +98,8 @@ class AclSeeder extends Seeder
         }
         
         $this->command->info('Creating default permisssions.');
-        foreach (get_models() as $model) {
-            foreach(HelperPack::generateCrudPermissionsForModel($model) as $value) {
+        foreach ($this->entityActions as $slug => $entity) {
+            foreach(HelperPack::generateCrudPermissionsForModel($slug, $entity['name'], $entity['actions']) as $value) {
                 Permission::create($value);
             }
         }

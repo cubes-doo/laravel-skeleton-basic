@@ -75,13 +75,16 @@ class HelperPack
         return sprintf('%s@%s', $preDomain, $domain);
     }
 
-    public static function generateCrudPermissionsForModel($model)
-    {
+    public static function generateCrudPermissionsForModel(
+        $entity, 
+        $entityName, 
+        $actions = ['create', 'read', 'update', 'delete']
+    ) {
         $permissions = [];
-        foreach(['create', 'read', 'update', 'delete'] as $action) {
+        foreach($actions as $action) {
             $permissions[$action] = [
-                'name' => studly_case($model) . ': ' . ucfirst($action),
-                'slug' => $model . ':' . $action,
+                'name' => $entityName . ': ' . ucfirst($action),
+                'slug' => $entity . ':' . $action,
             ];
         }
 
