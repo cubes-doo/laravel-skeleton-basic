@@ -72,7 +72,7 @@
                 <span class="text-danger">*</span>
             </label>
             <div class="col-md-10">
-                <input type="text" name="first_name" value="{{old('first_name', $entity->first_name)}}" class="form-control @errorClass('first_name', 'is-invalid')" placeholder="@lang('Enter a First Name')" autofocus maxlength="100">
+                <input type="text" name="first_name" value="{{old('first_name', $entity->first_name)}}" class="form-control @errorClass('first_name')" placeholder="@lang('Enter a First Name')" autofocus maxlength="100">
                 @formError(['field' => 'first_name'])
                 @endformError
             </div>
@@ -83,7 +83,7 @@
                 <span class="text-danger">*</span>
             </label>
             <div class="col-md-10">
-                <input type="text" name="last_name" value="{{old('last_name', $entity->last_name)}}" class="form-control @errorClass('last_name', 'is-invalid')" placeholder="@lang('Enter a Last Name')" maxlength="100">
+                <input type="text" name="last_name" value="{{old('last_name', $entity->last_name)}}" class="form-control @errorClass('last_name')" placeholder="@lang('Enter a Last Name')" maxlength="100">
                 @formError(['field' => 'last_name'])
                 @endformError
             </div>
@@ -94,7 +94,7 @@
                 <span class="text-danger">*</span>
             </label>
             <div class="col-md-10">
-                <input type="text" name="email" value="{{old('email', $entity->email)}}" class="form-control @errorClass('email', 'is-invalid')" placeholder="@lang('Enter a Email')">
+                <input type="text" name="email" value="{{old('email', $entity->email)}}" class="form-control @errorClass('email')" placeholder="@lang('Enter a Email')">
                 @formError(['field' => 'email'])
                 @endformError
             </div>

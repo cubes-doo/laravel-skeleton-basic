@@ -8,7 +8,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">@lang('Navigation')</li>
                 <li>
-                    <a class="@activeClass('dashboard', 'active')" href="{{route('dashboard')}}">
+                    <a class="@activeClass('dashboard')" href="{{route('dashboard')}}">
                         <i class="fi-air-play"></i>
                         <span class="badge badge-pill badge-success float-right">1</span> 
                         <span>@lang('Dashboard')</span>
