@@ -39,6 +39,7 @@ use Junges\ACL\Http\Models\Group as Entity;
  */
 use Illuminate\Http\Request as Request;
 use App\Http\Resources\Json as JsonResource;
+use App\Http\Resources\Select2\Role;
 
 /**
  * Example Controller for describing standards
@@ -271,5 +272,26 @@ class GroupsController extends Controller
         }
         //redirection with a message
         return redirect()->route('acl.groups.list')->withSystemSuccess(__('Role has been deleted!'));
+    }
+
+    public function selection()
+    {
+        $entities = Entity::query();
+        $data = $this->request->validate([
+            'q' => 'nullable|string'
+        ]);
+        
+        if(!empty($data['q'])) {
+            $entities->where(function($q) use($data) {
+                $s = ['LIKE', '%' . $data['q'] . '%'];
+                $q->orWhere('name', ...$s);
+                $q->orWhere('description', ...$s);
+            });
+        }
+
+        $entities = $entities->get();
+
+        // return EntityResource::make($entities);
+        return Role::collection($entities);
     }
 }
