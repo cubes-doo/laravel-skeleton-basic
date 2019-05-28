@@ -92,6 +92,11 @@ class UsersController extends Controller
             
             return $next($request);
         });
+
+        $this
+            ->middleware(['groups:admin'])
+            ->only(['permissions', 'updatePermissions'])
+        ;
     }
 
     /**
