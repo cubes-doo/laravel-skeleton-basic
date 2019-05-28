@@ -29,27 +29,47 @@ class ViewServiceProvider extends ServiceProvider
 
         // add custom blade directives
         \Blade::directive('activeClass', function ($expression) {
-            list($pattern, $class) =
-                explode(
-                    ',',
-                    $this->normalize($expression)
-                );
-            return "<?= request()->is('$pattern') ? '$class' : ''; ?>";
+            $e = explode(
+                ',',
+                $expression
+            );
+
+            $pattern = $e[0] ?? '';
+            $class   = $this->normalize($e[1] ?? 'active');
+
+            return '<?php echo (request()->is(' . $pattern . ') ? \'' . $class . '\' : null); ?>';
         });
         
         \Blade::directive('errorClass', function ($expression) {
-            list($pattern, $class) =
-                explode(
-                    ',',
-                    $this->normalize($expression)
-                );
+            $e = explode(
+                ',',
+                $expression
+            );
+
+            $pattern = $e[0] ?? '';
+            $class   = $this->normalize($e[1] ?? 'is-invalid');
             
-            return '<?= $errors->has("' . $pattern . '") ? \'' . $class . '\' : ""; ?>';
+            return '<?php echo ($errors->has(' . $pattern . ') ? \'' . $class . '\' : null); ?>';
         });
         
         \Blade::directive('route', function ($expression) {
-            $routeName = $this->normalize($expression);
-            return "<?= route('$routeName'); ?>";
+            $e = explode(
+                ',',
+                $expression
+            );
+
+            $routeName = $e[0] ?? '';
+            $params    = $e[1] ?? [];
+
+            $out = '';
+
+            if(!empty($params)) {
+                $out = "<?php echo (route($routeName, $params)); ?>";
+            } else {
+                $out = "<?php echo (route($routeName)); ?>";
+            }
+
+            return $out;
         });
 
         \Blade::component('_layout.partials.form.error', 'formError');
