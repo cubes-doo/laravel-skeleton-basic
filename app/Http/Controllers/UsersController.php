@@ -42,6 +42,8 @@ use App\Http\Resources\Json as JsonResource;
  * Dedicated class for create/edit validation
  */
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\Select2\PermissionGroup;
+use Junges\ACL\Http\Models\Permission;
 
 /**
  * Example Controller for describing standards
@@ -392,28 +394,30 @@ class UsersController extends Controller
                 ->first()
         ;
 
-        $permissions = 
+        $usedPermissions = 
             optional($entity->permissions)
-                ->map(function($item, $key){
-                    return [
-                        'id'   => $item->id,
-                        'text' => $item->name
-                    ];
-                })
+                ->pluck('id')
+                ->toArray()
         ;
+
+        $permissions = PermissionGroup::collection(
+            Permission::get()->groupBy(function ($item, $key) {
+                return explode(':', $item->slug)[0];
+            })->values()
+        )->toArray($this->request);
         
         return view(
             'users.permissions', 
-            compact('group', 'permissions')
+            compact('group', 'usedPermissions', 'permissions')
         );
     }
 
     public function updatePermissions(Entity $entity)
     {
         $data = $this->request->validate([
-            'group'         => 'required_without:permissions|exists:acl_groups,id',
-            'permissions'   => 'required_without:group|array',
-            'permissions.*' => 'integer|exists:acl_permissions,id',
+            'group'           => 'required_without:permissions|exists:acl_groups,id',
+            'permissions'     => 'required_without:group|array',
+            'permissions.*.*' => 'integer|exists:acl_permissions,id',
         ]);
         
         $entity->revokeAllGroups();
@@ -424,7 +428,7 @@ class UsersController extends Controller
         }
 
         if(!empty($data['permissions'])) {
-            $entity->syncPermissions($data['permissions']);
+            $entity->syncPermissions(collect($data['permissions'])->collapse()->toArray());
         }
 
         return redirect()->route('users.list')->withSystemSuccess(__('User permissions have been saved!'));

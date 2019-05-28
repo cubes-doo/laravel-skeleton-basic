@@ -48,7 +48,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-md-10">
-                                        <select name="group" class="form-control select2" @unless ($permissions->isEmpty()) disabled @endunless>
+                                        <select name="group" class="form-control select2" @unless (empty($usedPermissions)) disabled @endunless>
                                             @unless (empty($group))
                                                 <option value="{{$group['id']}}" selected>{{$group['text']}}</option>
                                             @endunless
@@ -62,25 +62,56 @@
                                         @lang('Customize permissions')
                                     </label>
                                     <div class="col-md-10">
-                                        <input name="custom-permissions" type="checkbox" value="1" @unless ($permissions->isEmpty()) checked @endunless data-plugin="switchery" data-color="#1bb99a"/>
+                                        <input name="custom-permissions" type="checkbox" value="1" @unless (empty($usedPermissions)) checked @endunless data-plugin="switchery" data-color="#1bb99a"/>
                                     </div>
                                 </div>
-                                <div class="form-group row custom-permissions" @if($permissions->isEmpty()) style="display: none" @endif>
-                                    <label class="col-md-2 control-label">
-                                        @lang('Permissions')
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="col-md-10">
-                                        <select name="permissions[]" multiple class="form-control select2" @unless (empty($group)) disabled @endunless>
-                                            @unless ($permissions->isEmpty())
-                                                @foreach ($permissions as $permission)
-                                                    <option value="{{$permission['id']}}" selected>{{$permission['text']}}</option>
+                                <div class="form-group row custom-permissions" @if(empty($usedPermissions)) style="display: none" @endif>
+                                    @unless (empty($permissions))
+                                        <label class="col-md-2 control-label">
+                                            @lang('Permissions')
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-md-10">
+                                            <div class="accordion" id="accordion-test-2">
+                                                @foreach ($permissions as $permissionGroup)
+                                                    <div class="card mb-2">
+                                                        <div class="card-heading">
+                                                            <h4 class="card-title font-14">
+                                                                <a href="#" class="collapsed" data-toggle="collapse" data-target="#group-{{$permissionGroup['id']}}" @if($loop->first) aria-expanded="true" @endif aria-controls="group-{{$permissionGroup['id']}}">
+                                                                    {{$permissionGroup['text']}}
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="group-{{$permissionGroup['id']}}" class="collapse @if($loop->first)show @endif" data-parent="#accordion-test-2">
+                                                            <div class="card-body">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input type="checkbox" name="permissions[{{$permissionGroup['id']}}][]" value="*">
+                                                                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                                                        *
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-inline">
+                                                                    @foreach ($permissionGroup['children'] as $permission)
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" name="permissions[{{$permissionGroup['id']}}][]" value="{{$permission['id']}}" @if (in_array($permission['id'], $usedPermissions)) checked @endif>
+                                                                                <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                                                                {{$permission['text']}}
+                                                                            </label>
+                                                                        </div>
+                                                                        &nbsp;
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @endforeach
-                                            @endunless
-                                        </select>
-                                        @formError(['field' => 'permissions'])
-                                        @endformError
-                                    </div>
+                                            </div>
+                                        </div>
+                                    @endunless
+                                    @formError(['field' => 'permissions'])
+                                    @endformError
                                 </div>
                                 <div class="form-group text-right m-b-0">
                                     <button class="btn btn-primary waves-effect waves-light" type="submit">
@@ -120,21 +151,25 @@
             if($(this).prop('checked')) {
                 $('.custom-permissions').slideDown();
                 $('[name=group]').prop('disabled', true);
-                $('[name="permissions[]"]').prop('disabled', false);
+                $('[name*="permissions["]').prop('disabled', false);
             } else {
                 $('.custom-permissions').slideUp();
-                $('[name="permissions[]"]').prop('disabled', true);
+                $('[name*="permissions["]').prop('disabled', true);
                 $('[name=group]').prop('disabled', false);
             }
         });
 
-        $('[name="permissions[]"]').select2({
-            placeholder: "@lang('--Assign permissions --')",
-            ajax: {
-                type: 'POST',
-                url: '@route(acl.permissions.selection)',
-                dataType: 'json',
-                delay: 1000
+        $('input[name^=permissions]').change(function(e) {
+            let $t = $(this);
+            let thisPermissionGroup = $(`input[name="${$t.attr('name')}"]`);
+            if($(this).val() == '*') {
+                thisPermissionGroup.prop('checked', $t.prop('checked'));
+            } else {
+                let total = thisPermissionGroup.length;
+                let checkedTotal = $(`input[name="${$t.attr('name')}"]:checked`).length;
+                if(total != checkedTotal) {
+                    $(`input[name="${$t.attr('name')}"][value="*"]`).prop('checked', false);
+                }
             }
         });
 
@@ -151,6 +186,10 @@
                     }
                 }
             }
+        });
+
+        $('#permissions-form').submit(function(e) {
+            $(`input[value="*"]`).remove();
         });
     </script>
     <!-- begin:page script -->

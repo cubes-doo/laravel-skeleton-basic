@@ -40,6 +40,8 @@ use Junges\ACL\Http\Models\Group as Entity;
 use Illuminate\Http\Request as Request;
 use App\Http\Resources\Json as JsonResource;
 use App\Http\Resources\Select2\Role;
+use Junges\ACL\Http\Models\Permission;
+use App\Http\Resources\Select2\PermissionGroup;
 
 /**
  * Example Controller for describing standards
@@ -128,6 +130,12 @@ class GroupsController extends Controller
         
         return view('acl.groups.create', [
             'entity' => new Entity(), // passed to avoid existence check on view script
+            'usedPermissions' => [],
+            'permissions' => PermissionGroup::collection(
+                Permission::get()->groupBy(function ($item, $key) {
+                    return explode(':', $item->slug)[0];
+                })->values()
+            )->toArray($this->request),
         ]);
     }
     
@@ -141,9 +149,10 @@ class GroupsController extends Controller
             // 1. required or nullable
             // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'name'        => 'required|string|min:3|max:100',
-            'permissions' => 'required|array|exists:acl_permissions,id',
-            'description' => 'nullable|string|min:10|max:655',
+            'name'            => 'required|string|min:3|max:100',
+            'permissions'     => 'required|array',
+            'permissions.*.*' => 'integer|exists:acl_permissions,id',
+            'description'     => 'nullable|string|min:10|max:655',
         ]);
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
@@ -164,7 +173,7 @@ class GroupsController extends Controller
         $entity->save();
         
         // sync many to many relationships
-        $entity->assignPermissions($data['permissions']);
+        $entity->assignPermissions(collect($data['permissions'])->collapse()->toArray());
         
         // if there is a file being uploaded (ex. photo)
         
@@ -198,12 +207,12 @@ class GroupsController extends Controller
         
         return view('acl.groups.edit', [
             'entity'      => $entity,
-            'permissions' => $entity->permissions->map(function($item, $key){
-                return [
-                    'id'   => $item->id,
-                    'text' => $item->name
-                ];
-            })
+            'usedPermissions' => $entity->permissions->pluck('id')->toArray(),
+            'permissions' => PermissionGroup::collection(
+                Permission::get()->groupBy(function ($item, $key) {
+                    return explode(':', $item->slug)[0];
+                })->values()
+            )->toArray($this->request),
         ]);
     }
     
@@ -217,11 +226,12 @@ class GroupsController extends Controller
             // 1. required or nullable
             // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'name'        => 'required|string|min:3|max:100',
-            'permissions' => 'required|array|exists:acl_permissions,id',
-            'description' => 'nullable|string|min:10|max:655',
+            'name'            => 'required|string|min:3|max:100',
+            'permissions'     => 'required|array',
+            'permissions.*.*' => 'integer|exists:acl_permissions,id',
+            'description'     => 'nullable|string|min:10|max:655',
         ]);
-        
+
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
         // always unset file keys, it will be processed on request object directly
         $data['slug'] = snake_case($data['name']);
@@ -239,7 +249,7 @@ class GroupsController extends Controller
         $entity->save();
         
         // sync many to many relationships
-        $entity->syncPermissions($data['permissions']);
+        $entity->syncPermissions(collect($data['permissions'])->collapse()->toArray());
         // if there is a file being uploaded (ex. photo)
         
         #6 Return propper response

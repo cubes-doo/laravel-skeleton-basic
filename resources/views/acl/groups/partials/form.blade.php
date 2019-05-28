@@ -2,7 +2,7 @@
     <link href="{{asset('/theme/plugins/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
 @endpush
 <!-- begin:form -->
-<form id="permissions-form" method="POST" class="form-horizontal" enctype="multipart/form-data">
+<form id="groups-form" method="POST" class="form-horizontal" enctype="multipart/form-data">
     {{ csrf_field() }}
     <div class="form-group row">
         <label class="col-md-2 control-label">
@@ -16,21 +16,52 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-md-2 control-label">
-            @lang('Permissions')
-            <span class="text-danger">*</span>
-        </label>
-        <div class="col-md-10">
-            <select name="permissions[]" multiple class="form-control select2">
-                @unless (empty($permissions))
-                    @foreach ($permissions as $permission)
-                        <option value="{{$permission['id']}}" selected>{{$permission['text']}}</option>
+        @unless (empty($permissions))
+            <label class="col-md-2 control-label">
+                @lang('Permissions')
+                <span class="text-danger">*</span>
+            </label>
+            <div class="col-md-10">
+                <div class="accordion" id="accordion-test-2">
+                    @foreach ($permissions as $permissionGroup)
+                        <div class="card mb-2">
+                            <div class="card-heading">
+                                <h4 class="card-title font-14">
+                                    <a href="#" class="collapsed" data-toggle="collapse" data-target="#group-{{$permissionGroup['id']}}" @if($loop->first) aria-expanded="true" @endif aria-controls="group-{{$permissionGroup['id']}}">
+                                        {{$permissionGroup['text']}}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="group-{{$permissionGroup['id']}}" class="collapse @if($loop->first)show @endif" data-parent="#accordion-test-2">
+                                <div class="card-body">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="permissions[{{$permissionGroup['id']}}][]" value="*">
+                                            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                            *
+                                        </label>
+                                    </div>
+                                    <div class="form-inline">
+                                        @foreach ($permissionGroup['children'] as $permission)
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="permissions[{{$permissionGroup['id']}}][]" value="{{$permission['id']}}" @if (in_array($permission['id'], $usedPermissions)) checked @endif>
+                                                    <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                                    {{$permission['text']}}
+                                                </label>
+                                            </div>
+                                            &nbsp;
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
-                @endunless
-            </select>
-            @formError(['field' => 'permissions'])
-            @endformError
-        </div>
+                </div>
+            </div>
+        @endunless
+        @formError(['field' => 'permissions'])
+        @endformError
     </div>
     <div class="form-group row">
         <label class="col-md-2 control-label">
@@ -57,27 +88,31 @@
     <script src="{{asset('/theme/plugins/select2/js/select2.min.js')}}"></script>
     <script src="{{asset('/theme/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
     <script type="text/javascript">
-        $('#permissions-form textarea').maxlength({
+        $('#groups-form textarea').maxlength({
             threshold: 655,
             placement: 'right'
         });
 
-        $('#permissions-form :text').maxlength({
+        $('#groups-form :text').maxlength({
             threshold: 100,
             placement: 'right'
         });
 
-        $('[name*="permissions"]').select2({
-            placeholder: "@lang('--Assign permissions --')",
-            ajax: {
-                type: 'POST',
-                url: '@route(acl.permissions.selection)',
-                dataType: 'json',
-                delay: 1000
+        $('input[name^=permissions]').change(function(e) {
+            let $t = $(this);
+            let thisPermissionGroup = $(`input[name="${$t.attr('name')}"]`);
+            if($(this).val() == '*') {
+                thisPermissionGroup.prop('checked', $t.prop('checked'));
+            } else {
+                let total = thisPermissionGroup.length;
+                let checkedTotal = $(`input[name="${$t.attr('name')}"]:checked`).length;
+                if(total != checkedTotal) {
+                    $(`input[name="${$t.attr('name')}"][value="*"]`).prop('checked', false);
+                }
             }
         });
 
-        $("#permissions-form").validate({
+        $("#groups-form").validate({
             rules: {
                 name: {
                     required: true,
@@ -91,6 +126,10 @@
                     rangelength: [10, 655]
                 }
             }
+        });
+
+        $('#groups-form').submit(function(e) {
+            $(`input[value="*"]`).remove();
         });
     </script>
     <!-- begin:page script -->
