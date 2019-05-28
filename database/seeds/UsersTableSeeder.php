@@ -51,7 +51,11 @@ class UsersTableSeeder extends Seeder
     {
         $this->command->info("Truncating {$this->table} table.");
         
-        \DB::table($this->table)->truncate();
+        \DB::raw("
+            SET FOREIGN_KEY_CHECKS = 0; 
+            TRUNCATE table $this->table; 
+            SET FOREIGN_KEY_CHECKS = 1;
+        ");
         
         $this->command->info('Creating default users.');
         

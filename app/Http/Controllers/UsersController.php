@@ -92,6 +92,11 @@ class UsersController extends Controller
             
             return $next($request);
         });
+
+        $this
+            ->middleware(['groups:admin'])
+            ->only(['permissions', 'updatePermissions'])
+        ;
     }
 
     /**
@@ -372,6 +377,57 @@ class UsersController extends Controller
         
         //redirection with a message
         return redirect()->route('users.list')->withSystemSuccess($message);
+    }
+
+    public function permissions(Entity $entity)
+    {
+        $group = 
+            optional($entity->groups)
+                ->map(function($item, $key) {
+                    return [
+                        'id' => $item->id,
+                        'text' => $item->name
+                    ];
+                })
+                ->first()
+        ;
+
+        $permissions = 
+            optional($entity->permissions)
+                ->map(function($item, $key){
+                    return [
+                        'id'   => $item->id,
+                        'text' => $item->name
+                    ];
+                })
+        ;
+        
+        return view(
+            'users.permissions', 
+            compact('group', 'permissions')
+        );
+    }
+
+    public function updatePermissions(Entity $entity)
+    {
+        $data = $this->request->validate([
+            'group'         => 'required_without:permissions|exists:acl_groups,id',
+            'permissions'   => 'required_without:group|array',
+            'permissions.*' => 'integer|exists:acl_permissions,id',
+        ]);
+        
+        $entity->revokeAllGroups();
+
+        if(!empty($data['group'])) {
+            $entity->revokeAllPermissions();
+            $entity->assignGroup([$data['group']]);
+        }
+
+        if(!empty($data['permissions'])) {
+            $entity->syncPermissions($data['permissions']);
+        }
+
+        return redirect()->route('users.list')->withSystemSuccess(__('User permissions have been saved!'));
     }
     
     /**

@@ -10,6 +10,7 @@
 <script src="{{asset('/theme/assets/js/jquery.slimscroll.js')}}"></script>
 <script src="{{asset('/theme/plugins/bootstrap-select/js/bootstrap-select.min.js')}}"></script>
 <script src="{{asset('/theme/plugins/sweet-alert2/sweetalert2.min.js')}}"></script>
+<script src="{{asset('/theme/plugins/switchery/switchery.min.js')}}"></script>
         
 
 <!-- App js -->
