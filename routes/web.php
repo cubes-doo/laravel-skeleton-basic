@@ -51,14 +51,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('users.')->prefix('/users/')->group(function () {
         $c = 'UsersController@';
-        Route::get('', $c . 'all')->name('list');
-        Route::post('datatable', $c . 'datatable')->name('datatable');
-        Route::get('create', $c . 'create')->name('create');
-        Route::post('create', $c . 'store');
-        Route::get('{entity}/edit', $c . 'edit')->name('edit');
-        Route::post('{entity}/edit', $c . 'update');
-        Route::post('{entity}/delete', $c . 'delete')->name('delete');
+        Route::get('',                      $c . 'all')->name('list');
+        Route::post('datatable',            $c . 'datatable')->name('datatable');
+        Route::get('create',                $c . 'create')->name('create');
+        Route::post('create',               $c . 'store');
+        Route::get('{entity}/edit',         $c . 'edit')->name('edit');
+        Route::post('{entity}/edit',        $c . 'update');
+        Route::post('{entity}/delete',      $c . 'delete')->name('delete');
         Route::any('{entity}/delete-photo', $c . 'deletePhoto')->name('delete_photo');
+        Route::get('{entity}/permissions',  $c . 'permissions')->name('permissions');
+        Route::post('{entity}/permissions', $c . 'updatePermissions');
     });
     
     Route::name('datatables.primary.')->prefix('/datatables-primary/')->group(function () {
