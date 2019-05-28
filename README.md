@@ -11,7 +11,7 @@
 
 A Laravel starter project, for defining standards & kickoff speed :rocket:
 
-*Read this in other languages: [English](README.md), [Srpski](README.sr-lat.md), [Српски](README.sr-cyr.md)*
+*Read this in other languages: [Srpski](README.sr-lat.md), [Српски](README.sr-cyr.md)*
 
 ## Getting Started
 
@@ -68,6 +68,18 @@ to enter the docker container's shell, and then inside it, run:
 
 ```
 composer install
+```
+
+in file .env in root check if APP_KEY has value (exmple: 'APP_KEY=base64:Q1teAHYgmZtZ5ZFD1CJZp8yzlQuBqUeXsz3Mn++/yl3='), if it doesn't also run:
+
+```
+php artisan key:generate
+```
+
+For making and filling your local database with test data you should run:
+
+```
+php artisan migrate --seed
 ```
 
 and you are good to go!
@@ -156,4 +168,4 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Aleksandar Dimic** - *Chief Science Officer* - [aleksandar-dimic](https://github.com/aleksandar-dimic)
 * **Aleksa Cvijić** - *Developer* - [acvi](https://github.com/ACvijic)
 
-See also the list of [contributors](https://github.com/cubes-doo/laravel-skeleton-basic/graphs/contributors) who participated in this project.
+See also the [list of contributors](https://github.com/cubes-doo/laravel-skeleton-basic/graphs/contributors) who participated in this project.
