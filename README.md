@@ -115,14 +115,6 @@ sudo docker/docker-php-cs-fix.sh
 ```
 > actually fixes the code using php-cs-fixer
 
-### Automating code checks
-
-To automate code checking, you could register git hooks that will run one of the commands mentioned above. We prefer the `commit` hook, but you could pick one that best suits you  :smile:
-
-```
-Give an example
-```
-
 ## Running the tests
 
 We created a script, that runs tests inside the Docker container:

@@ -115,14 +115,6 @@ sudo docker/docker-php-cs-fix.sh
 ```
 > zapravo ispravlja kod pomoću php-cs-fixer-a
 
-### Automatska provera koda
-
-Za automatsku proveru koda,možete registrovati git hooks koje će pokrenuti jednu od gore navedenih komandi. Mi preferiramo `commit` "hook", ali vi možete koristiti onu koja vama odgovara  :smile:
-
-```
-Dati primer
-```
-
 ## Pokretanje testova
 
 Napravili smo skriptu, koja pokreće testove u okviru docker kontejnera:
