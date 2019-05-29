@@ -4,43 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\DatatablePrimary as Entity;
-use App\Models\DatatableChild as Child;
-use App\Models\DatatableParent as ParentEntity;
 use Illuminate\Support\Facades\DB;
+use App\Models\DatatableChild as Child;
+use App\Models\DatatablePrimary as Entity;
+use App\Models\DatatableParent as ParentEntity;
 
 class DatatablesController extends Controller
 {
     
 //    protected $entityTable = (new Entity())->getTable();
     
-    public function primaryShow(){
+    public function primaryShow()
+    {
         return view('datatables.primary');
     }
     
-    public function parentShow(){
+    public function parentShow()
+    {
         return view('datatables.parent');
     }
     
-    public function childShow(){
+    public function childShow()
+    {
         return view('datatables.child');
     }
     
-    public function childrenShow(){
+    public function childrenShow()
+    {
         return view('datatables.children');
     }
     
     /**
      *  Filters and orders datatable.
      *  Data is fetched from single (MAIN) table without relations.
-     *  Columns don't need to be listed. You can add or edit columns. 
-     *  The js object of datatable tells you which columns are needed.  
-     * 
-     * @return void
+     *  Columns don't need to be listed. You can add or edit columns.
+     *  The js object of datatable tells you which columns are needed.
      */
     public function primary()
     {
-        return 
+        return
             datatables(Entity::query())
                 /*
                  *  Datatable by default filter data with global search,
@@ -52,15 +54,13 @@ class DatatablesController extends Controller
                      */
                     if (request()->has('search')) {
                         $query
-                            ->where(function($q){
+                            ->where(function ($q) {
                                 /*
                                  *  Define columns for filtering.
                                  */
                                 $q
-                                    ->orWhere('title', 'like', '%' . request()['search']['value'] . '%')
-                                ;
-                            })
-                        ;
+                                    ->orWhere('title', 'like', '%' . request()['search']['value'] . '%');
+                            });
                     }
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
@@ -79,14 +79,13 @@ class DatatablesController extends Controller
     /**
      * Filters and orders datatable.
      * Data is fetched from main table and her related parent table
-     * Columns that correspond to columns from parent table must be listed, 
+     * Columns that correspond to columns from parent table must be listed,
      * defined in filters and orders, also parent table column names
-     * must match with js object column names. 
-     * @return void
+     * must match with js object column names.
      */
     public function withParent()
     {
-        /* 
+        /*
          * Define entity and parent table names
          */
         $entityTable = (new Entity())->getTable();
@@ -94,38 +93,36 @@ class DatatablesController extends Controller
         
         /*
          * Define which column should be selected in sql query.
-         * Parent coulmns should use aliases  
+         * Parent coulmns should use aliases
          */
         $select = [
             $entityTable . '.*',
-            $parentTable . '.title as parent'
+            $parentTable . '.title as parent',
         ];
         /**
          * Building query by selecting and using joins
          */
         $query = Entity::select($select)->leftJoin($parentTable, $parentTable . '.id', '=', $entityTable . '.parent_id');
         
-        return 
+        return
             datatables($query)
-                ->filter(function ($query) use ($entityTable,$parentTable){
+                ->filter(function ($query) use ($entityTable,$parentTable) {
                     if (request()->has('search')) {
                         $query
                             /*
-                             * Use table variables for easier and faster code reuse 
+                             * Use table variables for easier and faster code reuse
                              */
-                            ->where(function($q) use ($entityTable,$parentTable){
+                            ->where(function ($q) use ($entityTable,$parentTable) {
                                 $q
                                     ->orWhere($entityTable . '.title', 'like', '%' . request()['search']['value'] . '%')
-                                    ->orWhere($parentTable . '.title', 'like', '%' . request()['search']['value'] . '%')
-                                ;
-                            })
-                        ;
+                                    ->orWhere($parentTable . '.title', 'like', '%' . request()['search']['value'] . '%');
+                            });
                     }
                 })
                 /*
                  * Adding parent columns witn names that correspond to aliases or names in select
                  */
-                ->addColumn('parent', function($entity){
+                ->addColumn('parent', function ($entity) {
                     return ($entity->parent) ? $entity->parent : 'N/A';
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
@@ -141,17 +138,18 @@ class DatatablesController extends Controller
                 /*
                  * Ordering data by entity columns is implemented by default,
                  * but ordering data by related table columns must be defined.
-                 * First attribute defines column name, 
+                 * First attribute defines column name,
                  * Second attribute defines one or more ordering instrictions in format:
-                 * {column} {$1}, {column} {$1}, ... 
-                 * $1 = variable that holds direction  
+                 * {column} {$1}, {column} {$1}, ...
+                 * $1 = variable that holds direction
                  */
-                ->orderColumn('parent', 'parent $1, ' . $entityTable . '.title $1')     
+                ->orderColumn('parent', 'parent $1, ' . $entityTable . '.title $1')
                 ->make(true);
     }
     
     /**
-     * Same as previous method (AKA withParent) but with different relationship 
+     * Same as previous method (AKA withParent) but with different relationship
+     *
      * @return mixed
      */
     public function withChild()
@@ -161,25 +159,23 @@ class DatatablesController extends Controller
         
         $select = [
             $entityTable . '.*',
-            $childTable . '.title as child'
+            $childTable . '.title as child',
         ];
         $query = Entity::select($select)->leftJoin($childTable, $childTable . '.parent_id', '=', $entityTable . '.id');
         
-        return 
+        return
             datatables($query)
-                ->filter(function ($query) use ($entityTable,$childTable){
+                ->filter(function ($query) use ($entityTable,$childTable) {
                     if (request()->has('search')) {
                         $query
-                            ->where(function($q) use ($entityTable,$childTable){
+                            ->where(function ($q) use ($entityTable,$childTable) {
                                 $q
                                     ->orWhere($entityTable . '.title', 'like', '%' . request()['search']['value'] . '%')
-                                    ->orWhere($childTable . '.title', 'like', '%' . request()['search']['value'] . '%')
-                                ;
-                            })
-                        ;
+                                    ->orWhere($childTable . '.title', 'like', '%' . request()['search']['value'] . '%');
+                            });
                     }
                 })
-                ->addColumn('child', function($entity){
+                ->addColumn('child', function ($entity) {
                     return ($entity->child) ? $entity->child : 'N/A';
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
@@ -201,7 +197,7 @@ class DatatablesController extends Controller
         $entityTable = (new Entity())->getTable();
         $childrenTable = (new Child())->getTable();
         /*
-         * Children table alias, must be defined 
+         * Children table alias, must be defined
          */
         $childrenTableAlias = 'children';
         $select = [
@@ -209,10 +205,10 @@ class DatatablesController extends Controller
             /*
              * Aggregate Count column
              */
-            'COALESCE('. $childrenTableAlias .'.counter, 0) as children'
+            'COALESCE('. $childrenTableAlias .'.counter, 0) as children',
         ];
         
-        $query = 
+        $query =
             Entity::
                 select(DB::raw(implode(',', $select)))
                 /*
@@ -223,36 +219,33 @@ class DatatablesController extends Controller
                             /*
                              * Aggregate count children relationship
                              */
-                            '( select parent_id, count(id) as counter from ' . $childrenTable .' group by parent_id ) as ' . $childrenTableAlias ), 
-                            $childrenTableAlias . '.parent_id', '=', $entityTable . '.id')
-
-            ;
-        return 
+                            '( select parent_id, count(id) as counter from ' . $childrenTable .' group by parent_id ) as ' . $childrenTableAlias
+                    ),
+                    $childrenTableAlias . '.parent_id',
+                    '=',
+                    $entityTable . '.id'
+                );
+        return
             datatables($query)
                 ->filter(function ($query) use ($entityTable, $childrenTableAlias) {
-                    if (request()->has('search') && !is_null(request()['search']['value'])) {
-                            $query
-                                ->where(function($q) use ($entityTable, $childrenTableAlias){
-                                    
+                    if (request()->has('search') && ! is_null(request()['search']['value'])) {
+                        $query
+                                ->where(function ($q) use ($entityTable, $childrenTableAlias) {
                                     $q
-                                        ->orWhere($entityTable . '.title', 'like', "%" . request()['search']['value'] . "%")
-                                            
-                                    ;
+                                        ->orWhere($entityTable . '.title', 'like', '%' . request()['search']['value'] . '%');
                                     /*
                                      * If global search value is 0, filter must check for parents without children
                                      */
-                                    if(request()['search']['value'] == 0){
-                                        $q->orWhereNull( $childrenTableAlias . '.counter');
+                                    if (request()['search']['value'] == 0) {
+                                        $q->orWhereNull($childrenTableAlias . '.counter');
                                     } else {
-                                        $q->orWhere($childrenTableAlias .'.counter', 'like', "%" . request()['search']['value'] . "%");
+                                        $q->orWhere($childrenTableAlias .'.counter', 'like', '%' . request()['search']['value'] . '%');
                                     }
-                                })
-
-                            ;
+                                });
                     }
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
-                ->addColumn('children', function ($entity){
+                ->addColumn('children', function ($entity) {
                     return $entity->children;
                 })
                 ->addColumn('actions', function ($entity) {
@@ -260,12 +253,11 @@ class DatatablesController extends Controller
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([
-                    'data-id' => function($entity) {
+                    'data-id' => function ($entity) {
                         return $entity->id;
-                    }
+                    },
                 ])
                 ->orderColumn('children', 'children $1, dt_primary.title $1')
-                ->make(true)
-        ;
+                ->make(true);
     }
 }

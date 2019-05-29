@@ -4,13 +4,7 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Http\Controllers;
 
 //change the request class if needed
@@ -40,10 +34,6 @@ use App\Http\Resources\Json as JsonResource;
 
 /**
  * Example Controller for describing standards
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class EntitesController extends Controller
 {
@@ -100,8 +90,6 @@ class EntitesController extends Controller
      * course, but would do its own thing like Job queuing,
      * Event dispatching, or any other business logic.
      */
-    
-    
     public function all()
     {
         //initiate entity query

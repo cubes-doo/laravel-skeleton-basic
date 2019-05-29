@@ -14,7 +14,7 @@ return [
     | messages to the logs. The name specified in this option should match
     | one of the channels defined in the "channels" configuration array.
     |
-    */
+     */
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
@@ -31,7 +31,7 @@ return [
     |                    "errorlog", "monolog",
     |                    "custom", "stack"
     |
-    */
+     */
 
     'channels' => [
         'stack' => [

@@ -19,12 +19,6 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
  * #1 Keep the <$policies> array clean!
  * #2 No long-term code commenting, please!
  * #3 Remove inclusions that are no longer necessary!
- *
- * @category   class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- *
- * @version    GIT: 1.0.0
  */
 class AuthServiceProvider extends ServiceProvider
 {
@@ -39,8 +33,6 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
     public function boot()
     {

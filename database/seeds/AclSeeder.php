@@ -4,25 +4,15 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
+use App\Models\User;
 use App\Lib\HelperPack;
 use Illuminate\Database\Seeder;
-use Junges\ACL\Http\Models\Permission;
 use Junges\ACL\Http\Models\Group;
-use App\Models\User;
+use Junges\ACL\Http\Models\Permission;
 
 /**
  * Seeder for Users model
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class AclSeeder extends Seeder
 {
@@ -33,63 +23,61 @@ class AclSeeder extends Seeder
      */
     protected $defaultGroups = [
         'admin' => [
-            '*'
+            '*',
         ],
         'moderator' => [
-            'user:*'
+            'user:*',
         ],
         'editor' => [
             'example:*',
-            'user:read'
+            'user:read',
         ],
     ];
 
     protected $entityActions = [
         'datatable_child' => [
             'name' => 'Datatable Child',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'datatable_parent' => [
             'name' => 'Datatable Parent',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'datatable_primary' => [
             'name' => 'Datatable Primary',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'example' => [
             'name' => 'Example',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'file' => [
             'name' => 'File',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'collection' => [
             'name' => 'Collection',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
         'collection.image' => [
             'name' => 'Collection Image',
-            'actions' => ['create', 'read', 'update', 'delete', 'crop']
-        ], 
+            'actions' => ['create', 'read', 'update', 'delete', 'crop'],
+        ],
         'user' => [
             'name' => 'User',
-            'actions' => ['create', 'read', 'update', 'delete']
-        ]
+            'actions' => ['create', 'read', 'update', 'delete'],
+        ],
     ];
     
     /**
      * Runs the DB seed
-     *
-     * @return void
      */
     public function run()
     {
-        $this->command->info("Truncating acl tables.");
+        $this->command->info('Truncating acl tables.');
         
-        foreach(config('acl.tables') as $key => $value) {
-            if($key == 'users') {
+        foreach (config('acl.tables') as $key => $value) {
+            if ($key == 'users') {
                 // there's another seeder that takes care of truncating this table
                 continue;
             }
@@ -99,7 +87,7 @@ class AclSeeder extends Seeder
         
         $this->command->info('Creating default permisssions.');
         foreach ($this->entityActions as $slug => $entity) {
-            foreach(HelperPack::generateCrudPermissionsForModel($slug, $entity['name'], $entity['actions']) as $value) {
+            foreach (HelperPack::generateCrudPermissionsForModel($slug, $entity['name'], $entity['actions']) as $value) {
                 Permission::create($value);
             }
         }
@@ -112,7 +100,7 @@ class AclSeeder extends Seeder
                 'slug' => $group,
             ]);
 
-            foreach($permissions as $permission) {
+            foreach ($permissions as $permission) {
                 switch ($permission) {
                     case '*':
                         $groupObj->assignAllPermissions();
@@ -136,7 +124,7 @@ class AclSeeder extends Seeder
 
         $this->command->info('Everyone\'s an admin!');
 
-        foreach(User::get() as $user) {
+        foreach (User::get() as $user) {
             $user->assignGroup(['admin']);
         }
     }

@@ -17,16 +17,16 @@
 |           problem the same way & returns a value the same as another function
 |           it is considered a duplicate
 |
-*/
+ */
 
 if (! function_exists('array_keys_exist')) {
     /**
      * Checks if all $keys exist in the $arr array
      *
-     * @param  array   $keys
-     * @param  array   $arr
+     * @param array $keys
+     * @param array $arr
      *
-     * @return boolean
+     * @return bool
      *
      * @author Alexander Dickson <alex@alexanderdickson.com>
      * @author Aleksa Cvijić     <aleksa.cvijic@cubes.rs>
@@ -40,8 +40,8 @@ if (! function_exists('array_keys_exist')) {
 
 if (! function_exists('str_cut')) {
     /**
-     * @param  type    $text
-     * @param  type    $limit
+     * @param type  $text
+     * @param type  $limit
      * @param mixed $delimiter
      *
      * @return string
@@ -110,7 +110,7 @@ if (! function_exists('json_config')) {
      *  - the file whose configuration we want must be stored in the config/ folder
      *  - the file whose configuration we want must be of type .json
      *
-     * @param  string $fileName
+     * @param string $fileName
      *
      * @return array
      */
@@ -136,8 +136,8 @@ if (! function_exists('get_models')) {
      */
     function get_models()
     {
-        $path    = app_path() . '/Models';
-        $out     = [];
+        $path = app_path() . '/Models';
+        $out = [];
         $results = scandir($path);
 
         foreach ($results as $result) {
@@ -147,14 +147,14 @@ if (! function_exists('get_models')) {
             
             $filename = $path . '/' . $result;
             if (is_dir($filename)) {
-                if($result !== 'Utils') {
-                    $out = array_merge($out, array_map(function($v) use($result) {
-                        $result = snake_case(substr($result,0,-4));
+                if ($result !== 'Utils') {
+                    $out = array_merge($out, array_map(function ($v) use ($result) {
+                        $result = snake_case(substr($result, 0, -4));
                         return $result . '.' . $v;
                     }, get_models($filename)));
                 }
-            }else{
-                $result = snake_case(substr($result,0,-4));
+            } else {
+                $result = snake_case(substr($result, 0, -4));
                 $out[] = $result;
             }
         }

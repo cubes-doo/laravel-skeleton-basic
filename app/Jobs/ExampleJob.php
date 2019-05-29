@@ -4,15 +4,7 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- * @version    GIT: 1.0.0
  */
-
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -30,12 +22,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
  *  - handle():
  *  - protected methods:
  *  - properties:
- *
- * @category   Class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- *
- * @version    GIT: 1.0.0
  */
 class ExampleJob implements ShouldQueue
 {

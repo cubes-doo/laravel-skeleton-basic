@@ -4,22 +4,11 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-/**
- * @category   Class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- */
 class JsonResourceCollection extends AnonymousResourceCollection
 {
     const STATUS_OK = 'ok';
@@ -168,7 +157,7 @@ class JsonResourceCollection extends AnonymousResourceCollection
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -184,10 +173,8 @@ class JsonResourceCollection extends AnonymousResourceCollection
     /**
      * Customize the response for a request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Http\JsonResponse  $response
-     *
-     * @return void
+     * @param \Illuminate\Http\Request      $request
+     * @param \Illuminate\Http\JsonResponse $response
      */
     public function withResponse($request, $response)
     {

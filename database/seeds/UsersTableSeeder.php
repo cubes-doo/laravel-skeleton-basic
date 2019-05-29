@@ -4,22 +4,12 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 use App\Lib\HelperPack;
 use Illuminate\Database\Seeder;
 
 /**
  * Seeder for Users model
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class UsersTableSeeder extends Seeder
 {
@@ -44,8 +34,6 @@ class UsersTableSeeder extends Seeder
     
     /**
      * Runs the DB seed
-     *
-     * @return void
      */
     public function run()
     {

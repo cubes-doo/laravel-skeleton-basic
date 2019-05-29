@@ -51,15 +51,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::name('users.')->prefix('/users/')->group(function () {
         $c = 'UsersController@';
-        Route::get('',                      $c . 'all')->name('list');
-        Route::post('datatable',            $c . 'datatable')->name('datatable');
-        Route::get('create',                $c . 'create')->name('create');
-        Route::post('create',               $c . 'store');
-        Route::get('{entity}/edit',         $c . 'edit')->name('edit');
-        Route::post('{entity}/edit',        $c . 'update');
-        Route::post('{entity}/delete',      $c . 'delete')->name('delete');
+        Route::get('', $c . 'all')->name('list');
+        Route::post('datatable', $c . 'datatable')->name('datatable');
+        Route::get('create', $c . 'create')->name('create');
+        Route::post('create', $c . 'store');
+        Route::get('{entity}/edit', $c . 'edit')->name('edit');
+        Route::post('{entity}/edit', $c . 'update');
+        Route::post('{entity}/delete', $c . 'delete')->name('delete');
         Route::any('{entity}/delete-photo', $c . 'deletePhoto')->name('delete_photo');
-        Route::get('{entity}/permissions',  $c . 'permissions')->name('permissions');
+        Route::get('{entity}/permissions', $c . 'permissions')->name('permissions');
         Route::post('{entity}/permissions', $c . 'updatePermissions');
     });
     
@@ -87,26 +87,26 @@ Route::middleware(['auth'])->group(function () {
     Route::name('acl.')->prefix('/acl/')->namespace('ACL')->group(function () {
         Route::name('permissions.')->prefix('/permissions/')->group(function () {
             $c = 'PermissionsController@';
-            Route::get('',                 $c . 'all')->name('list');
-            Route::post('datatable',       $c . 'datatable')->name('datatable');
-            Route::get('create',           $c . 'create')->name('create');
-            Route::post('create',          $c . 'store');
-            Route::get('{entity}/edit',    $c . 'edit')->name('edit');
-            Route::post('{entity}/edit',   $c . 'update');
+            Route::get('', $c . 'all')->name('list');
+            Route::post('datatable', $c . 'datatable')->name('datatable');
+            Route::get('create', $c . 'create')->name('create');
+            Route::post('create', $c . 'store');
+            Route::get('{entity}/edit', $c . 'edit')->name('edit');
+            Route::post('{entity}/edit', $c . 'update');
             Route::post('{entity}/delete', $c . 'delete')->name('delete');
-            Route::post('selection',       $c . 'selection')->name('selection');
+            Route::post('selection', $c . 'selection')->name('selection');
         });
         
         Route::name('groups.')->prefix('/roles/')->group(function () {
             $c = 'GroupsController@';
-            Route::get('',                 $c . 'all')->name('list');
-            Route::post('datatable',       $c . 'datatable')->name('datatable');
-            Route::get('create',           $c . 'create')->name('create');
-            Route::post('create',          $c . 'store');
-            Route::get('{entity}/edit',    $c . 'edit')->name('edit');
-            Route::post('{entity}/edit',   $c . 'update');
+            Route::get('', $c . 'all')->name('list');
+            Route::post('datatable', $c . 'datatable')->name('datatable');
+            Route::get('create', $c . 'create')->name('create');
+            Route::post('create', $c . 'store');
+            Route::get('{entity}/edit', $c . 'edit')->name('edit');
+            Route::post('{entity}/edit', $c . 'update');
             Route::post('{entity}/delete', $c . 'delete')->name('delete');
-            Route::post('selection',       $c . 'selection')->name('selection');
+            Route::post('selection', $c . 'selection')->name('selection');
         });
     });
 
@@ -152,4 +152,4 @@ Route::middleware(['auth'])->group(function () {
 | single responsibility principle.
 | @link https://www.sitepoint.com/the-single-responsibility-principle/
 | @link https://blog.codinghorror.com/curlys-law-do-one-thing/
-*/
+ */

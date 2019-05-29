@@ -128,7 +128,7 @@ trait StoreFilesTrait
     }
     
     /**
-     * @param string $column
+     * @param string                               $column
      * @param string|\Illuminate\Http\UploadedFile $file
      *
      * @return mixed $this fluent interface
@@ -192,19 +192,14 @@ trait StoreFilesTrait
     
     /**
      * Left as an example for processFileBeforeStore
-    protected function processFileBeforeStore(\Illuminate\Http\UploadedFile $file, $column)
-    {
-
-    }
+     * }
+     *
      * @param mixed $column
      */
     
     /**
      * Left as an example for processFileBeforeStore
-    protected function processFileAfterStore(\Illuminate\Http\UploadedFile $file, $column)
-    {
-        $newPath = $this->filePath($column);
-    }
+     * }
      */
 
     /**

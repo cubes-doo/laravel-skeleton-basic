@@ -4,34 +4,23 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 use Illuminate\Database\Seeder;
 
 /**
  * Seeder for Users model
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class SqlFunctionsSeeder extends Seeder
 {
     /**
      * Runs the DB seed
-     *
-     * @return void
      */
     public function run()
     {
-        $this->command->info("Adding custom SQL functions");
+        $this->command->info('Adding custom SQL functions');
 
-        \DB::unprepared(<<<SQL
+        \DB::unprepared(
+            <<<SQL
         -- splits a string (str) by a delimeter (delim) and returns back the part on position (pos - 0 based)
         -- usage example:
         /*

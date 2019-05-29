@@ -16,7 +16,7 @@ return [
         /*
          | The model you want to use as User Model must use MateusJunges\ACL\Traits\UsersTrait
          */
-        'user'       => \App\Models\User::class,
+        'user' => \App\Models\User::class,
 
         /*
          | The model you want to use as Permission model must use the MateusJunges\ACL\Traits\PermissionsTrait
@@ -26,7 +26,7 @@ return [
         /*
          | The model you want to use as Group model must use the MateusJunges\ACL\Traits\GroupsTrait
          */
-        'group'      => Junges\ACL\Http\Models\Group::class,
+        'group' => Junges\ACL\Http\Models\Group::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -42,12 +42,12 @@ return [
     |
      */
     'tables' => [
-        'users'                       => 'users',
-        'groups'                      => 'acl_groups',
-        'permissions'                 => 'acl_permissions',
-        'group_has_permissions'       => 'acl_group_has_permissions',
-        'user_has_permissions'        => 'acl_user_has_permissions',
-        'user_has_groups'             => 'acl_user_has_groups',
+        'users' => 'users',
+        'groups' => 'acl_groups',
+        'permissions' => 'acl_permissions',
+        'group_has_permissions' => 'acl_group_has_permissions',
+        'user_has_permissions' => 'acl_user_has_permissions',
+        'user_has_groups' => 'acl_user_has_groups',
     ],
 
 ];

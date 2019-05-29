@@ -11,7 +11,7 @@ class Role extends JsonResource
         self::wrap('results');
         
         return [
-            'id'   => $this->id,
+            'id' => $this->id,
             'text' => $this->name,
         ];
     }

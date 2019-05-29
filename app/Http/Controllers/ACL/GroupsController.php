@@ -4,13 +4,7 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Http\Controllers\ACL;
 
 //change the request class if needed
@@ -18,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 use App\Http\Controllers\Controller;
 
-use Junges\ACL\Http\Models\Group as Entity;
+use App\Http\Resources\Select2\Role;
 
 /*
  * - Model <use> statements:
@@ -37,18 +31,14 @@ use Junges\ACL\Http\Models\Group as Entity;
  * Method order should stay the same as in routes.
  *
  */
-use Illuminate\Http\Request as Request;
-use App\Http\Resources\Json as JsonResource;
-use App\Http\Resources\Select2\Role;
 use Junges\ACL\Http\Models\Permission;
+use Illuminate\Http\Request as Request;
+use Junges\ACL\Http\Models\Group as Entity;
+use App\Http\Resources\Json as JsonResource;
 use App\Http\Resources\Select2\PermissionGroup;
 
 /**
  * Example Controller for describing standards
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class GroupsController extends Controller
 {
@@ -81,8 +71,6 @@ class GroupsController extends Controller
      * course, but would do its own thing like Job queuing,
      * Event dispatching, or any other business logic.
      */
-    
-    
     public function all()
     {
         //initiate entity query
@@ -113,8 +101,7 @@ class GroupsController extends Controller
                         return $entity->id;
                     },
                 ])
-                ->make(true)
-        ;
+                ->make(true);
     }
     
     public function create()
@@ -149,10 +136,10 @@ class GroupsController extends Controller
             // 1. required or nullable
             // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'name'            => 'required|string|min:3|max:100',
-            'permissions'     => 'required|array',
+            'name' => 'required|string|min:3|max:100',
+            'permissions' => 'required|array',
             'permissions.*.*' => 'integer|exists:acl_permissions,id',
-            'description'     => 'nullable|string|min:10|max:655',
+            'description' => 'nullable|string|min:10|max:655',
         ]);
         
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
@@ -206,7 +193,7 @@ class GroupsController extends Controller
         #4 retuning response
         
         return view('acl.groups.edit', [
-            'entity'      => $entity,
+            'entity' => $entity,
             'usedPermissions' => $entity->permissions->pluck('id')->toArray(),
             'permissions' => PermissionGroup::collection(
                 Permission::get()->groupBy(function ($item, $key) {
@@ -226,10 +213,10 @@ class GroupsController extends Controller
             // 1. required or nullable
             // 2. modifier (string, int, date, numeric, file, etc)
             // 3. validation rules specific to modifier
-            'name'            => 'required|string|min:3|max:100',
-            'permissions'     => 'required|array',
+            'name' => 'required|string|min:3|max:100',
+            'permissions' => 'required|array',
             'permissions.*.*' => 'integer|exists:acl_permissions,id',
-            'description'     => 'nullable|string|min:10|max:655',
+            'description' => 'nullable|string|min:10|max:655',
         ]);
 
         #2 normalization = remove keys from $data that are files, and filter/normalize some values
@@ -288,11 +275,11 @@ class GroupsController extends Controller
     {
         $entities = Entity::query();
         $data = $this->request->validate([
-            'q' => 'nullable|string'
+            'q' => 'nullable|string',
         ]);
         
-        if(!empty($data['q'])) {
-            $entities->where(function($q) use($data) {
+        if (! empty($data['q'])) {
+            $entities->where(function ($q) use ($data) {
                 $s = ['LIKE', '%' . $data['q'] . '%'];
                 $q->orWhere('name', ...$s);
                 $q->orWhere('description', ...$s);

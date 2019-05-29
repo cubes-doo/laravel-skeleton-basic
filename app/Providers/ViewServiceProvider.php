@@ -13,8 +13,6 @@ class ViewServiceProvider extends ServiceProvider
 
     /**
      * Register services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -35,7 +33,7 @@ class ViewServiceProvider extends ServiceProvider
             );
 
             $pattern = $e[0] ?? '';
-            $class   = $this->normalize($e[1] ?? 'active');
+            $class = $this->normalize($e[1] ?? 'active');
 
             return '<?php echo (request()->is(' . $pattern . ') ? \'' . $class . '\' : null); ?>';
         });
@@ -47,7 +45,7 @@ class ViewServiceProvider extends ServiceProvider
             );
 
             $pattern = $e[0] ?? '';
-            $class   = $this->normalize($e[1] ?? 'is-invalid');
+            $class = $this->normalize($e[1] ?? 'is-invalid');
             
             return '<?php echo ($errors->has(' . $pattern . ') ? \'' . $class . '\' : null); ?>';
         });
@@ -59,11 +57,11 @@ class ViewServiceProvider extends ServiceProvider
             );
 
             $routeName = $e[0] ?? '';
-            $params    = $e[1] ?? [];
+            $params = $e[1] ?? [];
 
             $out = '';
 
-            if(!empty($params)) {
+            if (! empty($params)) {
                 $out = "<?php echo (route($routeName, $params)); ?>";
             } else {
                 $out = "<?php echo (route($routeName)); ?>";

@@ -4,25 +4,15 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Models;
 
+use Junges\ACL\Traits\UsersTrait;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Junges\ACL\Traits\UsersTrait;
 
 /**
  * Model for the appplication user
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class User extends Authenticatable
 {

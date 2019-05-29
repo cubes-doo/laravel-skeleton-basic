@@ -4,23 +4,13 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 use App\Models\{Example, User};
 
 use Illuminate\Database\Seeder;
 
 /**
  * Seeder for Users model
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class DatatablesTableSeeder extends Seeder
 {
@@ -77,35 +67,31 @@ class DatatablesTableSeeder extends Seeder
     
     /**
      * Runs the DB seed
-     *
-     * @return void
      */
     public function run()
     {
-        
-        foreach($this->tables as $table){
+        foreach ($this->tables as $table) {
             $this->command->info("Truncating {$table} table.");
             
             \DB::table($table)->truncate();
 
             $this->command->info("Creating default {$table}.");
             
-            if($table == 'dt_primary'){
-                foreach($this->primary as $row){
+            if ($table == 'dt_primary') {
+                foreach ($this->primary as $row) {
                     DB::table($table)->insert($row);
                 }
             }
-            if($table == 'dt_child'){
-                foreach($this->child as $row){
+            if ($table == 'dt_child') {
+                foreach ($this->child as $row) {
                     DB::table($table)->insert($row);
                 }
             }
-            if($table == 'dt_parent'){
-                foreach($this->parent as $row){
+            if ($table == 'dt_parent') {
+                foreach ($this->parent as $row) {
                     DB::table($table)->insert($row);
-                } 
+                }
             }
         }
-        
     }
 }

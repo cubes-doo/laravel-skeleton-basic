@@ -18,12 +18,6 @@ use Illuminate\Http\Resources\Json\Resource as BaseResource;
 
 /**
  * Description of JsonResource
- *
- * @category   Class
- *
- * @copyright  2015-2018 Cubes d.o.o.
- *
- * @version    GIT: 1.0.0
  */
 class Json extends BaseResource
 {
@@ -38,9 +32,7 @@ class Json extends BaseResource
     /**
      * Create a new resource instance.
      *
-     * @param  mixed  $resource
-     *
-     * @return void
+     * @param mixed $resource
      */
     public function __construct($resource = null)
     {
@@ -58,7 +50,7 @@ class Json extends BaseResource
     /**
      * Create new anonymous resource collection.
      *
-     * @param  mixed  $resource
+     * @param mixed $resource
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -206,7 +198,7 @@ class Json extends BaseResource
     /**
      * Get additional data that should be returned with the resource array.
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
@@ -222,10 +214,8 @@ class Json extends BaseResource
     /**
      * Customize the response for a request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Http\JsonResponse  $response
-     *
-     * @return void
+     * @param \Illuminate\Http\Request      $request
+     * @param \Illuminate\Http\JsonResponse $response
      */
     public function withResponse($request, $response)
     {

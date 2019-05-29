@@ -10,8 +10,6 @@ class SystemMessagesServiceProvider extends ServiceProvider
     const KEY = 'system-message';
     /**
      * Register the application's response macros.
-     *
-     * @return void
      */
     public function boot()
     {

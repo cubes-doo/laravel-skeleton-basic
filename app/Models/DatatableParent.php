@@ -4,13 +4,7 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
@@ -26,17 +20,13 @@ use App\Models\Utils\{
 
 /**
  * Example Model for describing standards
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class DatatableParent extends Model implements ActiveInactiveInterface
 {
     use ActiveInactiveTrait, StoreFilesTrait, CropImageTrait,
     CropImageSingleTrait, CropImageMultiTrait, SoftDeletes;
     
-     /**
+    /**
      * specifying table names is recommended
      */
     protected $table = 'dt_parent';
@@ -72,7 +62,6 @@ class DatatableParent extends Model implements ActiveInactiveInterface
     /**
      * Relationships: must be declared for all related models, even if they will never be used
      */
-    
     public function dtChild()
     {
         return $this->hasOne(DatatablePrimary::class);

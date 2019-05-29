@@ -12,14 +12,14 @@ class PermissionGroup extends ResourceCollection
         $group = explode(':', $this->first()->slug)[0];
 
         return [
-            'id'       => $group,
-            'text'     => ucwords(str_replace('_', ' ', $group)),
+            'id' => $group,
+            'text' => ucwords(str_replace('_', ' ', $group)),
             'children' => $this->map(function ($value) {
                 return [
-                    'id'       => $value->id,
-                    'text'     => $value->name,
+                    'id' => $value->id,
+                    'text' => $value->name,
                 ];
-            })
+            }),
         ];
     }
 }

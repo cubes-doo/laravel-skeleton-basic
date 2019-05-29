@@ -66,8 +66,6 @@ class Image extends Model
      * $recipeArrStack.
      *
      * @param Array $recipeArrStack
-     *
-     * @return void
      */
     private function mergeRecepies(&$recipeArrStack)
     {
@@ -89,10 +87,10 @@ class Image extends Model
      * Construct image filename from received filepath or file object.
      *
      * @param string|UplodedFile $fileSrc
-     * @param integer $imageId  | Image ID in 'images' table
-     * @param string  $addendum | insert this string into filename
-     * @param booled  $path     | return absolute path containing new filename
-     * @param mixed $imgId
+     * @param int                $imageId  | Image ID in 'images' table
+     * @param string             $addendum | insert this string into filename
+     * @param booled             $path     | return absolute path containing new filename
+     * @param mixed              $imgId
      *
      * @return string
      */
@@ -127,10 +125,10 @@ class Image extends Model
      * Store image to hard-drive
      *
      * @param UploadedFile $file
-     * @param integer      $imageId       | Image ID in 'images' table
-     * @param string       $nameAddendum  | insert this string in filename
+     * @param int          $imageId          | Image ID in 'images' table
+     * @param string       $nameAddendum     | insert this string in filename
      * @param mixed        $constructFilname (\Closure or string)
-     * @param mixed $imgId
+     * @param mixed        $imgId
      *
      * @return string|FALSE
      */
@@ -240,7 +238,7 @@ class Image extends Model
      * @param mixed $class
      * @param mixed $imageResizeRecepies
      *
-     * @return boolean
+     * @return bool
      */
     protected function processFileBeforeStore($originalImage, $class, $imageResizeRecepies)
     {
@@ -265,7 +263,7 @@ class Image extends Model
      * @param mixed $class
      * @param mixed $multiImageResizeRecepies
      *
-     * @return boolean
+     * @return bool
      */
     public function processFileAfterStore(
         $entity,
@@ -374,8 +372,6 @@ class Image extends Model
     /**
      * Erase image from the hard-drive and erase image's entry from the database
      * table
-     *
-     * @return void
      */
     public function delete()
     {
@@ -392,7 +388,7 @@ class Image extends Model
     /**
      * Erase image file from the hard-drive
      *
-     * @return boolean
+     * @return bool
      */
     public function deleteFileFromHdd()
     {

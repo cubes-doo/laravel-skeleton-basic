@@ -2,14 +2,14 @@
 
 namespace App\Models\Utils;
 
-use Illuminate\Support\Str;
 use App\Models\File;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
  * Trait is checking following attributes
- * 
- * - fileClassStorageDiskMap 
+ *
+ * - fileClassStorageDiskMap
  *      Is used to associate file class to a storage disk from config/filesystem
  *      Default storage disk is 'public' (\App\Models\File::DEFAULT_STORAGE_DISK)
  *      ex:
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * - filesDefaultStorageDiskName
  *      String, it is used to determine default storage disk name for model,
  *      if not set then default storage disk of File model i sused
- * 
+ *
  * - filesDefaultStorageDirectory
  *      If is set as STRING this will be used as default directory for all file classes
  *      If is set to boolean TRUE the str_slug-ed table name of the model will be used as default directory
@@ -38,13 +38,14 @@ trait FileableTrait
 {
     /**
      * @param int|string|null $class If int is passed than file is accessed over id
+     *
      * @return string|null
      */
     public function getFilePath($class = null)
     {
         $file = $this->getFile($class);
 
-        if (!$file) {
+        if (! $file) {
             return null;
         }
 
@@ -53,13 +54,14 @@ trait FileableTrait
 
     /**
      * @param int|string|null $class If int is passed than file is accessed over id
+     *
      * @return string|null
      */
     public function getFileUrl($class = null)
     {
         $file = $this->getFile($class);
 
-        if (!$file) {
+        if (! $file) {
             return null;
         }
 
@@ -68,13 +70,14 @@ trait FileableTrait
 
     /**
      * @param int|string|null $class If int is passed than file is accessed over id
+     *
      * @return File|null
      */
     public function getFile($class = null)
     {
         $files = $this->files;
 
-        if (!$class) {
+        if (! $class) {
             return $files->first();
         }
 
@@ -87,13 +90,14 @@ trait FileableTrait
 
     /**
      * @param int|string|null $class If int is passed than file is accessed over id
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasFile($class = null)
     {
         $files = $this->files;
 
-        if (!$class) {
+        if (! $class) {
             return $files->count() > 0;
         }
 
@@ -106,13 +110,14 @@ trait FileableTrait
 
     /**
      * @param string|null $class
+     *
      * @return File[]
      */
     public function getFiles($class = null)
     {
         $files = $this->files;
 
-        if (!$class) {
+        if (! $class) {
             return $files;
         }
 
@@ -121,6 +126,7 @@ trait FileableTrait
 
     /**
      * @param int|string|null $class If int is passed than file is accessed over id
+     *
      * @return self
      */
     public function deleteFile($class = null)
@@ -136,6 +142,7 @@ trait FileableTrait
 
     /**
      * @param string|null $class
+     *
      * @return self
      */
     public function deleteFiles($class = null)
@@ -150,7 +157,8 @@ trait FileableTrait
     /**
      * @param string|\Illuminate\Http\UploadedFile $class
      * @param string|\Illuminate\Http\UploadedFile $file
-     * @param array $attributes The attributes for new file
+     * @param array                                $attributes The attributes for new file
+     *
      * @return File
      */
     public function storeFile($class, $file = null, $attributes = null)
@@ -160,17 +168,16 @@ trait FileableTrait
             $class = null;
         }
 
-        if (!is_string($class)) {
+        if (! is_string($class)) {
             $class = File::DEFAULT_CLASS;
         }
 
-        if (!($file instanceof \Illuminate\Http\UploadedFile)) {
-
-            if (!is_string($file)) {
+        if (! ($file instanceof \Illuminate\Http\UploadedFile)) {
+            if (! is_string($file)) {
                 $file = $class;
             }
 
-            if (!request()->file($file)) {
+            if (! request()->file($file)) {
                 //unable to resolve file just return
                 logger()->debug('File ' . $file . ' has not been uploaded while trying to store it');
                 return;
@@ -179,13 +186,13 @@ trait FileableTrait
             $file = request()->file($file);
         }
 
-        if (!$file->isValid()) {
-            //file has not been uploaded just return 
+        if (! $file->isValid()) {
+            //file has not been uploaded just return
             logger()->debug('File ' . $class . ' is not valid');
             return;
         }
 
-        if (!is_array($attributes)) {
+        if (! is_array($attributes)) {
             $attributes = [];
         }
         
@@ -203,8 +210,7 @@ trait FileableTrait
     /**
      * @param string|\Illuminate\Http\UploadedFile[] $class
      * @param string|\Illuminate\Http\UploadedFile[] $files
-     * @param array $attributes The attributes for each of the new file
-     * @return null
+     * @param array                                  $attributes The attributes for each of the new file
      */
     public function storeFiles($class, $files = null, $attributes = null)
     {
@@ -213,11 +219,11 @@ trait FileableTrait
             $class = null;
         }
 
-        if (!is_string($class)) {
+        if (! is_string($class)) {
             $class = File::DEFAULT_CLASS;
         }
 
-        if(is_null($files)) {
+        if (is_null($files)) {
             $files = collect(request()->file($class))->flatten()->toArray();
         }
         
@@ -225,7 +231,7 @@ trait FileableTrait
             $files = collect(request()->file($files))->flatten()->toArray();
         }
 
-        if(!is_array($files) || empty($files)) {
+        if (! is_array($files) || empty($files)) {
             //no files has been uploaded just return
             return;
         }
@@ -239,14 +245,12 @@ trait FileableTrait
 
     // OTHER NON API METHODS
 
-    /**
-     * 
-     */
+    
     public static function bootFileableTrait()
     {
         /* Make morph map relation ( string(morphKey) pointing to class namespace ) */
         Relation::morphMap([
-            static::getFileableMorphKey() => static::class
+            static::getFileableMorphKey() => static::class,
         ]);
 
         /* Remove related files on model delete*/
@@ -272,15 +276,17 @@ trait FileableTrait
     }
 
     /**
+     * @param mixed $class
+     *
      * @return string The directory on storage for file class
      */
     public function getFileClassStorageDirectory($class)
     {
         if (
-            !isset($this->fileClassStorageDirectoryMap)
-            || !is_array($this->fileClassStorageDirectoryMap)
+            ! isset($this->fileClassStorageDirectoryMap)
+            || ! is_array($this->fileClassStorageDirectoryMap)
             || empty($this->fileClassStorageDirectoryMap[$class])
-            || !is_string($this->fileClassStorageDirectoryMap[$class])
+            || ! is_string($this->fileClassStorageDirectoryMap[$class])
         ) {
             return $this->getFilesDefaultStorageDirectory();
         }
@@ -289,15 +295,17 @@ trait FileableTrait
     }
 
     /**
+     * @param mixed $class
+     *
      * @return string Storage disk for file class if is mapped in 'fileClassStorageDiskMap' property
      */
     public function getFileClassStorageDiskName($class)
     {
         if (
-            !isset($this->fileClassStorageDiskMap)
-            || !is_array($this->fileClassStorageDiskMap)
+            ! isset($this->fileClassStorageDiskMap)
+            || ! is_array($this->fileClassStorageDiskMap)
             || empty($this->fileClassStorageDiskMap[$class])
-            || !is_string($this->fileClassStorageDiskMap[$class])
+            || ! is_string($this->fileClassStorageDiskMap[$class])
         ) {
             return $this->getFilesDefaultStorageDiskName();
         }

@@ -18,22 +18,22 @@ trait CropImageTrait
     private $CONFIG_NAME = 'crop_image_recipes';
     
     /**
-     * @var integer resize image according to specified width and height
+     * @var int resize image according to specified width and height
      */
     private $ACTION_RESIZE = 'resize';
     
     /**
-     * @var integer crop image according to specified position, width and height
+     * @var int crop image according to specified position, width and height
      */
     private $ACTION_CROP = 'crop';
     
     /**
-     * @var integer fit image according to specified width and height
+     * @var int fit image according to specified width and height
      */
     private $ACTION_FIT = 'fit';
     
     /**
-     * @var integer JPEG encode image
+     * @var int JPEG encode image
      */
     private $ACTION_JPG_ENCODE = 'jpg-encode';
     
@@ -82,9 +82,7 @@ trait CropImageTrait
      *
      * @param object $image    | image object
      * @param array  $cropData | crop parameters in the following format:
-     *                          [w, h, crop_width, crop_height, pos_x, pos_y];
-     *
-     * @return void
+     *                         [w, h, crop_width, crop_height, pos_x, pos_y];
      */
     private function cropImage($image, $cropData)
     {
@@ -136,7 +134,7 @@ trait CropImageTrait
                    'original width: ' . $orig_width,
                    'original height: ' . $orig_height
                    );
-                */
+                 */
                 
                 $image->crop((int)$crop_width, (int)$crop_height, $calc_posX, $calc_posY);
                 
@@ -157,12 +155,12 @@ trait CropImageTrait
     /**
      * Resize the image and constrain aspect ratio (auto if w or h is NULL)
      *
-     * @param object  $image | Intervention-image object
-     * @param int     $w
-     * @param int     $h
-     * @param boolean $constrainAspectRatio
+     * @param object $image                | Intervention-image object
+     * @param int    $w
+     * @param int    $h
+     * @param bool   $constrainAspectRatio
      *
-     * @return boolean
+     * @return bool
      */
     public function resizeImage($image, $w, $h, $constrainAspectRatio = false)
     {
@@ -189,11 +187,11 @@ trait CropImageTrait
     /**
      * @link https://stackoverflow.com/questions/26890539/intervention-image-aspect-ratio
      *
-     * @param object $image | Intervention-image object
-     * @param type $w
-     * @param type $h
-     * @param mixed $position
-     * @param mixed $conUpsize
+     * @param object $image     | Intervention-image object
+     * @param type   $w
+     * @param type   $h
+     * @param mixed  $position
+     * @param mixed  $conUpsize
      */
     public function fitImage($image, $w, $h, $position = 'center', $conUpsize = true)
     {
@@ -250,10 +248,10 @@ trait CropImageTrait
      * Intervention image library MUST be set as provider and given an
      * alias 'Image' in config/app
      *
-     * @param mixed $imageOrig file path or file object from request
-     *              (see Intervention\Image\AbstractDecoder\init() for
-     *               all possible input types)
-     * @param string|array        $actions     | actions to perform on image
+     * @param mixed        $imageOrig file path or file object from request
+     *                                (see Intervention\Image\AbstractDecoder\init() for
+     *                                all possible input types)
+     * @param string|array $actions   | actions to perform on image
      *
      * @return Image
      */

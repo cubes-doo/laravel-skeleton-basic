@@ -13,7 +13,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return TRUE; // authorization for 'Users' is performed with middleware
+        return true; // authorization for 'Users' is performed with middleware
     }
 
     /**
@@ -27,10 +27,10 @@ class UserRequest extends FormRequest
         
         return [
             'first_name' => 'required|string|min:2|max:100',
-            'last_name'  => 'required|string|min:2|max:100',
-            'email'      => "required|string|email|unique:users,email" 
+            'last_name' => 'required|string|min:2|max:100',
+            'email' => 'required|string|email|unique:users,email'
                             . (isset($entity->id) ? ',' . $entity->id : ''),
-            'images.*.*' => 'nullable|file|image'
+            'images.*.*' => 'nullable|file|image',
         ];
     }
 }

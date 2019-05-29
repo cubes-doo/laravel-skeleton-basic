@@ -45,7 +45,7 @@ trait ImageableTrait
      *
      * @param string $class
      *
-     * @return boolean
+     * @return bool
      */
     public function hasImage($class)
     {
@@ -54,10 +54,10 @@ trait ImageableTrait
     
     /**
      * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
+     *                      examples:
+     *                      "avatar", "icon" ...
+     *                      i.e. an image (or image size) associated to the model
+     *                      where this trait is used
      *
      * @return string
      */
@@ -71,10 +71,10 @@ trait ImageableTrait
      * Get first image of a class
      *
      * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
+     *                      examples:
+     *                      "avatar", "icon" ...
+     *                      i.e. an image (or image size) associated to the model
+     *                      where this trait is used
      *
      * @return Image
      */
@@ -93,10 +93,10 @@ trait ImageableTrait
      * Get all images or images of a class
      *
      * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
+     *                      examples:
+     *                      "avatar", "icon" ...
+     *                      i.e. an image (or image size) associated to the model
+     *                      where this trait is used
      *
      * @return Collection
      */
@@ -136,14 +136,14 @@ trait ImageableTrait
     
     /**
      * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
-     * @param mixed $file (null|string|UploadedFile)
+     *                      examples:
+     *                      "avatar", "icon" ...
+     *                      i.e. an image (or image size) associated to the model
+     *                      where this trait is used
+     * @param mixed  $file  (null|string|UploadedFile)
      * @param $newFilename
      *
-     * @return boolean
+     * @return bool
      */
     public function storeImage($class, $file = null, $newFilename = null)
     {
@@ -187,7 +187,7 @@ trait ImageableTrait
      *
      * @throws \InvalidArgumentException
      *
-     * @return boolean
+     * @return bool
      */
     public function storeImages($class, $files = null, $newFilename = null)
     {
@@ -230,7 +230,7 @@ trait ImageableTrait
      * @param $newFilename
      * @param null|mixed $file
      *
-     * @return boolean
+     * @return bool
      */
     public function updateImage($class, $file = null, $newFilename = null)
     {
@@ -270,14 +270,12 @@ trait ImageableTrait
     /**
      * Delete one image from 'images' table
      *
-     * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
-     * @param mixed $deleteChildren
-     *
-     * @return void
+     * @param string $class          - !!!NOT A PHP CLASS
+     *                               examples:
+     *                               "avatar", "icon" ...
+     *                               i.e. an image (or image size) associated to the model
+     *                               where this trait is used
+     * @param mixed  $deleteChildren
      */
     public function deleteImage($class = null, $deleteChildren = true)
     {
@@ -306,14 +304,12 @@ trait ImageableTrait
     /**
      * Delete all images bound to the model using this trait, from 'images' table.
      *
-     * @param string $class - !!!NOT A PHP CLASS
-     *                        examples:
-     *                          "avatar", "icon" ...
-     *                        i.e. an image (or image size) associated to the model
-     *                        where this trait is used
-     * @param mixed $deleteChildren
-     *
-     * @return void
+     * @param string $class          - !!!NOT A PHP CLASS
+     *                               examples:
+     *                               "avatar", "icon" ...
+     *                               i.e. an image (or image size) associated to the model
+     *                               where this trait is used
+     * @param mixed  $deleteChildren
      */
     public function deleteImages($class = null, $deleteChildren = true)
     {

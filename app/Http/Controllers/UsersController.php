@@ -4,13 +4,7 @@
  * Class
  *
  * PHP version 7.2
- *
- * @category   class
- *
- * @copyright  Cubes d.o.o.
- * @license    GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  */
-
 namespace App\Http\Controllers;
 
 //change the request class if needed
@@ -35,22 +29,18 @@ use Illuminate\Support\Carbon;
  * Method order should stay the same as in routes.
  *
  */
-use Illuminate\Http\Request as Request;
-use App\Http\Resources\Json as JsonResource;
+use App\Http\Requests\UserRequest;
+use Junges\ACL\Http\Models\Permission;
 
 /*
  * Dedicated class for create/edit validation
  */
-use App\Http\Requests\UserRequest;
+use Illuminate\Http\Request as Request;
+use App\Http\Resources\Json as JsonResource;
 use App\Http\Resources\Select2\PermissionGroup;
-use Junges\ACL\Http\Models\Permission;
 
 /**
  * Example Controller for describing standards
- *
- * @category   Class
- *
- * @copyright  Cubes d.o.o.
  */
 class UsersController extends Controller
 {
@@ -97,8 +87,7 @@ class UsersController extends Controller
 
         $this
             ->middleware(['groups:admin'])
-            ->only(['permissions', 'updatePermissions'])
-        ;
+            ->only(['permissions', 'updatePermissions']);
     }
 
     /**
@@ -110,8 +99,6 @@ class UsersController extends Controller
      * course, but would do its own thing like Job queuing,
      * Event dispatching, or any other business logic.
      */
-    
-    
     public function all()
     {
         //initiate entity query
@@ -193,12 +180,12 @@ class UsersController extends Controller
         
         # 1 validation
         # Validation is specified within UserRequest class
-        # For situation when validation rules are created and called directly in 
+        # For situation when validation rules are created and called directly in
         # controller - see EntitiesController.
         # get validated data
         $data = $request->validated();
 
-        #2 normalization = remove keys from $data that are files, and 
+        #2 normalization = remove keys from $data that are files, and
         # filter/normalize some values
         $data['password'] = bcrypt('psst!@#');
         
@@ -383,22 +370,20 @@ class UsersController extends Controller
 
     public function permissions(Entity $entity)
     {
-        $group = 
+        $group =
             optional($entity->groups)
-                ->map(function($item, $key) {
+                ->map(function ($item, $key) {
                     return [
                         'id' => $item->id,
-                        'text' => $item->name
+                        'text' => $item->name,
                     ];
                 })
-                ->first()
-        ;
+                ->first();
 
-        $usedPermissions = 
+        $usedPermissions =
             optional($entity->permissions)
                 ->pluck('id')
-                ->toArray()
-        ;
+                ->toArray();
 
         $permissions = PermissionGroup::collection(
             Permission::get()->groupBy(function ($item, $key) {
@@ -407,7 +392,7 @@ class UsersController extends Controller
         )->toArray($this->request);
         
         return view(
-            'users.permissions', 
+            'users.permissions',
             compact('group', 'usedPermissions', 'permissions')
         );
     }
@@ -415,19 +400,19 @@ class UsersController extends Controller
     public function updatePermissions(Entity $entity)
     {
         $data = $this->request->validate([
-            'group'           => 'required_without:permissions|exists:acl_groups,id',
-            'permissions'     => 'required_without:group|array',
+            'group' => 'required_without:permissions|exists:acl_groups,id',
+            'permissions' => 'required_without:group|array',
             'permissions.*.*' => 'integer|exists:acl_permissions,id',
         ]);
         
         $entity->revokeAllGroups();
 
-        if(!empty($data['group'])) {
+        if (! empty($data['group'])) {
             $entity->revokeAllPermissions();
             $entity->assignGroup([$data['group']]);
         }
 
-        if(!empty($data['permissions'])) {
+        if (! empty($data['permissions'])) {
             $entity->syncPermissions(collect($data['permissions'])->collapse()->toArray());
         }
 

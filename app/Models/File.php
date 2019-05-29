@@ -63,12 +63,12 @@ class File extends Model
      */
     public function fileName()
     {
-        if (!$this->id || !$this->name) {
+        if (! $this->id || ! $this->name) {
             return null;
         }
 
         $class = $this->class;
-        if (!$class) {
+        if (! $class) {
             $class = static::DEFAULT_CLASS;
         }
 
@@ -81,7 +81,7 @@ class File extends Model
     public function fileUrl()
     {
         $storageRelativePath = $this->storageRelativePath();
-        if (!$storageRelativePath) {
+        if (! $storageRelativePath) {
             return null;
         }
 
@@ -94,7 +94,7 @@ class File extends Model
     public function filePath()
     {
         $storageRelativePath = $this->storageRelativePath();
-        if (!$storageRelativePath) {
+        if (! $storageRelativePath) {
             return null;
         }
 
@@ -102,11 +102,13 @@ class File extends Model
     }
 
     /**
+     * @param mixed $pretty
+     *
      * @return int|string If not pretty int is returned as number of bytes, otherwise the size in kB, MB, GB or TB is returned
      */
     public function fileSize($pretty = false)
     {
-        if (!$pretty) {
+        if (! $pretty) {
             return $this->size;
         }
 
@@ -134,12 +136,13 @@ class File extends Model
 
     /**
      * Delete associated file from storage
+     *
      * @return self
      */
     public function deleteFile()
     {
         $storageRelativePath = $this->storageRelativePath();
-        if (!$storageRelativePath) {
+        if (! $storageRelativePath) {
             return null;
         }
 
@@ -161,7 +164,7 @@ class File extends Model
      */
     public function storageDiskName()
     {
-        if (!$this->disk) {
+        if (! $this->disk) {
             return static::DEFAULT_STORAGE_DISK;
         }
 
@@ -174,7 +177,7 @@ class File extends Model
     public function storageDirectory()
     {
         $directory = $this->directory;
-        if (!$directory) {
+        if (! $directory) {
             $directory = static::DEFAULT_DIRECTORY;
         }
 
@@ -187,7 +190,7 @@ class File extends Model
     public function storageRelativePath()
     {
         $fileName = $this->fileName();
-        if (!$fileName) {
+        if (! $fileName) {
             return null;
         }
 
@@ -208,6 +211,7 @@ class File extends Model
 
     /**
      * Utility function for sanitizing uploaded file name
+     *
      * @return string
      */
     public static function filterFileOriginalName(\Illuminate\Http\UploadedFile $file)
@@ -224,8 +228,10 @@ class File extends Model
 
     /**
      * Stores uploaded file and deletes previous one
-     * @param \Illuminate\Http\UploadedFile $file The uploaded file
-     * @param string|array $attributes Attributes to set for model. If string is passed then it is considered to be the 'class' field
+     *
+     * @param \Illuminate\Http\UploadedFile $file       The uploaded file
+     * @param string|array                  $attributes Attributes to set for model. If string is passed then it is considered to be the 'class' field
+     *
      * @return self
      */
     public function storeFile(\Illuminate\Http\UploadedFile $file, $attributes = null)
@@ -236,7 +242,7 @@ class File extends Model
             ];
         }
 
-        if (!is_array($attributes)) {
+        if (! is_array($attributes)) {
             $attributes = [];
         }
 
@@ -257,7 +263,7 @@ class File extends Model
         $disk = $this->storageDiskName();
 
         $file->storeAs($directory, $this->fileName(), [
-            'disk' => $disk
+            'disk' => $disk,
         ]);
 
         return $this;

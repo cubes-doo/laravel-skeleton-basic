@@ -10,12 +10,10 @@ class HelperPack
 {
     
     /**
-     * @param string $var      | variable to test
-     * @param string $varName  | name of the variable for exception string
+     * @param string $var     | variable to test
+     * @param string $varName | name of the variable for exception string
      *
      * @throws \InvalidArgumentException
-     *
-     * @return void
      */
     private static function throwErrorIfNotString($var, $varName)
     {
@@ -35,8 +33,6 @@ class HelperPack
      * @param mixed $userData
      *
      * @throws \InvalidArgumentException
-     *
-     * @return void
      */
     private static function validateGenerateEmailStrMethodArgs($domain, $sep, $userData)
     {
@@ -51,9 +47,9 @@ class HelperPack
     /**
      * Generate email string from domain, separator and user data.
      *
-     * @param string $domain  | email domain (e.g. example.com)
-     * @param string $sep     | user data separator on 'implode'
-     * @param Array $userData | user data in varible number of arguments
+     * @param string $domain   | email domain (e.g. example.com)
+     * @param string $sep      | user data separator on 'implode'
+     * @param Array  $userData | user data in varible number of arguments
      *
      * @throws \InvalidArgumentException
      *
@@ -76,12 +72,12 @@ class HelperPack
     }
 
     public static function generateCrudPermissionsForModel(
-        $entity, 
-        $entityName, 
+        $entity,
+        $entityName,
         $actions = ['create', 'read', 'update', 'delete']
     ) {
         $permissions = [];
-        foreach($actions as $action) {
+        foreach ($actions as $action) {
             $permissions[$action] = [
                 'name' => $entityName . ': ' . ucfirst($action),
                 'slug' => $entity . ':' . $action,

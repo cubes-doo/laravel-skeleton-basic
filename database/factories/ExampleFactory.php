@@ -14,7 +14,7 @@ use Faker\Generator as Faker;
 | Faking all attributes for a model, this way removing redundancies, and
 | adding ease of use accross all seeders and tests.
 |
-*/
+ */
 
 $factory->define(App\Models\Example::class, function (Faker $faker) {
     return [
