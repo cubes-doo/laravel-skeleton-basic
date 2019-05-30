@@ -11,6 +11,7 @@
 <script src="{{asset('/theme/plugins/bootstrap-select/js/bootstrap-select.min.js')}}"></script>
 <script src="{{asset('/theme/plugins/sweet-alert2/sweetalert2.min.js')}}"></script>
 <script src="{{asset('/theme/plugins/switchery/switchery.min.js')}}"></script>
+<script src="{{asset('/theme/plugins/ckeditor5-build-classic/ckeditor.js')}}"></script>
         
 
 <!-- App js -->
