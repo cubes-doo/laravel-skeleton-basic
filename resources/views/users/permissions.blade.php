@@ -141,7 +141,7 @@
             placeholder: "@lang('--Assign role --')",
             ajax: {
                 type: 'POST',
-                url: '@route(acl.groups.selection)',
+                url: '@route("acl.groups.selection")',
                 dataType: 'json',
                 delay: 1000
             }
