@@ -17,5 +17,10 @@
             $(element).closest('.form-group').find('.invalid-feedback').addClass('d-block');
         }
     });
+
+    jQuery.validator.addMethod('ckrequired', function (value, element, params) {
+        let id = jQuery(element).attr('name');
+        CKEDITOR.instances[id].updateElement();
+    });
 </script>
 <!-- end:jq validation setup script-->
