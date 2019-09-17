@@ -197,9 +197,11 @@ trait FileableTrait
         }
         
         $attributes['class'] = $class;
-        $attributes['disk'] = $this->getFileClassStorageDiskName($class);
-        $attributes['directory'] = $this->getFileClassStorageDirectory($class);
+        $attributes['disk'] = $attributes['disk'] ?? $this->getFileClassStorageDiskName($class);
+        $attributes['directory'] = $attributes['directory'] ?? $this->getFileClassStorageDirectory($class);
+        
         logger()->debug('Storing file', $attributes);
+        
         $fileModel = $this->files()->create($attributes);
 
         $fileModel->storeFile($file, $attributes);
@@ -211,6 +213,7 @@ trait FileableTrait
      * @param string|\Illuminate\Http\UploadedFile[] $class
      * @param string|\Illuminate\Http\UploadedFile[] $files
      * @param array                                  $attributes The attributes for each of the new file
+     * @return File[]
      */
     public function storeFiles($class, $files = null, $attributes = null)
     {
@@ -236,11 +239,75 @@ trait FileableTrait
             return;
         }
 
+        $storedFiles = [];
+
         foreach ($files as $file) {
-            $this->storeFile($class, $file, $attributes);
+            $storedFiles[] = $this->storeFile($class, $file, $attributes);
         }
 
-        return;
+        return $storedFiles;
+    }
+
+    /**
+     * Replaces file in class, if file of $class exists it will be deleted and replaced with new one
+     * 
+     * @param string|\Illuminate\Http\UploadedFile $class
+     * @param string|\Illuminate\Http\UploadedFile $file
+     * @param array                                $attributes The attributes for new file
+     *
+     * @return File
+     */
+    public function updateFile($class, $file = null, $attributes = null)
+    {
+        $fileModel = $this->storeFile($class, $file, $attributes);
+
+        if (!$fileModel) {
+            return;
+        }
+
+        foreach(
+            $this->files()
+                ->where('class', $fileModel->class)
+                ->where('id', '!=', $fileModel->id)
+                ->get()
+            as $fileModelToDelete
+        ) {
+            //delete other files in same class
+            $fileModelToDelete->delete();
+        }
+
+        return $fileModel;
+    }
+
+    /**
+     * Removes all files from class and place the new uploaded ones
+     * @param string|\Illuminate\Http\UploadedFile[] $class
+     * @param string|\Illuminate\Http\UploadedFile[] $files
+     * @param array                                  $attributes The attributes for each of the new file
+     * @return File[]
+     */
+    public function updateFiles($class, $files = null, $attributes = null)
+    {
+        $fileModels = $this->storeFiles($class, $files, $attributes);
+
+        if (empty($fileModels)) {
+            return;
+        }
+
+        $fileModelsCollection = collect($fileModels);
+
+        foreach(
+            $this->files()
+                ->where('class', $fileModelsCollection->first()->class)
+                ->whereNotIn('id', $fileModelsCollection->pluck('id'))
+                ->get()
+            as $fileModelToDelete
+        ) {
+            //delete other files in same class
+            $fileModelToDelete->delete();
+        }
+
+        return $fileModels;
     }
 
     // OTHER NON API METHODS
