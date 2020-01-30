@@ -98,7 +98,7 @@ class PermissionsController extends Controller
                     }
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('acl.permissions.partials.table.actions', compact('entity'));
+                    return view('acl.permissions.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([

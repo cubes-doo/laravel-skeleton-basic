@@ -65,7 +65,7 @@ class DatatablesController extends Controller
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
                 ->addColumn('actions', function ($entity) {
-                    return view('datatables.partials.table.actions', compact('entity'));
+                    return view('datatables.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['active', 'actions'])
                 ->setRowAttr([
@@ -127,7 +127,7 @@ class DatatablesController extends Controller
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
                 ->addColumn('actions', function ($entity) {
-                    return view('datatables.partials.table.actions', compact('entity'));
+                    return view('datatables.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([
@@ -180,7 +180,7 @@ class DatatablesController extends Controller
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
                 ->addColumn('actions', function ($entity) {
-                    return view('datatables.partials.table.actions', compact('entity'));
+                    return view('datatables.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([
@@ -249,7 +249,7 @@ class DatatablesController extends Controller
                     return $entity->children;
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('datatables.partials.table.actions', compact('entity'));
+                    return view('datatables.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([

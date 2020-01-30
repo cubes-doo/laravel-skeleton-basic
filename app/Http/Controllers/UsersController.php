@@ -129,10 +129,10 @@ class UsersController extends Controller
                     });
                 })
                 ->addColumn('images', function ($entity) {
-                    return view('users.partials.table.images', compact('entity'));
+                    return view('users.partials.table.images', ['entity' => $entity]);
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('users.partials.table.actions', compact('entity'));
+                    return view('users.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['images', 'actions'])
                 ->setRowAttr([
@@ -393,7 +393,11 @@ class UsersController extends Controller
         
         return view(
             'users.permissions',
-            compact('group', 'usedPermissions', 'permissions')
+            [
+                'group' => $group,
+                'usedPermissions' => $usedPermissions,
+                'permissions' => $permissions,
+            ]
         );
     }
 

@@ -93,7 +93,7 @@ class GroupsController extends Controller
                     }
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('acl.groups.partials.table.actions', compact('entity'));
+                    return view('acl.groups.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['actions'])
                 ->setRowAttr([

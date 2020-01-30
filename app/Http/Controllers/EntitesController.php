@@ -112,15 +112,15 @@ class EntitesController extends Controller
                     }
                 })
                 ->editColumn('active', function ($entity) {
-                    return view('entities.partials.table.active', compact('entity'));
+                    return view('entities.partials.table.active', ['entity' => $entity]);
                 })
                 ->editColumn('title', '{{str_cut($title, 20)}}')
                 ->editColumn('description', '{{str_cut($description, 30)}}')
                 ->editColumn('photo', function ($entity) {
-                    return view('entities.partials.table.photo', compact('entity'));
+                    return view('entities.partials.table.photo', ['entity' => $entity]);
                 })
                 ->addColumn('actions', function ($entity) {
-                    return view('entities.partials.table.actions', compact('entity'));
+                    return view('entities.partials.table.actions', ['entity' => $entity]);
                 })
                 ->rawColumns(['active', 'photo', 'actions'])
                 ->setRowAttr([
