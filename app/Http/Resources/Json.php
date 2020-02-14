@@ -24,9 +24,9 @@ class Json extends BaseResource
     const STATUS_OK = 'ok';
     const STATUS_ERROR = 'error';
     
-    protected $locale;
-    protected $status = 'ok';
-    protected $message = '';
+    private $locale;
+    private $status = 'ok';
+    private $message = '';
     
     
     /**

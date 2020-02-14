@@ -14,9 +14,9 @@ class JsonResourceCollection extends AnonymousResourceCollection
     const STATUS_OK = 'ok';
     const STATUS_ERROR = 'error';
     
-    protected $locale;
-    protected $status = 'ok';
-    protected $message = '';
+    private $locale;
+    private $status = 'ok';
+    private $message = '';
     
     /**
      * @return string The locale or app locale if not set
