@@ -4,6 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+
+use App\Http\Resources\Json as JsonResource;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +51,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if (request()->is('api/*')) {
+            if($exception instanceof ValidationException) {
+                $errors = [];
+
+                foreach($exception->errors() as $key => $value) {
+                    $errors[] = [
+                        'field' => $key,
+                        'messages' => $value
+                    ];
+                }
+                
+                return JsonResource::make($errors)
+                    ->withError($exception->getMessage())
+                    ->withHttpStatus(422);
+            }
+        }
         return parent::render($request, $exception);
     }
 }
