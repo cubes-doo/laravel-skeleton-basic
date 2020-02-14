@@ -17,6 +17,7 @@ class JsonResourceCollection extends AnonymousResourceCollection
     private $locale;
     private $status = 'ok';
     private $message = '';
+    private $httpStatus = null;
     
     /**
      * @return string The locale or app locale if not set
@@ -73,6 +74,26 @@ class JsonResourceCollection extends AnonymousResourceCollection
     }
     
     /**
+     * @return int
+     */
+    public function getHttpStatus()
+    {
+        return $this->httpStatus;
+    }
+    
+    /**
+     * @param string $status
+     *
+     * @return Json
+     */
+    public function setHttpStatus(int $httpStatus)
+    {
+        $this->httpStatus = $httpStatus;
+        
+        return $this;
+    }
+    
+    /**
      * @param string $status
      *
      * @return Json
@@ -96,6 +117,32 @@ class JsonResourceCollection extends AnonymousResourceCollection
     public function isStatusError()
     {
         return self::STATUS_ERROR == $this->getStatus();
+    }
+    
+    /**
+     * @param string $status
+     *
+     * @return Json
+     */
+    public function withHttpStatus($httpStatus)
+    {
+        return $this->setHttpStatus($httpStatus);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isHttpStatusOk()
+    {
+        return 200 == $this->getHttpStatus();
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isHttpStatusError()
+    {
+        return 200 != $this->getHttpStatus();
     }
     
     /**
@@ -136,6 +183,7 @@ class JsonResourceCollection extends AnonymousResourceCollection
     public function withError($errorMessage)
     {
         $this->withStatus(self::STATUS_ERROR)
+            ->withHttpStatus(400)
             ->withMessage($errorMessage);
         
         return $this;
@@ -178,9 +226,8 @@ class JsonResourceCollection extends AnonymousResourceCollection
      */
     public function withResponse($request, $response)
     {
-        if (! $this->isStatusOk()) {
-            //Set status code to 400 if error is occured
-            $response->setStatusCode(400);
+        if (!empty($this->getHttpStatus())) {
+            $response->setStatusCode($this->getHttpStatus());
         }
     }
 }
