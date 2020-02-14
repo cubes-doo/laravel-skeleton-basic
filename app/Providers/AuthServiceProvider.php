@@ -37,5 +37,23 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+	    \Auth::extend('stateless', function ($app, $name, array $config) {
+            // Return an instance of Illuminate\Contracts\Auth\Guard...
+
+            return new \App\Auth\StatelessTokenGuard(
+                \Auth::createUserProvider($config['provider']),
+                $app['request']
+            );
+       });
+
+        \Auth::extend('stateful', function ($app, $name, array $config) {
+            // Return an instance of Illuminate\Contracts\Auth\Guard...
+
+            return new \App\Auth\StatefulTokenGuard(
+                \Auth::createUserProvider($config['provider']),
+                $app['request']
+            );
+       });
     }
 }

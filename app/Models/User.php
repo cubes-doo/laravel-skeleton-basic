@@ -27,6 +27,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'first_name', 'last_name', 'email', 'password',
+        'api_token', 'refresh_token', 
     ];
 
     /**
@@ -36,6 +37,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password', 'remember_token',
+        'api_token', 'refresh_token', 
     ];
     
     protected $imageResizeRecepies = [
