@@ -17,6 +17,7 @@
 <link href="{{asset('/theme/plugins/bootstrap-select/css/bootstrap-select.min.css')}}" rel="stylesheet" />
 <link href="{{asset('/theme/plugins/sweet-alert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css">
 <link href="{{asset('/theme/plugins/switchery/switchery.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{asset('/theme/plugins/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css"/>
 
 @stack('head_links')
 
