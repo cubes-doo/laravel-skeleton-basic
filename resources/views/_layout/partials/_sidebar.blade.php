@@ -29,6 +29,12 @@
                         <span>@lang('Users')</span>
                     </a>
                 </li>
+                <li>
+                    <a class="@activeClass('jobs', 'active') @activeClass('jobs/*', 'active')" href="{{route('jobs.list')}}">
+                        <i class="mdi mdi-cloud-outline"></i>
+                        <span>@lang('Jobs')</span>
+                    </a>
+                </li>
                 @group('admin')
                     <li>
                         <a class="@activeClass('acl/*', 'active')" href="javascript: void(0);" aria-expanded="true">

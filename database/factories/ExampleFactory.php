@@ -20,5 +20,8 @@ $factory->define(App\Models\Example::class, function (Faker $faker) {
     return [
         'title' => $faker->text(100),
         'description' => $faker->text(200),
+        'updated_at' => now(),
+        'created_at' => now(),
+        'created_by' => 1
     ];
 });

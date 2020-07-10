@@ -110,6 +110,17 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::name('jobs.')->prefix('/jobs/')->group(function () {
+        $c = 'JobsController@';
+        Route::get('', $c . 'all')->name('list');
+        Route::post('datatable', $c . 'datatable')->name('datatable');
+        Route::post('run-job', $c . 'runJob')->name('run_job');
+        Route::post('rerun-job', $c . 'rerunJob')->name('rerun_job');
+        Route::get('status/{jobStatus}', $c . 'showJobProgress')->name('job_status');
+        Route::get('/ajax-progress-status', $c . 'ajaxGetJobStatusInfo')->name('ajax_status');
+        Route::get('/ajax-all', $c . 'ajaxGetMyJobsStatusesInfoTiny')->name('ajax_all');
+    });
+
     /*
      * If a controller is in a sub-folder (ex. app/http/Controllers/Admin):
      *
